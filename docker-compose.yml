@@ -1,4 +1,14 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: huffmanks/recipe
+    container_name: recipe_app
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
   postgres:
     image: postgres:18-alpine
     restart: unless-stopped
