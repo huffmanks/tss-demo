@@ -2,18 +2,18 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { authUser } from "@/fn/helpers";
 
-export const Route = createFileRoute("/")({
-  component: Home,
+export const Route = createFileRoute("/dashboard")({
+  component: Dashboard,
   loader: async () => {
     return await authUser();
   },
 });
 
-function Home() {
+function Dashboard() {
   const user = Route.useLoaderData();
   const navigate = useNavigate();
 
-  if (user) navigate({ href: "/dashboard" });
+  if (!user) navigate({ href: "/" });
 
-  return <div>Home page</div>;
+  return <div>Dashboard page</div>;
 }
