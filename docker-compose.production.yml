@@ -1,0 +1,17 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: huffmanks/recipe
+    container_name: recipe_app
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  postgres:
+    volumes:
+      - pgdata_prod:/var/lib/postgresql/data
+
+volumes:
+  pgdata_prod:

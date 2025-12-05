@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev --port 3000",
+    "dev": "dotenvx run -f .env.development -- vite dev --port 3000",
     "build": "vite build",
     "preview": "vite preview",
     "start": "node .output/server/index.mjs",
@@ -11,13 +11,12 @@
     "lint": "eslint",
     "format": "prettier",
     "check": "prettier --write . && eslint --fix",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio",
-    "docker:up:dev": "docker compose -f docker-compose.dev.yml up -d",
-    "docker:build:prod": "docker compose -f docker-compose.prod.yml build --no-cache",
-    "docker:up:prod": "docker compose -f docker-compose.prod.yml up -d"
+    "db:migrate:dev": "dotenvx run -f .env.development -- drizzle-kit migrate",
+    "db:generate:dev": "dotenvx run -f .env.development -- drizzle-kit generate",
+    "db:push:dev": "dotenvx run -f .env.development -- drizzle-kit push",
+    "db:studio:dev": "dotenvx run -f .env.development -- drizzle-kit studio",
+    "db:migrate:prod": "dotenvx run -f .env.production -- drizzle-kit migrate",
+    "db:push:prod": "dotenvx run -f .env.production -- drizzle-kit push"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.6",
@@ -42,6 +41,7 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "^1.51.1",
     "@tanstack/devtools-vite": "^0.3.11",
     "@tanstack/eslint-config": "^0.3.0",
     "@testing-library/dom": "^10.4.0",
