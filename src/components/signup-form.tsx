@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
@@ -9,14 +11,26 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui
 import { Input } from "@/components/ui/input";
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
+    // @TODO encrypt password
     const { data, error } = await authClient.signUp.email({
-      name: "ted",
-      email: "user@email.com",
-      password: "password",
+      name,
+      email,
+      password,
     });
 
     if (error) {
@@ -39,23 +53,45 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="name">Full Name</FieldLabel>
-              <Input id="name" type="text" placeholder="John Doe" required />
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                required
+                onChange={(e) => setName(e.target.value)}
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input id="email" type="email" placeholder="m@example.com" required />
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+                onChange={(e) => setEmail(e.target.value)}
+              />
               <FieldDescription>
                 We&apos;ll use this to contact you. We will not share your email with anyone else.
               </FieldDescription>
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                type="password"
+                required
+                onChange={(e) => setPassword(e.target.value)}
+              />
               <FieldDescription>Must be at least 8 characters long.</FieldDescription>
             </Field>
             <Field>
               <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
-              <Input id="confirm-password" type="password" required />
+              <Input
+                id="confirm-password"
+                type="password"
+                required
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
               <FieldDescription>Please confirm your password.</FieldDescription>
             </Field>
             <FieldGroup>

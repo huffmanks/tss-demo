@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Link } from "@tanstack/react-router";
 
 import { cn } from "@/lib/utils";
@@ -8,6 +10,8 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui
 import { Input } from "@/components/ui/input";
 
 export function ForgotPasswordForm({ className, ...props }: React.ComponentProps<"div">) {
+  const [email, setEmail] = useState("");
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     // @TODO
@@ -26,7 +30,13 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input id="email" type="email" placeholder="m@example.com" required />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </Field>
 
               <Field>

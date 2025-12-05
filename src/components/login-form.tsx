@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
@@ -10,13 +12,16 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui
 import { Input } from "@/components/ui/input";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const { data, error } = await authClient.signIn.email({
-      email: "user@email.com",
-      password: "password",
+      email,
+      password,
     });
 
     if (error) {
@@ -40,7 +45,13 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input id="email" type="email" placeholder="m@example.com" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </Field>
               <Field>
                 <div className="flex items-center">
@@ -51,7 +62,12 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                     Forgot your password?
                   </Link>
                 </div>
-                <Input id="password" type="password" />
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </Field>
               <Field>
                 <Button className="cursor-pointer" type="submit">
