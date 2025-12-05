@@ -1,19 +1,31 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
-import { authUser } from "@/fn/helpers";
+import { authClient } from "@/lib/auth-client";
+import { loggedOut } from "@/middleware/auth";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
-  loader: async () => {
-    return await authUser();
+  server: {
+    middleware: [loggedOut],
   },
 });
 
 function Dashboard() {
-  const user = Route.useLoaderData();
   const navigate = useNavigate();
 
-  if (!user) navigate({ href: "/" });
+  async function signOut() {
+    await authClient.signOut();
 
-  return <div>Dashboard page</div>;
+    navigate({ to: "/" });
+  }
+
+  return (
+    <div className="mx-auto max-w-lg p-4">
+      <h1 className="mb-4 text-xl font-bold">Dashboard page</h1>
+
+      <div className="flex items-center gap-4">
+        <button onClick={signOut}>Logout</button>
+      </div>
+    </div>
+  );
 }

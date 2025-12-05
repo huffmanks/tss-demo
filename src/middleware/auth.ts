@@ -1,0 +1,24 @@
+import { redirect } from "@tanstack/react-router";
+import { createMiddleware } from "@tanstack/react-start";
+
+import { auth } from "@/lib/auth";
+
+export const loggedOut = createMiddleware().server(async ({ next, request }) => {
+  const session = await auth.api.getSession({ headers: request.headers });
+
+  if (!session) {
+    throw redirect({ to: "/" });
+  }
+
+  return await next();
+});
+
+export const loggedIn = createMiddleware().server(async ({ next, request }) => {
+  const session = await auth.api.getSession({ headers: request.headers });
+
+  if (session) {
+    throw redirect({ to: "/dashboard" });
+  }
+
+  return await next();
+});
