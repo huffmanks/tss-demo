@@ -48,6 +48,10 @@ export const Route = createFileRoute("/api/electric")({
         upstreamUrl.searchParams.set("table", table);
         upstreamUrl.searchParams.set("where", whereSql);
 
+        if (process.env.ELECTRIC_SECRET) {
+          upstreamUrl.searchParams.set(`secret`, process.env.ELECTRIC_SECRET);
+        }
+
         console.log("electric-proxy", {
           userId,
           table,
@@ -64,6 +68,8 @@ export const Route = createFileRoute("/api/electric")({
 
           headers.delete("access-control-allow-origin");
           headers.delete("access-control-allow-credentials");
+          headers.delete(`content-encoding`);
+          headers.delete(`content-length`);
 
           headers.set("Vary", "Cookie");
 

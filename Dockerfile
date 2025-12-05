@@ -1,30 +1,40 @@
-FROM node:22-alpine AS builder
+# --- STAGE 0: Installer ---
+FROM node:22-alpine AS installer
 
 WORKDIR /app
 
-RUN corepack enable
-
 COPY package*.json pnpm-lock.yaml ./
 
-RUN pnpm install --frozen-lockfile
+RUN corepack enable \
+    && pnpm install --frozen-lockfile
 
+# --- STAGE 1: Builder ---
+FROM installer AS builder
+
+WORKDIR /app
+
+COPY --from=installer /app/node_modules ./node_modules
 COPY . .
 
-RUN pnpm run build
+RUN pnpm run build \
+    && rm -rf node_modules \
+    && pnpm store prune
 
+# --- STAGE 2: Production ---
 FROM node:22-alpine AS production
 
 WORKDIR /app
 
-RUN corepack enable
+COPY package*.json pnpm-lock.yaml ./
 
-COPY package*.json ./
-
-RUN pnpm install --prod
+RUN corepack enable \
+    && pnpm install --prod --frozen-lockfile \
+    && pnpm store prune
 
 RUN chown -R node:node /app
 
 COPY --from=builder --chown=node:node /app/.output .output
+
 USER node
 
 ENV PORT=3000

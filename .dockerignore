@@ -20,6 +20,7 @@ node_modules/
 bun.lockb
 
 # General/Shared Build Artifacts
+.output/
 out/
 dist/
 build/

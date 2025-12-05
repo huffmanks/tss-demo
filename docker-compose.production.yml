@@ -3,15 +3,25 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: huffmanks/recipe
+    image: huffmanks/recipe:latest
     container_name: recipe_app
     ports:
       - "3000:3000"
+    environment:
+      VITE_APP_URL: ${VITE_APP_URL}
+      ELECTRIC_URL: ${ELECTRIC_URL}
+      ELECTRIC_SECRET: ${ELECTRIC_SECRET}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
     restart: unless-stopped
 
   postgres:
     volumes:
       - pgdata_prod:/var/lib/postgresql/data
+  electric:
+    environment:
+      ELECTRIC_SECRET: ${ELECTRIC_SECRET}
 
 volumes:
   pgdata_prod:

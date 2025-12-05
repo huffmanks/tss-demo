@@ -11,10 +11,8 @@ const getElectricUrl = () => {
   if (typeof window !== "undefined") {
     return `${window.location.origin}/api/electric`;
   }
-  // Fallback for SSR (shouldn't be used since dashboard has ssr: false)
-  return process.env.VITE_APP_URL
-    ? `${process.env.VITE_APP_URL}/api/electric`
-    : "http://localhost:3000/api/electric";
+  // Fallback for SSR
+  return `${process.env.VITE_APP_URL}/api/electric`;
 };
 
 export const todosCollection = createCollection(

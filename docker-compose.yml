@@ -26,8 +26,9 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
       ELECTRIC_INSECURE: ${ELECTRIC_INSECURE}
+      ELECTRIC_PORT: ${ELECTRIC_PORT}
     ports:
-      - "4000:3000"
+      - "4000:4000"
     depends_on:
       postgres:
         condition: service_healthy
