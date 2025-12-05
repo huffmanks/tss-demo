@@ -1,5 +1,7 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
+import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -8,6 +10,24 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui
 import { Input } from "@/components/ui/input";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
+  const navigate = useNavigate();
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const { data, error } = await authClient.signIn.email({
+      email: "user@email.com",
+      password: "password",
+    });
+
+    if (error) {
+      toast.error(error?.message || "Sign in failed.");
+    }
+
+    if (data) {
+      navigate({ to: "/dashboard" });
+    }
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -16,25 +36,27 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
           <CardDescription>Enter your email below to login to your account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input id="email" type="email" placeholder="m@example.com" required />
+                <Input id="email" type="email" placeholder="m@example.com" />
               </Field>
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
+                  <Link
+                    to="/forgot-password"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
                     Forgot your password?
-                  </a>
+                  </Link>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button className="cursor-pointer" type="submit">
+                  Login
+                </Button>
 
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <Link to="/signup">Sign up</Link>

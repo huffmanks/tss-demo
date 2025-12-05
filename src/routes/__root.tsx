@@ -4,6 +4,8 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import appCss from "@/styles.css?url";
 
+import { Toaster } from "@/components/ui/sonner";
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -50,6 +52,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             },
           ]}
         />
+        <Toaster richColors />
         <Scripts />
       </body>
     </html>
