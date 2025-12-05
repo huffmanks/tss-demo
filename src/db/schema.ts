@@ -85,9 +85,7 @@ export const verifications = pgTable(
 export const todos = pgTable(
   "todos",
   {
-    id: uuid("id")
-      .$defaultFn(() => uuidv7())
-      .primaryKey(),
+    id: uuid("id").primaryKey(),
     title: text("title").notNull(),
     completed: boolean("completed").default(false).notNull(),
     userId: uuid("user_id")

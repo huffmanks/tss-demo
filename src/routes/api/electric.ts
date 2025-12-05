@@ -1,8 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { eq } from "drizzle-orm";
 
-import { db } from "@/db";
-import { todos } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { json } from "@/lib/utils";
 
@@ -33,17 +30,7 @@ export const Route = createFileRoute("/api/electric")({
 
         switch (table) {
           case "todos":
-            const userTodos = await db
-              .select({ id: todos.id })
-              .from(todos)
-              .where(eq(todos.userId, userId));
-
-            if (userTodos.length === 0) {
-              whereSql = `1 = 0`;
-            } else {
-              const todoIds = userTodos.map((wb) => `'${wb.id}'`).join(", ");
-              whereSql = `"todoId" IN (${todoIds})`;
-            }
+            whereSql = `user_id = '${userId}'`;
             break;
 
           default:

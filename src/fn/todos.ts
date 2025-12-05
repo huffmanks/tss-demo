@@ -4,18 +4,13 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { todoSchema } from "@/db/entities";
 import { todos } from "@/db/schema";
-import { authTodo, authUser, getTxId } from "@/fn/helpers";
+import { authTodo, getTxId } from "@/fn/helpers";
 
 export const createTodo = createServerFn({ method: "POST" })
-  .inputValidator(todoSchema.pick({ title: true }))
+  .inputValidator(todoSchema)
   .handler(async ({ data }) => {
-    const user = await authUser();
-
     return await db.transaction(async (tx) => {
-      const [todo] = await tx
-        .insert(todos)
-        .values({ ...data, userId: user.id })
-        .returning();
+      const [todo] = await tx.insert(todos).values(data).returning();
       const txid = await getTxId();
 
       return { todo, txid };
