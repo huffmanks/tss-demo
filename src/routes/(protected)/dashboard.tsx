@@ -6,7 +6,7 @@ import { authClient } from "@/lib/auth-client";
 import { todosCollection } from "@/lib/collections";
 import { loggedOut } from "@/middleware/auth";
 
-export const Route = createFileRoute("/dashboard")({
+export const Route = createFileRoute("/(protected)/dashboard")({
   ssr: false,
   component: Dashboard,
   server: {
