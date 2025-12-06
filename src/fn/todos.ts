@@ -7,7 +7,7 @@ import { todos } from "@/db/schema";
 import { authTodo, getTxId } from "@/fn/helpers";
 
 export const createTodo = createServerFn({ method: "POST" })
-  .inputValidator(todoSchema)
+  .inputValidator(todoSchema.pick({ id: true, title: true, userId: true }))
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
       const [todo] = await tx.insert(todos).values(data).returning();

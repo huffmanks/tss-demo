@@ -43,7 +43,7 @@ export function NavUser({
     }
 
     if (data) {
-      navigate({ to: "/" });
+      navigate({ to: "/", reloadDocument: true });
     }
   }
 

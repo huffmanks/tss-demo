@@ -1,5 +1,5 @@
 # --- STAGE 0: Installer ---
-FROM node:22-alpine AS installer
+FROM node:22.18.0-alpine AS installer
 
 WORKDIR /app
 
@@ -21,15 +21,11 @@ RUN pnpm run build \
     && pnpm store prune
 
 # --- STAGE 2: Production ---
-FROM node:22-alpine AS production
+FROM node:22.18.0-alpine AS production
 
 WORKDIR /app
 
 COPY package*.json pnpm-lock.yaml ./
-
-RUN corepack enable \
-    && pnpm install --prod --frozen-lockfile \
-    && pnpm store prune
 
 RUN chown -R node:node /app
 

@@ -25,6 +25,7 @@ function DashboardRoute() {
 
   async function handleCreateTodo() {
     const id = uuidv7();
+
     todosCollection.insert({
       id: id,
       title: "hello",

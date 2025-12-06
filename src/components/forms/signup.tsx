@@ -26,7 +26,6 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       return;
     }
 
-    // @TODO encrypt password
     const { data, error } = await authClient.signUp.email({
       name,
       email,

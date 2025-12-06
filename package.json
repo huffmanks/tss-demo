@@ -6,7 +6,7 @@
     "dev": "dotenvx run -f .env.development -- vite dev --port 3000",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "node .output/server/index.mjs",
+    "start": "dotenvx run -f .env.development -- node .output/server/index.mjs",
     "test": "vitest run",
     "lint": "eslint",
     "format": "prettier",
@@ -16,7 +16,8 @@
     "db:push:dev": "dotenvx run -f .env.development -- drizzle-kit push",
     "db:studio:dev": "dotenvx run -f .env.development -- drizzle-kit studio",
     "db:migrate:prod": "dotenvx run -f .env.production -- drizzle-kit migrate",
-    "db:push:prod": "dotenvx run -f .env.production -- drizzle-kit push"
+    "db:push:prod": "dotenvx run -f .env.production -- drizzle-kit push",
+    "db:studio:prod": "dotenvx run -f .env.production -- drizzle-kit studio"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",
@@ -47,6 +48,7 @@
     "pg": "^8.16.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "slugify": "^1.6.6",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.0.6",

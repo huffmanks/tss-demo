@@ -59,7 +59,7 @@ prod-docker-up: ## Start the production environment
 	@echo "\033[1;32m─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─\033[0m"
 	@echo "\033[1;32m│ \033[32m🐳 Starting Docker services... \033[0m \033[1;32m│\033[0m"
 	@echo "\033[1;32m╰─────────────────────────────────╯\033[0m"
-	@$(DOCKER_COMPOSE) up -d
+	@$(DOCKER_COMPOSE) up --build -d
 
 prod-docker-down: DOCKER_FILES = $(PROD_COMPOSE_FILES)
 prod-docker-down: ENV_FILE = $(PROD_ENV_FILE)
@@ -67,4 +67,4 @@ prod-docker-down: ## Stop the production environment
 	@echo "\033[1;33m╭─────────────────────────────────────╮\033[0m"
 	@echo "\033[1;33m│ \033[33m🐳 Shutting down Docker services...\033[0m \033[1;33m│\033[0m"
 	@echo "\033[1;33m╰─────────────────────────────────────╯\033[0m"
-	@$(DOCKER_COMPOSE) down
+	@$(DOCKER_COMPOSE) down -v

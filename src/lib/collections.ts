@@ -22,6 +22,7 @@ export const todosCollection = createCollection(
     shapeOptions: {
       url: getElectricUrl(),
       params: { table: "todos" },
+      onError: () => {},
     },
     getKey: (item) => item.id,
     onInsert: async ({ transaction }) => {
