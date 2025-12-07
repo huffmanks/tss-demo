@@ -26,7 +26,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
           <CardDescription>Enter your email below to reset your password</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} autoComplete="off">
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -34,6 +34,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  autoComplete="off"
                   required
                   onChange={(e) => setEmail(e.target.value)}
                 />

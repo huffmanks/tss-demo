@@ -1,8 +1,7 @@
 import { getRequestHeaders } from "@tanstack/react-start/server";
-import { and, eq, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 import { db } from "@/db";
-import { todos } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 export async function authUser() {
@@ -15,19 +14,6 @@ export async function authUser() {
   }
 
   return user;
-}
-
-export async function authTodo(todoId: string) {
-  const user = await authUser();
-  const todo = await db
-    .select()
-    .from(todos)
-    .where(and(eq(todos.id, todoId), eq(todos.userId, user.id)));
-
-  if (!todo) {
-    throw new Error("Todo not found or access denied");
-  }
-  return { user, todo };
 }
 
 type TxIdResultRow = {

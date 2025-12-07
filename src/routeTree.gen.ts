@@ -13,11 +13,13 @@ import { Route as protectedRouteRouteImport } from './routes/(protected)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiElectricRouteImport } from './routes/api/electric'
-import { Route as protectedDashboardRouteImport } from './routes/(protected)/dashboard'
 import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
+import { Route as protectedDashboardRouteRouteImport } from './routes/(protected)/dashboard/route'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as protectedDashboardCategorycategoryIdRouteImport } from './routes/(protected)/dashboard/category$categoryId'
+import { Route as protectedDashboardCategoryRouteImport } from './routes/(protected)/dashboard/category'
 
 const protectedRouteRoute = protectedRouteRouteImport.update({
   id: '/(protected)',
@@ -37,11 +39,6 @@ const ApiElectricRoute = ApiElectricRouteImport.update({
   path: '/api/electric',
   getParentRoute: () => rootRouteImport,
 } as any)
-const protectedDashboardRoute = protectedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => protectedRouteRoute,
-} as any)
 const authSignupRoute = authSignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -57,28 +54,49 @@ const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => authRouteRoute,
 } as any)
+const protectedDashboardRouteRoute = protectedDashboardRouteRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => protectedRouteRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const protectedDashboardCategorycategoryIdRoute =
+  protectedDashboardCategorycategoryIdRouteImport.update({
+    id: '/category$categoryId',
+    path: '/category$categoryId',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardCategoryRoute =
+  protectedDashboardCategoryRouteImport.update({
+    id: '/category',
+    path: '/category',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof protectedDashboardRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/dashboard': typeof protectedDashboardRoute
   '/api/electric': typeof ApiElectricRoute
+  '/dashboard/category': typeof protectedDashboardCategoryRoute
+  '/dashboard/category$categoryId': typeof protectedDashboardCategorycategoryIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof protectedDashboardRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/dashboard': typeof protectedDashboardRoute
   '/api/electric': typeof ApiElectricRoute
+  '/dashboard/category': typeof protectedDashboardCategoryRoute
+  '/dashboard/category$categoryId': typeof protectedDashboardCategorycategoryIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
@@ -86,42 +104,50 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/(auth)': typeof authRouteRouteWithChildren
   '/(protected)': typeof protectedRouteRouteWithChildren
+  '/(protected)/dashboard': typeof protectedDashboardRouteRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
-  '/(protected)/dashboard': typeof protectedDashboardRoute
   '/api/electric': typeof ApiElectricRoute
+  '/(protected)/dashboard/category': typeof protectedDashboardCategoryRoute
+  '/(protected)/dashboard/category$categoryId': typeof protectedDashboardCategorycategoryIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/dashboard'
     | '/forgot-password'
     | '/login'
     | '/signup'
-    | '/dashboard'
     | '/api/electric'
+    | '/dashboard/category'
+    | '/dashboard/category$categoryId'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/dashboard'
     | '/forgot-password'
     | '/login'
     | '/signup'
-    | '/dashboard'
     | '/api/electric'
+    | '/dashboard/category'
+    | '/dashboard/category$categoryId'
     | '/api/auth/$'
   id:
     | '__root__'
     | '/'
     | '/(auth)'
     | '/(protected)'
+    | '/(protected)/dashboard'
     | '/(auth)/forgot-password'
     | '/(auth)/login'
     | '/(auth)/signup'
-    | '/(protected)/dashboard'
     | '/api/electric'
+    | '/(protected)/dashboard/category'
+    | '/(protected)/dashboard/category$categoryId'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
@@ -163,13 +189,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiElectricRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(protected)/dashboard': {
-      id: '/(protected)/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof protectedDashboardRouteImport
-      parentRoute: typeof protectedRouteRoute
-    }
     '/(auth)/signup': {
       id: '/(auth)/signup'
       path: '/signup'
@@ -191,12 +210,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authForgotPasswordRouteImport
       parentRoute: typeof authRouteRoute
     }
+    '/(protected)/dashboard': {
+      id: '/(protected)/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof protectedDashboardRouteRouteImport
+      parentRoute: typeof protectedRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/(protected)/dashboard/category$categoryId': {
+      id: '/(protected)/dashboard/category$categoryId'
+      path: '/category$categoryId'
+      fullPath: '/dashboard/category$categoryId'
+      preLoaderRoute: typeof protectedDashboardCategorycategoryIdRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/category': {
+      id: '/(protected)/dashboard/category'
+      path: '/category'
+      fullPath: '/dashboard/category'
+      preLoaderRoute: typeof protectedDashboardCategoryRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
     }
   }
 }
@@ -217,12 +257,29 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
 )
 
+interface protectedDashboardRouteRouteChildren {
+  protectedDashboardCategoryRoute: typeof protectedDashboardCategoryRoute
+  protectedDashboardCategorycategoryIdRoute: typeof protectedDashboardCategorycategoryIdRoute
+}
+
+const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren =
+  {
+    protectedDashboardCategoryRoute: protectedDashboardCategoryRoute,
+    protectedDashboardCategorycategoryIdRoute:
+      protectedDashboardCategorycategoryIdRoute,
+  }
+
+const protectedDashboardRouteRouteWithChildren =
+  protectedDashboardRouteRoute._addFileChildren(
+    protectedDashboardRouteRouteChildren,
+  )
+
 interface protectedRouteRouteChildren {
-  protectedDashboardRoute: typeof protectedDashboardRoute
+  protectedDashboardRouteRoute: typeof protectedDashboardRouteRouteWithChildren
 }
 
 const protectedRouteRouteChildren: protectedRouteRouteChildren = {
-  protectedDashboardRoute: protectedDashboardRoute,
+  protectedDashboardRouteRoute: protectedDashboardRouteRouteWithChildren,
 }
 
 const protectedRouteRouteWithChildren = protectedRouteRoute._addFileChildren(

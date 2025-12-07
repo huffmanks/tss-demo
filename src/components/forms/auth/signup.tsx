@@ -48,7 +48,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         <CardDescription>Enter your information below to create your account</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="name">Full Name</FieldLabel>
@@ -56,6 +56,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 id="name"
                 type="text"
                 placeholder="John Doe"
+                autoComplete="off"
                 required
                 onChange={(e) => setName(e.target.value)}
               />
@@ -66,6 +67,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 id="email"
                 type="email"
                 placeholder="m@example.com"
+                autoComplete="off"
                 required
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -78,6 +80,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               <Input
                 id="password"
                 type="password"
+                autoComplete="off"
                 required
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -88,6 +91,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               <Input
                 id="confirm-password"
                 type="password"
+                autoComplete="off"
                 required
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />

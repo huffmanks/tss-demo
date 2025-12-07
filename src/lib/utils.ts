@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
+import slugifyPkg from "slugify";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -13,5 +14,12 @@ export function json<T>(data: T, status: number = 200, init?: ResponseInit): Res
     status,
     headers,
     ...init,
+  });
+}
+
+export function slugify(string: string) {
+  return slugifyPkg(string, {
+    lower: true,
+    strict: true,
   });
 }

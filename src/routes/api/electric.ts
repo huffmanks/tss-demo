@@ -20,22 +20,29 @@ export const Route = createFileRoute("/api/electric")({
         const url = new URL(request.url);
 
         const table = url.searchParams.get("table")?.trim();
-        const allowedTables = ["todos"];
+        const allowedTables = [
+          "recipes",
+          "categories",
+          "cuisines",
+          "tags",
+          "ingredients",
+          "instructions",
+        ];
 
         if (!table || !allowedTables.includes(table)) {
           return json({ error: "Invalid or missing table." }, 400);
         }
 
-        let whereSql: string;
+        // let whereSql: string;
 
-        switch (table) {
-          case "todos":
-            whereSql = `user_id = '${userId}'`;
-            break;
+        // switch (table) {
+        //   case "recipes":
+        //     whereSql = `user_id = '${userId}'`;
+        //     break;
 
-          default:
-            throw new Error("Invalid table");
-        }
+        //   default:
+        //     throw new Error("Invalid table");
+        // }
 
         const electricUrl = process.env.ELECTRIC_URL!;
         const upstreamUrl = new URL("/v1/shape", electricUrl);
@@ -46,7 +53,7 @@ export const Route = createFileRoute("/api/electric")({
         }
 
         upstreamUrl.searchParams.set("table", table);
-        upstreamUrl.searchParams.set("where", whereSql);
+        // upstreamUrl.searchParams.set("where", whereSql);
 
         if (process.env.ELECTRIC_SECRET) {
           upstreamUrl.searchParams.set(`secret`, process.env.ELECTRIC_SECRET);
@@ -55,7 +62,7 @@ export const Route = createFileRoute("/api/electric")({
         console.log("electric-proxy", {
           userId,
           table,
-          where: whereSql,
+          // where: whereSql,
           url: upstreamUrl.toString(),
         });
 
