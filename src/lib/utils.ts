@@ -23,3 +23,15 @@ export function slugify(string: string) {
     strict: true,
   });
 }
+
+export function createAcronym(inputString: string) {
+  const sanitizedString = inputString.trim().replace(/[-_]/g, " ");
+
+  const words = sanitizedString.split(/\s+/).filter(Boolean);
+
+  const letters = words.map((word) => word.charAt(0).toUpperCase());
+
+  const acronym = letters.join("").slice(0, 3);
+
+  return acronym;
+}

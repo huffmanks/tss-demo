@@ -28,6 +28,9 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: RootDocument,
+  errorComponent: () => {
+    return <p>Error. Something went wrong!</p>;
+  },
   notFoundComponent: () => {
     return <p>This page doesn’t exist!</p>;
   },

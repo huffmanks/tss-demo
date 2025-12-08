@@ -1,18 +1,56 @@
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { getRequestHeaders } from "@tanstack/react-start/server";
 
-import { loggedOut } from "@/middleware/auth";
+import { auth } from "@/lib/auth";
+
+import { AppSidebar } from "@/components/blocks/sidebar/app-sidebar";
+import { SiteHeader } from "@/components/blocks/sidebar/site-header";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+
+const authUser = createServerFn().handler(async () => {
+  const headers = getRequestHeaders();
+  const session = await auth.api.getSession({ headers });
+
+  const user = session?.user;
+  if (!user) {
+    throw new Error("Unauthorized");
+  }
+
+  return user;
+});
 
 export const Route = createFileRoute("/(protected)/dashboard")({
   component: DashboardRoute,
-  server: {
-    middleware: [loggedOut],
+  loader: async ({ location }) => {
+    const user = await authUser();
+
+    if (!user) {
+      throw redirect({
+        to: "/login",
+        search: { redirect: location.href },
+      });
+    }
+
+    return { user };
   },
 });
 
 function DashboardRoute() {
+  const { user } = Route.useLoaderData();
   return (
-    <div className="p-4">
-      <Outlet />
+    <div className="[--header-height:calc(--spacing(14))]">
+      <SidebarProvider className="flex flex-col">
+        <SiteHeader />
+        <div className="flex flex-1">
+          <AppSidebar user={user} />
+          <SidebarInset>
+            <div className="p-4">
+              <Outlet />
+            </div>
+          </SidebarInset>
+        </div>
+      </SidebarProvider>
     </div>
   );
 }

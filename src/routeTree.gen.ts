@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as protectedRouteRouteImport } from './routes/(protected)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiElectricRouteImport } from './routes/api/electric'
@@ -21,10 +20,6 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as protectedDashboardCategorycategoryIdRouteImport } from './routes/(protected)/dashboard/category$categoryId'
 import { Route as protectedDashboardCategoryRouteImport } from './routes/(protected)/dashboard/category'
 
-const protectedRouteRoute = protectedRouteRouteImport.update({
-  id: '/(protected)',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => rootRouteImport,
@@ -55,9 +50,9 @@ const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
   getParentRoute: () => authRouteRoute,
 } as any)
 const protectedDashboardRouteRoute = protectedDashboardRouteRouteImport.update({
-  id: '/dashboard',
+  id: '/(protected)/dashboard',
   path: '/dashboard',
-  getParentRoute: () => protectedRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -103,7 +98,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(auth)': typeof authRouteRouteWithChildren
-  '/(protected)': typeof protectedRouteRouteWithChildren
   '/(protected)/dashboard': typeof protectedDashboardRouteRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/login': typeof authLoginRoute
@@ -140,7 +134,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/(auth)'
-    | '/(protected)'
     | '/(protected)/dashboard'
     | '/(auth)/forgot-password'
     | '/(auth)/login'
@@ -154,20 +147,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   authRouteRoute: typeof authRouteRouteWithChildren
-  protectedRouteRoute: typeof protectedRouteRouteWithChildren
+  protectedDashboardRouteRoute: typeof protectedDashboardRouteRouteWithChildren
   ApiElectricRoute: typeof ApiElectricRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/(protected)': {
-      id: '/(protected)'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof protectedRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(auth)': {
       id: '/(auth)'
       path: ''
@@ -215,7 +201,7 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof protectedDashboardRouteRouteImport
-      parentRoute: typeof protectedRouteRoute
+      parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -274,22 +260,10 @@ const protectedDashboardRouteRouteWithChildren =
     protectedDashboardRouteRouteChildren,
   )
 
-interface protectedRouteRouteChildren {
-  protectedDashboardRouteRoute: typeof protectedDashboardRouteRouteWithChildren
-}
-
-const protectedRouteRouteChildren: protectedRouteRouteChildren = {
-  protectedDashboardRouteRoute: protectedDashboardRouteRouteWithChildren,
-}
-
-const protectedRouteRouteWithChildren = protectedRouteRoute._addFileChildren(
-  protectedRouteRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
-  protectedRouteRoute: protectedRouteRouteWithChildren,
+  protectedDashboardRouteRoute: protectedDashboardRouteRouteWithChildren,
   ApiElectricRoute: ApiElectricRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

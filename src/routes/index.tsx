@@ -1,13 +1,13 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 
-import { loggedIn } from "@/middleware/auth";
+import { redirectIfAuthenticated } from "@/middleware/auth";
 
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   component: HomeRoute,
   server: {
-    middleware: [loggedIn],
+    middleware: [redirectIfAuthenticated],
   },
 });
 
