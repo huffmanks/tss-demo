@@ -85,9 +85,7 @@ export const verifications = pgTable(
 export const recipes = pgTable(
   "recipes",
   {
-    id: uuid("id")
-      .$defaultFn(() => uuidv7())
-      .primaryKey(),
+    id: uuid("id").primaryKey(),
     title: text("title").notNull().unique(),
     slug: text("slug").notNull().unique(),
     description: text("description").notNull(),
@@ -110,25 +108,19 @@ export const recipes = pgTable(
 );
 
 export const categories = pgTable("categories", {
-  id: uuid("id")
-    .$defaultFn(() => uuidv7())
-    .primaryKey(),
+  id: uuid("id").primaryKey(),
   title: text("title").notNull().unique(),
   slug: text("slug").notNull().unique(),
 });
 
 export const cuisines = pgTable("cuisines", {
-  id: uuid("id")
-    .$defaultFn(() => uuidv7())
-    .primaryKey(),
+  id: uuid("id").primaryKey(),
   title: text("title").notNull().unique(),
   slug: text("slug").notNull().unique(),
 });
 
 export const recipeCuisines = pgTable("recipe_cuisines", {
-  id: uuid("id")
-    .$defaultFn(() => uuidv7())
-    .primaryKey(),
+  id: uuid("id").primaryKey(),
   recipeId: uuid("recipe_id")
     .references(() => recipes.id)
     .notNull(),
@@ -138,17 +130,13 @@ export const recipeCuisines = pgTable("recipe_cuisines", {
 });
 
 export const tags = pgTable("tags", {
-  id: uuid("id")
-    .$defaultFn(() => uuidv7())
-    .primaryKey(),
+  id: uuid("id").primaryKey(),
   title: text("title").notNull().unique(),
   slug: text("slug").notNull().unique(),
 });
 
 export const recipeTags = pgTable("recipe_tags", {
-  id: uuid("id")
-    .$defaultFn(() => uuidv7())
-    .primaryKey(),
+  id: uuid("id").primaryKey(),
   recipeId: uuid("recipe_id")
     .references(() => recipes.id)
     .notNull(),
@@ -158,9 +146,7 @@ export const recipeTags = pgTable("recipe_tags", {
 });
 
 export const ingredients = pgTable("ingredients", {
-  id: uuid("id")
-    .$defaultFn(() => uuidv7())
-    .primaryKey(),
+  id: uuid("id").primaryKey(),
   recipeId: uuid("recipe_id")
     .references(() => recipes.id, { onDelete: "cascade" })
     .notNull(),
@@ -171,9 +157,7 @@ export const ingredients = pgTable("ingredients", {
 });
 
 export const recipeIngredients = pgTable("recipe_ingredients", {
-  id: uuid("id")
-    .$defaultFn(() => uuidv7())
-    .primaryKey(),
+  id: uuid("id").primaryKey(),
   recipeId: uuid("recipe_id")
     .references(() => recipes.id, { onDelete: "cascade" })
     .notNull(),
@@ -183,9 +167,7 @@ export const recipeIngredients = pgTable("recipe_ingredients", {
 });
 
 export const instructions = pgTable("instructions", {
-  id: uuid("id")
-    .$defaultFn(() => uuidv7())
-    .primaryKey(),
+  id: uuid("id").primaryKey(),
   recipeId: uuid("recipe_id")
     .references(() => recipes.id, { onDelete: "cascade" })
     .notNull(),
@@ -195,9 +177,7 @@ export const instructions = pgTable("instructions", {
 });
 
 export const recipeInstructions = pgTable("recipe_instructions", {
-  id: uuid("id")
-    .$defaultFn(() => uuidv7())
-    .primaryKey(),
+  id: uuid("id").primaryKey(),
   recipeId: uuid("recipe_id")
     .references(() => recipes.id, { onDelete: "cascade" })
     .notNull(),

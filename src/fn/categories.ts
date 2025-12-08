@@ -10,10 +10,7 @@ export const createCategory = createServerFn({ method: "POST" })
   .inputValidator(categorySchema)
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
-      const [category] = await tx
-        .insert(categories)
-        .values({ title: data.title, slug: data.slug })
-        .returning();
+      const [category] = await tx.insert(categories).values(data).returning();
       const txid = await getTxId();
 
       return { category, txid };
