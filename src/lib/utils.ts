@@ -35,3 +35,10 @@ export function createAcronym(inputString: string) {
 
   return acronym;
 }
+
+export function createLabel(segment: string) {
+  if (!isNaN(Number(segment)) || segment.length > 20) {
+    return "Details";
+  }
+  return segment.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+}

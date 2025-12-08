@@ -6,12 +6,12 @@ import { categoriesCollection } from "@/lib/collections";
 
 import { CategoryForm } from "@/components/forms/collections/category";
 
-export const Route = createFileRoute("/(protected)/dashboard/category")({
+export const Route = createFileRoute("/(protected)/dashboard/categories")({
   ssr: false,
-  component: CategoryRoute,
+  component: CategoriesRoute,
 });
 
-function CategoryRoute() {
+function CategoriesRoute() {
   const { data: categories, isLoading } = useLiveQuery((q) =>
     q.from({ category: categoriesCollection })
   );

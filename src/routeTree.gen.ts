@@ -17,8 +17,9 @@ import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as protectedDashboardRouteRouteImport } from './routes/(protected)/dashboard/route'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as protectedDashboardCategorycategoryIdRouteImport } from './routes/(protected)/dashboard/category$categoryId'
-import { Route as protectedDashboardCategoryRouteImport } from './routes/(protected)/dashboard/category'
+import { Route as protectedDashboardCategoriescategoryIdRouteImport } from './routes/(protected)/dashboard/categories$categoryId'
+import { Route as protectedDashboardCategoriesRouteImport } from './routes/(protected)/dashboard/categories'
+import { Route as protectedDashboardTestTestTestRouteImport } from './routes/(protected)/dashboard/test.test.test'
 
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
@@ -59,16 +60,22 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const protectedDashboardCategorycategoryIdRoute =
-  protectedDashboardCategorycategoryIdRouteImport.update({
-    id: '/category$categoryId',
-    path: '/category$categoryId',
+const protectedDashboardCategoriescategoryIdRoute =
+  protectedDashboardCategoriescategoryIdRouteImport.update({
+    id: '/categories$categoryId',
+    path: '/categories$categoryId',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
-const protectedDashboardCategoryRoute =
-  protectedDashboardCategoryRouteImport.update({
-    id: '/category',
-    path: '/category',
+const protectedDashboardCategoriesRoute =
+  protectedDashboardCategoriesRouteImport.update({
+    id: '/categories',
+    path: '/categories',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardTestTestTestRoute =
+  protectedDashboardTestTestTestRouteImport.update({
+    id: '/test/test/test',
+    path: '/test/test/test',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
 
@@ -79,9 +86,10 @@ export interface FileRoutesByFullPath {
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
   '/api/electric': typeof ApiElectricRoute
-  '/dashboard/category': typeof protectedDashboardCategoryRoute
-  '/dashboard/category$categoryId': typeof protectedDashboardCategorycategoryIdRoute
+  '/dashboard/categories': typeof protectedDashboardCategoriesRoute
+  '/dashboard/categories$categoryId': typeof protectedDashboardCategoriescategoryIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/dashboard/test/test/test': typeof protectedDashboardTestTestTestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -90,9 +98,10 @@ export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
   '/api/electric': typeof ApiElectricRoute
-  '/dashboard/category': typeof protectedDashboardCategoryRoute
-  '/dashboard/category$categoryId': typeof protectedDashboardCategorycategoryIdRoute
+  '/dashboard/categories': typeof protectedDashboardCategoriesRoute
+  '/dashboard/categories$categoryId': typeof protectedDashboardCategoriescategoryIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/dashboard/test/test/test': typeof protectedDashboardTestTestTestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -103,9 +112,10 @@ export interface FileRoutesById {
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
   '/api/electric': typeof ApiElectricRoute
-  '/(protected)/dashboard/category': typeof protectedDashboardCategoryRoute
-  '/(protected)/dashboard/category$categoryId': typeof protectedDashboardCategorycategoryIdRoute
+  '/(protected)/dashboard/categories': typeof protectedDashboardCategoriesRoute
+  '/(protected)/dashboard/categories$categoryId': typeof protectedDashboardCategoriescategoryIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/(protected)/dashboard/test/test/test': typeof protectedDashboardTestTestTestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -116,9 +126,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/api/electric'
-    | '/dashboard/category'
-    | '/dashboard/category$categoryId'
+    | '/dashboard/categories'
+    | '/dashboard/categories$categoryId'
     | '/api/auth/$'
+    | '/dashboard/test/test/test'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -127,9 +138,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/api/electric'
-    | '/dashboard/category'
-    | '/dashboard/category$categoryId'
+    | '/dashboard/categories'
+    | '/dashboard/categories$categoryId'
     | '/api/auth/$'
+    | '/dashboard/test/test/test'
   id:
     | '__root__'
     | '/'
@@ -139,9 +151,10 @@ export interface FileRouteTypes {
     | '/(auth)/login'
     | '/(auth)/signup'
     | '/api/electric'
-    | '/(protected)/dashboard/category'
-    | '/(protected)/dashboard/category$categoryId'
+    | '/(protected)/dashboard/categories'
+    | '/(protected)/dashboard/categories$categoryId'
     | '/api/auth/$'
+    | '/(protected)/dashboard/test/test/test'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -210,18 +223,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(protected)/dashboard/category$categoryId': {
-      id: '/(protected)/dashboard/category$categoryId'
-      path: '/category$categoryId'
-      fullPath: '/dashboard/category$categoryId'
-      preLoaderRoute: typeof protectedDashboardCategorycategoryIdRouteImport
+    '/(protected)/dashboard/categories$categoryId': {
+      id: '/(protected)/dashboard/categories$categoryId'
+      path: '/categories$categoryId'
+      fullPath: '/dashboard/categories$categoryId'
+      preLoaderRoute: typeof protectedDashboardCategoriescategoryIdRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
-    '/(protected)/dashboard/category': {
-      id: '/(protected)/dashboard/category'
-      path: '/category'
-      fullPath: '/dashboard/category'
-      preLoaderRoute: typeof protectedDashboardCategoryRouteImport
+    '/(protected)/dashboard/categories': {
+      id: '/(protected)/dashboard/categories'
+      path: '/categories'
+      fullPath: '/dashboard/categories'
+      preLoaderRoute: typeof protectedDashboardCategoriesRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/test/test/test': {
+      id: '/(protected)/dashboard/test/test/test'
+      path: '/test/test/test'
+      fullPath: '/dashboard/test/test/test'
+      preLoaderRoute: typeof protectedDashboardTestTestTestRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
   }
@@ -244,15 +264,17 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 )
 
 interface protectedDashboardRouteRouteChildren {
-  protectedDashboardCategoryRoute: typeof protectedDashboardCategoryRoute
-  protectedDashboardCategorycategoryIdRoute: typeof protectedDashboardCategorycategoryIdRoute
+  protectedDashboardCategoriesRoute: typeof protectedDashboardCategoriesRoute
+  protectedDashboardCategoriescategoryIdRoute: typeof protectedDashboardCategoriescategoryIdRoute
+  protectedDashboardTestTestTestRoute: typeof protectedDashboardTestTestTestRoute
 }
 
 const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren =
   {
-    protectedDashboardCategoryRoute: protectedDashboardCategoryRoute,
-    protectedDashboardCategorycategoryIdRoute:
-      protectedDashboardCategorycategoryIdRoute,
+    protectedDashboardCategoriesRoute: protectedDashboardCategoriesRoute,
+    protectedDashboardCategoriescategoryIdRoute:
+      protectedDashboardCategoriescategoryIdRoute,
+    protectedDashboardTestTestTestRoute: protectedDashboardTestTestTestRoute,
   }
 
 const protectedDashboardRouteRouteWithChildren =

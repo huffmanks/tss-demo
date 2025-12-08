@@ -5,7 +5,7 @@ import { categoriesCollection } from "@/lib/collections";
 
 import { CategoryForm } from "@/components/forms/collections/category";
 
-export const Route = createFileRoute("/(protected)/dashboard/category$categoryId")({
+export const Route = createFileRoute("/(protected)/dashboard/categories$categoryId")({
   ssr: false,
   component: CategoryRoute,
   loader: ({ params }) => {
