@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 export function ForgotPasswordForm({ className, ...props }: React.ComponentProps<"div">) {
   const [email, setEmail] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     // @TODO
     // setup reset password flow

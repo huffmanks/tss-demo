@@ -153,6 +153,9 @@ importers:
       drizzle-kit:
         specifier: ^0.31.8
         version: 0.31.8
+      eslint:
+        specifier: ^9.39.1
+        version: 9.39.1(jiti@2.6.1)
       jsdom:
         specifier: ^27.0.0
         version: 27.2.0

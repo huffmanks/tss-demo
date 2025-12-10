@@ -25,7 +25,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     });
 
     if (error) {
-      toast.error(error?.message || "Sign in failed.");
+      toast.error(error.message || "Sign in failed.");
     }
 
     if (data) {

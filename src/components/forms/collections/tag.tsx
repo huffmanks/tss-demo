@@ -3,36 +3,36 @@ import { useLayoutEffect } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { v7 as uuidv7 } from "uuid";
 
-import type { Category } from "@/db/schema/recipes";
-import { categoriesCollection } from "@/lib/collections";
+import type { Tag } from "@/db/schema/recipes";
+import { tagsCollection } from "@/lib/collections";
 import { slugify } from "@/lib/utils";
 
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-interface CategoryFormProps {
-  category?: Category;
+interface TagFormProps {
+  tag?: Tag;
   handleClose: () => void;
   children: React.ReactNode;
 }
 
-export function CategoryForm({ category, handleClose, children }: CategoryFormProps) {
+export function TagForm({ tag, handleClose, children }: TagFormProps) {
   const form = useForm({
     defaultValues: {
-      title: category?.title ?? "",
-      slug: category?.slug ?? "",
+      title: tag?.title ?? "",
+      slug: tag?.slug ?? "",
     },
 
     onSubmit: ({ value }) => {
       try {
-        if (category?.id) {
-          categoriesCollection.update(category.id, (data) => {
+        if (tag?.id) {
+          tagsCollection.update(tag.id, (data) => {
             data.title = value.title;
             data.slug = value.slug;
           });
         } else {
           const id = uuidv7();
-          categoriesCollection.insert({
+          tagsCollection.insert({
             id,
             title: value.title,
             slug: value.slug,
@@ -41,17 +41,17 @@ export function CategoryForm({ category, handleClose, children }: CategoryFormPr
 
         handleClose();
       } catch (error) {
-        toast.error("Error submitting category.");
+        toast.error("Error submitting tag.");
       }
     },
   });
 
   useLayoutEffect(() => {
     form.reset({
-      title: category?.title ?? "",
-      slug: category?.slug ?? "",
+      title: tag?.title ?? "",
+      slug: tag?.slug ?? "",
     });
-  }, [category]);
+  }, [tag]);
 
   return (
     <form

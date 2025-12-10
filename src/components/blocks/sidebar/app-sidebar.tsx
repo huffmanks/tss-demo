@@ -9,7 +9,7 @@ import {
   Settings2Icon,
 } from "lucide-react";
 
-import { AuthUser } from "@/types";
+import type { AuthUser } from "@/types";
 
 import { NavMain } from "@/components/blocks/sidebar/nav-main";
 import { NavSecondary } from "@/components/blocks/sidebar/nav-secondary";

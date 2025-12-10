@@ -71,7 +71,7 @@ export function SiteHeader() {
             {layers.links.map((item) => (
               <BreadcrumbLinkOrPage key={item.to} item={item} itemType="link" />
             ))}
-            {layers?.collapsed && (
+            {layers.collapsed && (
               <>
                 <BreadcrumbItem>
                   <DropdownMenu>

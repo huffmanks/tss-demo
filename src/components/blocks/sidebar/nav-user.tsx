@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 import { createAcronym } from "@/lib/utils";
-import { AuthUser } from "@/types";
+import type { AuthUser } from "@/types";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -33,7 +33,7 @@ export function NavUser({ user }: { user: AuthUser }) {
     const { data, error } = await authClient.signOut();
 
     if (error) {
-      toast.error(error?.message || "Logout failed.");
+      toast.error(error.message || "Logout failed.");
     }
 
     if (data) {

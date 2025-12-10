@@ -33,7 +33,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     });
 
     if (error) {
-      toast.error(error?.message || "Sign up failed.");
+      toast.error(error.message || "Sign up failed.");
     }
 
     if (data) {

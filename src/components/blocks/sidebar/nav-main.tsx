@@ -18,16 +18,16 @@ import {
 export function NavMain({
   items,
 }: {
-  items: {
+  items: Array<{
     title: string;
     url: string;
     icon: LucideIcon;
     isActive?: boolean;
-    items?: {
+    items?: Array<{
       title: string;
       url: string;
-    }[];
-  }[];
+    }>;
+  }>;
 }) {
   return (
     <SidebarGroup>
@@ -52,7 +52,7 @@ export function NavMain({
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
+                      {item.items.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
                             <a href={subItem.url}>

@@ -12,12 +12,11 @@ const authUser = createServerFn().handler(async () => {
   const headers = getRequestHeaders();
   const session = await auth.api.getSession({ headers });
 
-  const user = session?.user;
-  if (!user) {
+  if (!session?.user) {
     throw new Error("Unauthorized");
   }
 
-  return user;
+  return session.user;
 });
 
 export const Route = createFileRoute("/(protected)/dashboard")({
@@ -25,7 +24,7 @@ export const Route = createFileRoute("/(protected)/dashboard")({
   loader: async ({ location }) => {
     const user = await authUser();
 
-    if (!user) {
+    if (!user.id) {
       throw redirect({
         to: "/login",
         search: { redirect: location.href },

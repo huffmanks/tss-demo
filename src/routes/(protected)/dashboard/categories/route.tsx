@@ -4,7 +4,7 @@ import { useLiveQuery } from "@tanstack/react-db";
 import { createFileRoute } from "@tanstack/react-router";
 import { EllipsisIcon, PlusIcon } from "lucide-react";
 
-import { Category } from "@/db/schema";
+import type { Category } from "@/db/schema/recipes";
 import { categoriesCollection } from "@/lib/collections";
 
 import { CategoryForm } from "@/components/forms/collections/category";
@@ -99,10 +99,10 @@ function CategoryTable({
   categories,
   handleOpen,
 }: {
-  categories: Category[] | null;
+  categories: Array<Category> | null;
   handleOpen: (id: string) => void;
 }) {
-  if (!categories || !categories?.length) return null;
+  if (!categories || !categories.length) return null;
 
   return (
     <Table>

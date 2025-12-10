@@ -198,3 +198,5 @@ export const recipeInstructionRelations = relations(recipeInstructions, ({ one }
 
 export type NewCategory = typeof categories.$inferInsert;
 export type Category = typeof categories.$inferSelect;
+export type NewTag = typeof categories.$inferInsert;
+export type Tag = typeof categories.$inferSelect;

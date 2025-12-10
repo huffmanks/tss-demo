@@ -12,7 +12,7 @@ export const Route = createFileRoute("/api/electric")({
       GET: async ({ request }: { request: Request }) => {
         const session = await auth.api.getSession({ headers: request.headers });
 
-        if (!session?.user?.id) {
+        if (!session?.user.id) {
           return json({ error: "Not authenticated" }, 401);
         }
 
