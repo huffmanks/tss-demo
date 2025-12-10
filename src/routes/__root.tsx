@@ -4,6 +4,8 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import appCss from "@/styles.css?url";
 
+import ErrorPage from "@/components/error-page";
+import NotFound from "@/components/not-found";
 import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createRootRoute({
@@ -28,12 +30,8 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: RootDocument,
-  errorComponent: () => {
-    return <p>Error. Something went wrong!</p>;
-  },
-  notFoundComponent: () => {
-    return <p>This page doesn’t exist!</p>;
-  },
+  errorComponent: () => <ErrorPage />,
+  notFoundComponent: () => <NotFound />,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {

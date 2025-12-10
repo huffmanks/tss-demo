@@ -16,13 +16,13 @@ const authUser = createServerFn().handler(async () => {
     throw new Error("Unauthorized");
   }
 
-  return session.user;
+  return { user: session.user, orgId: session.session.activeOrganizationId };
 });
 
 export const Route = createFileRoute("/(protected)/dashboard")({
   component: DashboardRoute,
   loader: async ({ location }) => {
-    const user = await authUser();
+    const { user, orgId } = await authUser();
 
     if (!user.id) {
       throw redirect({
@@ -31,18 +31,18 @@ export const Route = createFileRoute("/(protected)/dashboard")({
       });
     }
 
-    return { user };
+    return { user, orgId };
   },
 });
 
 function DashboardRoute() {
-  const { user } = Route.useLoaderData();
+  const { user, orgId } = Route.useLoaderData();
   return (
     <div className="[--header-height:calc(--spacing(14))]">
       <SidebarProvider className="flex flex-col">
         <SiteHeader />
         <div className="flex flex-1">
-          <AppSidebar user={user} />
+          <AppSidebar user={user} orgId={orgId} />
           <SidebarInset>
             <div className="p-4">
               <Outlet />

@@ -9,6 +9,17 @@ import { cuisinesCollection } from "@/lib/collections";
 import { cn } from "@/lib/utils";
 
 import { CuisineForm } from "@/components/forms/collections/cuisine";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -66,8 +77,6 @@ function CuisinesRoute() {
     setOpen(false);
   }
 
-  console.log(cuisines);
-
   return (
     <div className="p-4">
       <div className="mb-4 flex items-center justify-between gap-4">
@@ -111,7 +120,11 @@ function CuisinesRoute() {
           <CuisineForm cuisine={cuisine} handleClose={handleClose}>
             <DialogFooter>
               <DialogClose asChild>
-                <Button type="button" variant="outline" onClick={handleClose}>
+                <Button
+                  className="cursor-pointer"
+                  type="button"
+                  variant="outline"
+                  onClick={handleClose}>
                   Cancel
                 </Button>
               </DialogClose>
@@ -134,6 +147,10 @@ function CuisineTable({
   handleOpen: (id: string) => void;
 }) {
   if (!cuisines || !cuisines.length) return null;
+
+  function handleDelete(id: string) {
+    cuisinesCollection.delete(id);
+  }
 
   return (
     <Table>
@@ -168,9 +185,31 @@ function CuisineTable({
                     onClick={() => handleOpen(cuisine.id)}>
                     <span>Edit</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
-                    <span>Delete</span>
-                  </DropdownMenuItem>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <DropdownMenuItem
+                        onSelect={(e) => e.preventDefault()}
+                        className="cursor-pointer">
+                        <span>Delete</span>
+                      </DropdownMenuItem>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently delete the cuisine.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="cursor-pointer"
+                          onClick={() => handleDelete(cuisine.id)}>
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>

@@ -9,6 +9,17 @@ import { tagsCollection } from "@/lib/collections";
 import { cn } from "@/lib/utils";
 
 import { TagForm } from "@/components/forms/collections/tag";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -66,8 +77,6 @@ function TagsRoute() {
     setOpen(false);
   }
 
-  console.log(tags);
-
   return (
     <div className="p-4">
       <div className="mb-4 flex items-center justify-between gap-4">
@@ -109,7 +118,11 @@ function TagsRoute() {
           <TagForm tag={tag} handleClose={handleClose}>
             <DialogFooter>
               <DialogClose asChild>
-                <Button type="button" variant="outline" onClick={handleClose}>
+                <Button
+                  className="cursor-pointer"
+                  type="button"
+                  variant="outline"
+                  onClick={handleClose}>
                   Cancel
                 </Button>
               </DialogClose>
@@ -132,6 +145,10 @@ function TagTable({
   handleOpen: (id: string) => void;
 }) {
   if (!tags || !tags.length) return null;
+
+  function handleDelete(id: string) {
+    tagsCollection.delete(id);
+  }
 
   return (
     <Table>
@@ -164,9 +181,31 @@ function TagTable({
                   <DropdownMenuItem className="cursor-pointer" onClick={() => handleOpen(tag.id)}>
                     <span>Edit</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
-                    <span>Delete</span>
-                  </DropdownMenuItem>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <DropdownMenuItem
+                        onSelect={(e) => e.preventDefault()}
+                        className="cursor-pointer">
+                        <span>Delete</span>
+                      </DropdownMenuItem>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently delete the tag.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="cursor-pointer"
+                          onClick={() => handleDelete(tag.id)}>
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>

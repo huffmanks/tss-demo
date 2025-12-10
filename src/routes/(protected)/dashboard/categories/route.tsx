@@ -6,8 +6,20 @@ import { BookOpenIcon, EllipsisIcon, PlusIcon } from "lucide-react";
 
 import type { Category } from "@/db/schema/recipes";
 import { categoriesCollection } from "@/lib/collections";
+import { cn } from "@/lib/utils";
 
 import { CategoryForm } from "@/components/forms/collections/category";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -69,7 +81,9 @@ function CategoriesRoute() {
     <div className="p-4">
       <div className="mb-4 flex items-center justify-between gap-4">
         <h1 className="text-xl font-bold">Categories</h1>
-        <Button className="cursor-pointer" onClick={() => handleOpen(null)}>
+        <Button
+          className={cn("cursor-pointer", !categories.length && "hidden")}
+          onClick={() => handleOpen(null)}>
           <PlusIcon />
           <span className="hidden sm:inline-flex">Create</span>
         </Button>
@@ -108,7 +122,11 @@ function CategoriesRoute() {
           <CategoryForm category={category} handleClose={handleClose}>
             <DialogFooter>
               <DialogClose asChild>
-                <Button type="button" variant="outline" onClick={handleClose}>
+                <Button
+                  className="cursor-pointer"
+                  type="button"
+                  variant="outline"
+                  onClick={handleClose}>
                   Cancel
                 </Button>
               </DialogClose>
@@ -131,6 +149,10 @@ function CategoryTable({
   handleOpen: (id: string) => void;
 }) {
   if (!categories || !categories.length) return null;
+
+  function handleDelete(id: string) {
+    categoriesCollection.delete(id);
+  }
 
   return (
     <Table>
@@ -165,9 +187,32 @@ function CategoryTable({
                     onClick={() => handleOpen(category.id)}>
                     <span>Edit</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
-                    <span>Delete</span>
-                  </DropdownMenuItem>
+
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <DropdownMenuItem
+                        onSelect={(e) => e.preventDefault()}
+                        className="cursor-pointer">
+                        <span>Delete</span>
+                      </DropdownMenuItem>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently delete the category.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="cursor-pointer"
+                          onClick={() => handleDelete(category.id)}>
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>

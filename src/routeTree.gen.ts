@@ -18,8 +18,11 @@ import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-p
 import { Route as protectedDashboardRouteRouteImport } from './routes/(protected)/dashboard/route'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as protectedDashboardTagsRouteRouteImport } from './routes/(protected)/dashboard/tags/route'
+import { Route as protectedDashboardSettingsRouteRouteImport } from './routes/(protected)/dashboard/settings/route'
+import { Route as protectedDashboardProfileRouteRouteImport } from './routes/(protected)/dashboard/profile/route'
 import { Route as protectedDashboardCuisinesRouteRouteImport } from './routes/(protected)/dashboard/cuisines/route'
 import { Route as protectedDashboardCategoriesRouteRouteImport } from './routes/(protected)/dashboard/categories/route'
+import { Route as protectedDashboardOrganizationsIdRouteImport } from './routes/(protected)/dashboard/organizations/$id'
 
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
@@ -66,6 +69,18 @@ const protectedDashboardTagsRouteRoute =
     path: '/tags',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
+const protectedDashboardSettingsRouteRoute =
+  protectedDashboardSettingsRouteRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardProfileRouteRoute =
+  protectedDashboardProfileRouteRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
 const protectedDashboardCuisinesRouteRoute =
   protectedDashboardCuisinesRouteRouteImport.update({
     id: '/cuisines',
@@ -78,6 +93,12 @@ const protectedDashboardCategoriesRouteRoute =
     path: '/categories',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
+const protectedDashboardOrganizationsIdRoute =
+  protectedDashboardOrganizationsIdRouteImport.update({
+    id: '/organizations/$id',
+    path: '/organizations/$id',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -88,8 +109,11 @@ export interface FileRoutesByFullPath {
   '/api/electric': typeof ApiElectricRoute
   '/dashboard/categories': typeof protectedDashboardCategoriesRouteRoute
   '/dashboard/cuisines': typeof protectedDashboardCuisinesRouteRoute
+  '/dashboard/profile': typeof protectedDashboardProfileRouteRoute
+  '/dashboard/settings': typeof protectedDashboardSettingsRouteRoute
   '/dashboard/tags': typeof protectedDashboardTagsRouteRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/dashboard/organizations/$id': typeof protectedDashboardOrganizationsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -100,8 +124,11 @@ export interface FileRoutesByTo {
   '/api/electric': typeof ApiElectricRoute
   '/dashboard/categories': typeof protectedDashboardCategoriesRouteRoute
   '/dashboard/cuisines': typeof protectedDashboardCuisinesRouteRoute
+  '/dashboard/profile': typeof protectedDashboardProfileRouteRoute
+  '/dashboard/settings': typeof protectedDashboardSettingsRouteRoute
   '/dashboard/tags': typeof protectedDashboardTagsRouteRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/dashboard/organizations/$id': typeof protectedDashboardOrganizationsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -114,8 +141,11 @@ export interface FileRoutesById {
   '/api/electric': typeof ApiElectricRoute
   '/(protected)/dashboard/categories': typeof protectedDashboardCategoriesRouteRoute
   '/(protected)/dashboard/cuisines': typeof protectedDashboardCuisinesRouteRoute
+  '/(protected)/dashboard/profile': typeof protectedDashboardProfileRouteRoute
+  '/(protected)/dashboard/settings': typeof protectedDashboardSettingsRouteRoute
   '/(protected)/dashboard/tags': typeof protectedDashboardTagsRouteRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/(protected)/dashboard/organizations/$id': typeof protectedDashboardOrganizationsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -128,8 +158,11 @@ export interface FileRouteTypes {
     | '/api/electric'
     | '/dashboard/categories'
     | '/dashboard/cuisines'
+    | '/dashboard/profile'
+    | '/dashboard/settings'
     | '/dashboard/tags'
     | '/api/auth/$'
+    | '/dashboard/organizations/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -140,8 +173,11 @@ export interface FileRouteTypes {
     | '/api/electric'
     | '/dashboard/categories'
     | '/dashboard/cuisines'
+    | '/dashboard/profile'
+    | '/dashboard/settings'
     | '/dashboard/tags'
     | '/api/auth/$'
+    | '/dashboard/organizations/$id'
   id:
     | '__root__'
     | '/'
@@ -153,8 +189,11 @@ export interface FileRouteTypes {
     | '/api/electric'
     | '/(protected)/dashboard/categories'
     | '/(protected)/dashboard/cuisines'
+    | '/(protected)/dashboard/profile'
+    | '/(protected)/dashboard/settings'
     | '/(protected)/dashboard/tags'
     | '/api/auth/$'
+    | '/(protected)/dashboard/organizations/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -230,6 +269,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedDashboardTagsRouteRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
+    '/(protected)/dashboard/settings': {
+      id: '/(protected)/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof protectedDashboardSettingsRouteRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/profile': {
+      id: '/(protected)/dashboard/profile'
+      path: '/profile'
+      fullPath: '/dashboard/profile'
+      preLoaderRoute: typeof protectedDashboardProfileRouteRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
     '/(protected)/dashboard/cuisines': {
       id: '/(protected)/dashboard/cuisines'
       path: '/cuisines'
@@ -242,6 +295,13 @@ declare module '@tanstack/react-router' {
       path: '/categories'
       fullPath: '/dashboard/categories'
       preLoaderRoute: typeof protectedDashboardCategoriesRouteRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/organizations/$id': {
+      id: '/(protected)/dashboard/organizations/$id'
+      path: '/organizations/$id'
+      fullPath: '/dashboard/organizations/$id'
+      preLoaderRoute: typeof protectedDashboardOrganizationsIdRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
   }
@@ -266,7 +326,10 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 interface protectedDashboardRouteRouteChildren {
   protectedDashboardCategoriesRouteRoute: typeof protectedDashboardCategoriesRouteRoute
   protectedDashboardCuisinesRouteRoute: typeof protectedDashboardCuisinesRouteRoute
+  protectedDashboardProfileRouteRoute: typeof protectedDashboardProfileRouteRoute
+  protectedDashboardSettingsRouteRoute: typeof protectedDashboardSettingsRouteRoute
   protectedDashboardTagsRouteRoute: typeof protectedDashboardTagsRouteRoute
+  protectedDashboardOrganizationsIdRoute: typeof protectedDashboardOrganizationsIdRoute
 }
 
 const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren =
@@ -274,7 +337,11 @@ const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren
     protectedDashboardCategoriesRouteRoute:
       protectedDashboardCategoriesRouteRoute,
     protectedDashboardCuisinesRouteRoute: protectedDashboardCuisinesRouteRoute,
+    protectedDashboardProfileRouteRoute: protectedDashboardProfileRouteRoute,
+    protectedDashboardSettingsRouteRoute: protectedDashboardSettingsRouteRoute,
     protectedDashboardTagsRouteRoute: protectedDashboardTagsRouteRoute,
+    protectedDashboardOrganizationsIdRoute:
+      protectedDashboardOrganizationsIdRoute,
   }
 
 const protectedDashboardRouteRouteWithChildren =
