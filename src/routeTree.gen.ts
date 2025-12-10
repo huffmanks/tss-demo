@@ -19,6 +19,7 @@ import { Route as protectedDashboardRouteRouteImport } from './routes/(protected
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as protectedDashboardTagsRouteRouteImport } from './routes/(protected)/dashboard/tags/route'
 import { Route as protectedDashboardSettingsRouteRouteImport } from './routes/(protected)/dashboard/settings/route'
+import { Route as protectedDashboardRecipesRouteRouteImport } from './routes/(protected)/dashboard/recipes/route'
 import { Route as protectedDashboardProfileRouteRouteImport } from './routes/(protected)/dashboard/profile/route'
 import { Route as protectedDashboardCuisinesRouteRouteImport } from './routes/(protected)/dashboard/cuisines/route'
 import { Route as protectedDashboardCategoriesRouteRouteImport } from './routes/(protected)/dashboard/categories/route'
@@ -75,6 +76,12 @@ const protectedDashboardSettingsRouteRoute =
     path: '/settings',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
+const protectedDashboardRecipesRouteRoute =
+  protectedDashboardRecipesRouteRouteImport.update({
+    id: '/recipes',
+    path: '/recipes',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
 const protectedDashboardProfileRouteRoute =
   protectedDashboardProfileRouteRouteImport.update({
     id: '/profile',
@@ -110,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/categories': typeof protectedDashboardCategoriesRouteRoute
   '/dashboard/cuisines': typeof protectedDashboardCuisinesRouteRoute
   '/dashboard/profile': typeof protectedDashboardProfileRouteRoute
+  '/dashboard/recipes': typeof protectedDashboardRecipesRouteRoute
   '/dashboard/settings': typeof protectedDashboardSettingsRouteRoute
   '/dashboard/tags': typeof protectedDashboardTagsRouteRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -125,6 +133,7 @@ export interface FileRoutesByTo {
   '/dashboard/categories': typeof protectedDashboardCategoriesRouteRoute
   '/dashboard/cuisines': typeof protectedDashboardCuisinesRouteRoute
   '/dashboard/profile': typeof protectedDashboardProfileRouteRoute
+  '/dashboard/recipes': typeof protectedDashboardRecipesRouteRoute
   '/dashboard/settings': typeof protectedDashboardSettingsRouteRoute
   '/dashboard/tags': typeof protectedDashboardTagsRouteRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -142,6 +151,7 @@ export interface FileRoutesById {
   '/(protected)/dashboard/categories': typeof protectedDashboardCategoriesRouteRoute
   '/(protected)/dashboard/cuisines': typeof protectedDashboardCuisinesRouteRoute
   '/(protected)/dashboard/profile': typeof protectedDashboardProfileRouteRoute
+  '/(protected)/dashboard/recipes': typeof protectedDashboardRecipesRouteRoute
   '/(protected)/dashboard/settings': typeof protectedDashboardSettingsRouteRoute
   '/(protected)/dashboard/tags': typeof protectedDashboardTagsRouteRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/dashboard/categories'
     | '/dashboard/cuisines'
     | '/dashboard/profile'
+    | '/dashboard/recipes'
     | '/dashboard/settings'
     | '/dashboard/tags'
     | '/api/auth/$'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/dashboard/categories'
     | '/dashboard/cuisines'
     | '/dashboard/profile'
+    | '/dashboard/recipes'
     | '/dashboard/settings'
     | '/dashboard/tags'
     | '/api/auth/$'
@@ -190,6 +202,7 @@ export interface FileRouteTypes {
     | '/(protected)/dashboard/categories'
     | '/(protected)/dashboard/cuisines'
     | '/(protected)/dashboard/profile'
+    | '/(protected)/dashboard/recipes'
     | '/(protected)/dashboard/settings'
     | '/(protected)/dashboard/tags'
     | '/api/auth/$'
@@ -276,6 +289,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedDashboardSettingsRouteRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
+    '/(protected)/dashboard/recipes': {
+      id: '/(protected)/dashboard/recipes'
+      path: '/recipes'
+      fullPath: '/dashboard/recipes'
+      preLoaderRoute: typeof protectedDashboardRecipesRouteRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
     '/(protected)/dashboard/profile': {
       id: '/(protected)/dashboard/profile'
       path: '/profile'
@@ -327,6 +347,7 @@ interface protectedDashboardRouteRouteChildren {
   protectedDashboardCategoriesRouteRoute: typeof protectedDashboardCategoriesRouteRoute
   protectedDashboardCuisinesRouteRoute: typeof protectedDashboardCuisinesRouteRoute
   protectedDashboardProfileRouteRoute: typeof protectedDashboardProfileRouteRoute
+  protectedDashboardRecipesRouteRoute: typeof protectedDashboardRecipesRouteRoute
   protectedDashboardSettingsRouteRoute: typeof protectedDashboardSettingsRouteRoute
   protectedDashboardTagsRouteRoute: typeof protectedDashboardTagsRouteRoute
   protectedDashboardOrganizationsIdRoute: typeof protectedDashboardOrganizationsIdRoute
@@ -338,6 +359,7 @@ const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren
       protectedDashboardCategoriesRouteRoute,
     protectedDashboardCuisinesRouteRoute: protectedDashboardCuisinesRouteRoute,
     protectedDashboardProfileRouteRoute: protectedDashboardProfileRouteRoute,
+    protectedDashboardRecipesRouteRoute: protectedDashboardRecipesRouteRoute,
     protectedDashboardSettingsRouteRoute: protectedDashboardSettingsRouteRoute,
     protectedDashboardTagsRouteRoute: protectedDashboardTagsRouteRoute,
     protectedDashboardOrganizationsIdRoute:

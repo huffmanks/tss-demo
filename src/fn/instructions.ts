@@ -8,15 +8,9 @@ import { getTxId } from "@/fn/helpers";
 
 export const createInstruction = createServerFn({ method: "POST" })
   .inputValidator(
-    instructionSchema
-      .pick({
-        recipeId: true,
-        name: true,
-        order: true,
-      })
-      .extend({
-        isHeading: instructionSchema.shape.isHeading.optional(),
-      })
+    instructionSchema.extend({
+      isHeading: instructionSchema.shape.isHeading.optional(),
+    })
   )
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {

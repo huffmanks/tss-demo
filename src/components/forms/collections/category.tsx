@@ -7,16 +7,17 @@ import type { Category } from "@/db/schema/recipes";
 import { categoriesCollection } from "@/lib/collections";
 import { slugify } from "@/lib/utils";
 
+import { Button } from "@/components/ui/button";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 interface CategoryFormProps {
   category?: Category;
   handleClose: () => void;
-  children: React.ReactNode;
 }
 
-export function CategoryForm({ category, handleClose, children }: CategoryFormProps) {
+export function CategoryForm({ category, handleClose }: CategoryFormProps) {
   const form = useForm({
     defaultValues: {
       title: category?.title ?? "",
@@ -80,7 +81,16 @@ export function CategoryForm({ category, handleClose, children }: CategoryFormPr
           )}
         />
       </FieldGroup>
-      {children}
+      <DialogFooter>
+        <DialogClose asChild>
+          <Button className="cursor-pointer" type="button" variant="outline" onClick={handleClose}>
+            Cancel
+          </Button>
+        </DialogClose>
+        <Button className="cursor-pointer" type="submit">
+          {category ? "Update" : "Create"}
+        </Button>
+      </DialogFooter>
     </form>
   );
 }

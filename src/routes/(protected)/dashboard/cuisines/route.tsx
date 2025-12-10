@@ -23,10 +23,8 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -117,22 +115,7 @@ function CuisinesRoute() {
               {cuisine ? "Edit this cuisine." : "Create a new cuisine."}
             </DialogDescription>
           </DialogHeader>
-          <CuisineForm cuisine={cuisine} handleClose={handleClose}>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button
-                  className="cursor-pointer"
-                  type="button"
-                  variant="outline"
-                  onClick={handleClose}>
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button className="cursor-pointer" type="submit">
-                {cuisine ? "Update" : "Create"}
-              </Button>
-            </DialogFooter>
-          </CuisineForm>
+          <CuisineForm cuisine={cuisine} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
     </div>

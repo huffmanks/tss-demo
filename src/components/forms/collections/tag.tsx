@@ -7,16 +7,17 @@ import type { Tag } from "@/db/schema/recipes";
 import { tagsCollection } from "@/lib/collections";
 import { slugify } from "@/lib/utils";
 
+import { Button } from "@/components/ui/button";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 interface TagFormProps {
   tag?: Tag;
   handleClose: () => void;
-  children: React.ReactNode;
 }
 
-export function TagForm({ tag, handleClose, children }: TagFormProps) {
+export function TagForm({ tag, handleClose }: TagFormProps) {
   const form = useForm({
     defaultValues: {
       title: tag?.title ?? "",
@@ -80,7 +81,16 @@ export function TagForm({ tag, handleClose, children }: TagFormProps) {
           )}
         />
       </FieldGroup>
-      {children}
+      <DialogFooter>
+        <DialogClose asChild>
+          <Button className="cursor-pointer" type="button" variant="outline" onClick={handleClose}>
+            Cancel
+          </Button>
+        </DialogClose>
+        <Button className="cursor-pointer" type="submit">
+          {tag ? "Update" : "Create"}
+        </Button>
+      </DialogFooter>
     </form>
   );
 }

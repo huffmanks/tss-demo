@@ -23,10 +23,8 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -115,22 +113,7 @@ function TagsRoute() {
             <DialogTitle>Tag</DialogTitle>
             <DialogDescription>{tag ? "Edit this tag." : "Create a new tag."}</DialogDescription>
           </DialogHeader>
-          <TagForm tag={tag} handleClose={handleClose}>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button
-                  className="cursor-pointer"
-                  type="button"
-                  variant="outline"
-                  onClick={handleClose}>
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button className="cursor-pointer" type="submit">
-                {tag ? "Update" : "Create"}
-              </Button>
-            </DialogFooter>
-          </TagForm>
+          <TagForm tag={tag} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
     </div>

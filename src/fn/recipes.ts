@@ -8,21 +8,11 @@ import { getTxId } from "@/fn/helpers";
 
 export const createRecipe = createServerFn({ method: "POST" })
   .inputValidator(
-    recipeSchema
-      .pick({
-        title: true,
-        slug: true,
-        description: true,
-        image: true,
-        servingSize: true,
-        userId: true,
-        categoryId: true,
-      })
-      .extend({
-        prepTime: recipeSchema.shape.prepTime.optional(),
-        cookTime: recipeSchema.shape.prepTime.optional(),
-        totalTime: recipeSchema.shape.prepTime.optional(),
-      })
+    recipeSchema.extend({
+      prepTime: recipeSchema.shape.prepTime.optional(),
+      cookTime: recipeSchema.shape.prepTime.optional(),
+      totalTime: recipeSchema.shape.prepTime.optional(),
+    })
   )
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {

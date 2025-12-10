@@ -7,16 +7,17 @@ import type { Cuisine } from "@/db/schema/recipes";
 import { cuisinesCollection } from "@/lib/collections";
 import { slugify } from "@/lib/utils";
 
+import { Button } from "@/components/ui/button";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 interface CuisineFormProps {
   cuisine?: Cuisine;
   handleClose: () => void;
-  children: React.ReactNode;
 }
 
-export function CuisineForm({ cuisine, handleClose, children }: CuisineFormProps) {
+export function CuisineForm({ cuisine, handleClose }: CuisineFormProps) {
   const form = useForm({
     defaultValues: {
       title: cuisine?.title ?? "",
@@ -80,7 +81,16 @@ export function CuisineForm({ cuisine, handleClose, children }: CuisineFormProps
           )}
         />
       </FieldGroup>
-      {children}
+      <DialogFooter>
+        <DialogClose asChild>
+          <Button className="cursor-pointer" type="button" variant="outline" onClick={handleClose}>
+            Cancel
+          </Button>
+        </DialogClose>
+        <Button className="cursor-pointer" type="submit">
+          {cuisine ? "Update" : "Create"}
+        </Button>
+      </DialogFooter>
     </form>
   );
 }

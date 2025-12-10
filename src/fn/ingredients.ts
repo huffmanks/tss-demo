@@ -8,16 +8,10 @@ import { getTxId } from "@/fn/helpers";
 
 export const createIngredient = createServerFn({ method: "POST" })
   .inputValidator(
-    ingredientSchema
-      .pick({
-        recipeId: true,
-        name: true,
-        order: true,
-      })
-      .extend({
-        amount: ingredientSchema.shape.amount.optional(),
-        unit: ingredientSchema.shape.unit.optional(),
-      })
+    ingredientSchema.extend({
+      amount: ingredientSchema.shape.amount.optional(),
+      unit: ingredientSchema.shape.unit.optional(),
+    })
   )
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {

@@ -23,10 +23,8 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -119,22 +117,7 @@ function CategoriesRoute() {
               {category ? "Edit this category." : "Create a new category."}
             </DialogDescription>
           </DialogHeader>
-          <CategoryForm category={category} handleClose={handleClose}>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button
-                  className="cursor-pointer"
-                  type="button"
-                  variant="outline"
-                  onClick={handleClose}>
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button className="cursor-pointer" type="submit">
-                {category ? "Update" : "Create"}
-              </Button>
-            </DialogFooter>
-          </CategoryForm>
+          <CategoryForm category={category} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
     </div>
