@@ -7,12 +7,7 @@ import { cuisines } from "@/db/schema";
 import { getTxId } from "@/fn/helpers";
 
 export const createCuisine = createServerFn({ method: "POST" })
-  .inputValidator(
-    cuisineSchema.pick({
-      title: true,
-      slug: true,
-    })
-  )
+  .inputValidator(cuisineSchema)
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
       const [cuisine] = await tx.insert(cuisines).values(data).returning();

@@ -2,12 +2,13 @@ import { useState } from "react";
 
 import { useLiveQuery } from "@tanstack/react-db";
 import { createFileRoute } from "@tanstack/react-router";
-import { BookOpenIcon, EllipsisIcon, PlusIcon } from "lucide-react";
+import { EarthIcon, EllipsisIcon, PlusIcon } from "lucide-react";
 
-import type { Category } from "@/db/schema/recipes";
-import { categoriesCollection } from "@/lib/collections";
+import type { Cuisine } from "@/db/schema/recipes";
+import { cuisinesCollection } from "@/lib/collections";
+import { cn } from "@/lib/utils";
 
-import { CategoryForm } from "@/components/forms/collections/category";
+import { CuisineForm } from "@/components/forms/collections/cuisine";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -43,17 +44,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export const Route = createFileRoute("/(protected)/dashboard/categories")({
+export const Route = createFileRoute("/(protected)/dashboard/cuisines")({
   ssr: false,
-  component: CategoriesRoute,
+  component: CuisinesRoute,
 });
 
-function CategoriesRoute() {
+function CuisinesRoute() {
   const [open, setOpen] = useState(false);
   const [modalId, setModalId] = useState<string | null>(null);
-  const { data: categories } = useLiveQuery((q) => q.from({ category: categoriesCollection }));
+  const { data: cuisines } = useLiveQuery((q) => q.from({ cuisine: cuisinesCollection }));
 
-  const category = categories.find((cat) => cat.id === modalId);
+  const cuisine = cuisines.find((cat) => cat.id === modalId);
 
   function handleOpen(id: string | null) {
     setModalId(id);
@@ -65,29 +66,31 @@ function CategoriesRoute() {
     setOpen(false);
   }
 
+  console.log(cuisines);
+
   return (
     <div className="p-4">
       <div className="mb-4 flex items-center justify-between gap-4">
-        <h1 className="text-xl font-bold">Categories</h1>
-        <Button className="cursor-pointer" onClick={() => handleOpen(null)}>
+        <h1 className="text-xl font-bold">Cuisines</h1>
+        <Button
+          className={cn("cursor-pointer", !cuisines.length && "hidden")}
+          onClick={() => handleOpen(null)}>
           <PlusIcon />
           <span className="hidden sm:inline-flex">Create</span>
         </Button>
       </div>
 
       <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
-        {categories.length ? (
-          <CategoryTable categories={categories} handleOpen={handleOpen} />
+        {cuisines.length ? (
+          <CuisineTable cuisines={cuisines} handleOpen={handleOpen} />
         ) : (
           <Empty className="from-muted/50 to-background h-full bg-linear-to-b from-30%">
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <BookOpenIcon />
+                <EarthIcon />
               </EmptyMedia>
-              <EmptyTitle>No Categories</EmptyTitle>
-              <EmptyDescription>
-                Create a category. New categories will appear here.
-              </EmptyDescription>
+              <EmptyTitle>No Cuisines</EmptyTitle>
+              <EmptyDescription>Create a cuisine. New cuisines will appear here.</EmptyDescription>
             </EmptyHeader>
 
             <EmptyContent>
@@ -100,12 +103,12 @@ function CategoriesRoute() {
 
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Category</DialogTitle>
+            <DialogTitle>Cuisine</DialogTitle>
             <DialogDescription>
-              {category ? "Edit this category." : "Create a new category."}
+              {cuisine ? "Edit this cuisine." : "Create a new cuisine."}
             </DialogDescription>
           </DialogHeader>
-          <CategoryForm category={category} handleClose={handleClose}>
+          <CuisineForm cuisine={cuisine} handleClose={handleClose}>
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="outline" onClick={handleClose}>
@@ -113,24 +116,24 @@ function CategoriesRoute() {
                 </Button>
               </DialogClose>
               <Button className="cursor-pointer" type="submit">
-                {category ? "Update" : "Create"}
+                {cuisine ? "Update" : "Create"}
               </Button>
             </DialogFooter>
-          </CategoryForm>
+          </CuisineForm>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
 
-function CategoryTable({
-  categories,
+function CuisineTable({
+  cuisines,
   handleOpen,
 }: {
-  categories: Array<Category> | null;
+  cuisines: Array<Cuisine> | null;
   handleOpen: (id: string) => void;
 }) {
-  if (!categories || !categories.length) return null;
+  if (!cuisines || !cuisines.length) return null;
 
   return (
     <Table>
@@ -143,11 +146,11 @@ function CategoryTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {categories.map((category) => (
-          <TableRow key={category.id} className="odd:bg-muted/25">
-            <TableCell>{category.id}</TableCell>
-            <TableCell>{category.title}</TableCell>
-            <TableCell>{category.slug}</TableCell>
+        {cuisines.map((cuisine) => (
+          <TableRow key={cuisine.id} className="odd:bg-muted/25">
+            <TableCell>{cuisine.id}</TableCell>
+            <TableCell>{cuisine.title}</TableCell>
+            <TableCell>{cuisine.slug}</TableCell>
             <TableCell className="w-12">
               <DropdownMenu>
                 <DropdownMenuTrigger
@@ -157,12 +160,12 @@ function CategoryTable({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="text-muted-foreground truncate text-sm">
-                    {category.title}
+                    {cuisine.title}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer"
-                    onClick={() => handleOpen(category.id)}>
+                    onClick={() => handleOpen(cuisine.id)}>
                     <span>Edit</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">

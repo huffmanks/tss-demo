@@ -7,12 +7,7 @@ import { tags } from "@/db/schema";
 import { getTxId } from "@/fn/helpers";
 
 export const createTag = createServerFn({ method: "POST" })
-  .inputValidator(
-    tagSchema.pick({
-      title: true,
-      slug: true,
-    })
-  )
+  .inputValidator(tagSchema)
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
       const [tag] = await tx.insert(tags).values(data).returning();

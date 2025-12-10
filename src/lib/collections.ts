@@ -91,13 +91,13 @@ export const categoriesCollection = createCollection(
   })
 );
 
-export const cuisnesCollection = createCollection(
+export const cuisinesCollection = createCollection(
   electricCollectionOptions({
-    id: "cuisnes",
+    id: "cuisines",
     schema: cuisineSchema,
     shapeOptions: {
       url: getElectricUrl(),
-      params: { table: "cuisnes" },
+      params: { table: "cuisines" },
       onError: () => {},
     },
     getKey: (item) => item.id,
