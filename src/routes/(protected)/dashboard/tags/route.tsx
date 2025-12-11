@@ -5,7 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { EllipsisIcon, FrameIcon, PlusIcon } from "lucide-react";
 
 import type { Tag } from "@/db/schema/recipes";
-import { tagsCollection } from "@/lib/collections";
+import { tagsCollection } from "@/electric/collections";
 import { cn } from "@/lib/utils";
 
 import { TagForm } from "@/components/forms/collections/tag";
@@ -139,7 +139,6 @@ function TagTable({
         <TableRow>
           <TableHead>Id</TableHead>
           <TableHead>Title</TableHead>
-          <TableHead>Slug</TableHead>
           <TableHead></TableHead>
         </TableRow>
       </TableHeader>
@@ -148,7 +147,6 @@ function TagTable({
           <TableRow key={tag.id} className="odd:bg-muted/25">
             <TableCell>{tag.id}</TableCell>
             <TableCell>{tag.title}</TableCell>
-            <TableCell>{tag.slug}</TableCell>
             <TableCell className="w-12">
               <DropdownMenu>
                 <DropdownMenuTrigger

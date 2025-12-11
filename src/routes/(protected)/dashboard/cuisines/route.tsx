@@ -5,7 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { EarthIcon, EllipsisIcon, PlusIcon } from "lucide-react";
 
 import type { Cuisine } from "@/db/schema/recipes";
-import { cuisinesCollection } from "@/lib/collections";
+import { cuisinesCollection } from "@/electric/collections";
 import { cn } from "@/lib/utils";
 
 import { CuisineForm } from "@/components/forms/collections/cuisine";
@@ -141,7 +141,6 @@ function CuisineTable({
         <TableRow>
           <TableHead>Id</TableHead>
           <TableHead>Title</TableHead>
-          <TableHead>Slug</TableHead>
           <TableHead></TableHead>
         </TableRow>
       </TableHeader>
@@ -150,7 +149,6 @@ function CuisineTable({
           <TableRow key={cuisine.id} className="odd:bg-muted/25">
             <TableCell>{cuisine.id}</TableCell>
             <TableCell>{cuisine.title}</TableCell>
-            <TableCell>{cuisine.slug}</TableCell>
             <TableCell className="w-12">
               <DropdownMenu>
                 <DropdownMenuTrigger

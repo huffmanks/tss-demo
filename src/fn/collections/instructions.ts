@@ -2,8 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { instructionSchema } from "@/db/entities";
 import { instructions } from "@/db/schema";
+import { instructionSchema } from "@/electric/entities";
 import { getTxId } from "@/fn/helpers";
 
 export const createInstruction = createServerFn({ method: "POST" })

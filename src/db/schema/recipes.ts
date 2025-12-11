@@ -393,7 +393,11 @@ export const instructionsRelations = relations(instructions, ({ one }) => ({
 
 export type NewRecipe = typeof recipes.$inferInsert;
 export type Recipe = typeof recipes.$inferSelect;
+export type NewCategory = typeof categories.$inferInsert;
+export type Category = typeof categories.$inferSelect;
 export type NewCuisine = typeof cuisines.$inferInsert;
 export type Cuisine = typeof cuisines.$inferSelect;
+export type NewDiet = typeof diets.$inferInsert;
+export type Diet = typeof diets.$inferSelect;
 export type NewTag = typeof tags.$inferInsert;
 export type Tag = typeof tags.$inferSelect;

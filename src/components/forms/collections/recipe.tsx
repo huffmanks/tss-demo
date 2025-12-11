@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { v7 as uuidv7 } from "uuid";
 
 import type { Recipe } from "@/db/schema/recipes";
-import { categoriesCollection, recipesCollection } from "@/lib/collections";
+import { categoriesCollection, recipesCollection } from "@/electric/collections";
 import { slugify } from "@/lib/utils";
 
 import MultipleSelector from "@/components/custom/multiple-selector";

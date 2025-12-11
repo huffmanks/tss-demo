@@ -2,24 +2,24 @@ import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { cuisineSchema } from "@/db/entities";
-import { cuisines } from "@/db/schema";
+import { tags } from "@/db/schema";
+import { tagSchema } from "@/electric/entities";
 import { getTxId } from "@/fn/helpers";
 
-export const createCuisine = createServerFn({ method: "POST" })
-  .inputValidator(cuisineSchema)
+export const createTag = createServerFn({ method: "POST" })
+  .inputValidator(tagSchema)
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
-      const [cuisine] = await tx.insert(cuisines).values(data).returning();
+      const [tag] = await tx.insert(tags).values(data).returning();
       const txid = await getTxId();
 
-      return { cuisine, txid };
+      return { tag, txid };
     });
   });
 
-export const updateCuisine = createServerFn({ method: "POST" })
+export const updateTag = createServerFn({ method: "POST" })
   .inputValidator(
-    cuisineSchema
+    tagSchema
       .pick({
         id: true,
         title: true,
@@ -32,25 +32,25 @@ export const updateCuisine = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
-      const [cuisine] = await tx
-        .update(cuisines)
+      const [tag] = await tx
+        .update(tags)
         .set({ ...data })
-        .where(eq(cuisines.id, data.id))
+        .where(eq(tags.id, data.id))
         .returning();
       const txid = await getTxId();
 
-      return { cuisine, txid };
+      return { tag, txid };
     });
   });
 
-export const deleteCuisine = createServerFn({ method: "POST" })
-  .inputValidator(cuisineSchema.pick({ id: true }))
+export const deleteTag = createServerFn({ method: "POST" })
+  .inputValidator(tagSchema.pick({ id: true }))
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
-      const [cuisine] = await tx.delete(cuisines).where(eq(cuisines.id, data.id)).returning();
+      const [tag] = await tx.delete(tags).where(eq(tags.id, data.id)).returning();
 
       const txid = await getTxId();
 
-      return { cuisine, txid };
+      return { tag, txid };
     });
   });

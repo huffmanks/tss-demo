@@ -2,24 +2,24 @@ import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { categorySchema } from "@/db/entities";
-import { categories } from "@/db/schema";
+import { cuisines } from "@/db/schema";
+import { cuisineSchema } from "@/electric/entities";
 import { getTxId } from "@/fn/helpers";
 
-export const createCategory = createServerFn({ method: "POST" })
-  .inputValidator(categorySchema)
+export const createCuisine = createServerFn({ method: "POST" })
+  .inputValidator(cuisineSchema)
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
-      const [category] = await tx.insert(categories).values(data).returning();
+      const [cuisine] = await tx.insert(cuisines).values(data).returning();
       const txid = await getTxId();
 
-      return { category, txid };
+      return { cuisine, txid };
     });
   });
 
-export const updateCategory = createServerFn({ method: "POST" })
+export const updateCuisine = createServerFn({ method: "POST" })
   .inputValidator(
-    categorySchema
+    cuisineSchema
       .pick({
         id: true,
         title: true,
@@ -32,25 +32,25 @@ export const updateCategory = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
-      const [category] = await tx
-        .update(categories)
+      const [cuisine] = await tx
+        .update(cuisines)
         .set({ ...data })
-        .where(eq(categories.id, data.id))
+        .where(eq(cuisines.id, data.id))
         .returning();
       const txid = await getTxId();
 
-      return { category, txid };
+      return { cuisine, txid };
     });
   });
 
-export const deleteCategory = createServerFn({ method: "POST" })
-  .inputValidator(categorySchema.pick({ id: true }))
+export const deleteCuisine = createServerFn({ method: "POST" })
+  .inputValidator(cuisineSchema.pick({ id: true }))
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
-      const [category] = await tx.delete(categories).where(eq(categories.id, data.id)).returning();
+      const [cuisine] = await tx.delete(cuisines).where(eq(cuisines.id, data.id)).returning();
 
       const txid = await getTxId();
 
-      return { category, txid };
+      return { cuisine, txid };
     });
   });

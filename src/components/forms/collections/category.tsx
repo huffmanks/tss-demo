@@ -4,8 +4,7 @@ import { toast } from "sonner";
 import { v7 as uuidv7 } from "uuid";
 
 import type { Category } from "@/db/schema/recipes";
-import { categoriesCollection } from "@/lib/collections";
-import { slugify } from "@/lib/utils";
+import { categoriesCollection } from "@/electric/collections";
 
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
@@ -21,7 +20,6 @@ export function CategoryForm({ category, handleClose }: CategoryFormProps) {
   const form = useForm({
     defaultValues: {
       title: category?.title ?? "",
-      slug: category?.slug ?? "",
     },
 
     onSubmit: ({ value }) => {
@@ -29,14 +27,12 @@ export function CategoryForm({ category, handleClose }: CategoryFormProps) {
         if (category?.id) {
           categoriesCollection.update(category.id, (data) => {
             data.title = value.title;
-            data.slug = value.slug;
           });
         } else {
           const id = uuidv7();
           categoriesCollection.insert({
             id,
             title: value.title,
-            slug: value.slug,
           });
         }
 
@@ -50,7 +46,6 @@ export function CategoryForm({ category, handleClose }: CategoryFormProps) {
   useLayoutEffect(() => {
     form.reset({
       title: category?.title ?? "",
-      slug: category?.slug ?? "",
     });
   }, [category]);
 
@@ -60,7 +55,6 @@ export function CategoryForm({ category, handleClose }: CategoryFormProps) {
       onSubmit={async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        form.setFieldValue("slug", slugify(form.getFieldValue("title")));
         await form.handleSubmit();
       }}>
       <FieldGroup>

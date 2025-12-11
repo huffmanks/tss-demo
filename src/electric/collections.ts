@@ -4,17 +4,23 @@ import { createCollection } from "@tanstack/react-db";
 import {
   categorySchema,
   cuisineSchema,
+  dietSchema,
   ingredientSchema,
   instructionSchema,
   recipeSchema,
   tagSchema,
-} from "@/db/entities";
-import { createCategory, deleteCategory, updateCategory } from "@/fn/categories";
-import { createCuisine, deleteCuisine, updateCuisine } from "@/fn/cuisines";
-import { createIngredient, deleteIngredient, updateIngredient } from "@/fn/ingredients";
-import { createInstruction, deleteInstruction, updateInstruction } from "@/fn/instructions";
-import { createRecipe, deleteRecipe, updateRecipe } from "@/fn/recipes";
-import { createTag, deleteTag, updateTag } from "@/fn/tags";
+} from "@/electric/entities";
+import { createCategory, deleteCategory, updateCategory } from "@/fn/collections/categories";
+import { createCuisine, deleteCuisine, updateCuisine } from "@/fn/collections/cuisines";
+import { createDiet, deleteDiet, updateDiet } from "@/fn/collections/diets";
+import { createIngredient, deleteIngredient, updateIngredient } from "@/fn/collections/ingredients";
+import {
+  createInstruction,
+  deleteInstruction,
+  updateInstruction,
+} from "@/fn/collections/instructions";
+import { createRecipe, deleteRecipe, updateRecipe } from "@/fn/collections/recipes";
+import { createTag, deleteTag, updateTag } from "@/fn/collections/tags";
 
 // Construct absolute URL for Electric sync
 // In browser: uses window.location.origin
@@ -116,6 +122,38 @@ export const cuisinesCollection = createCollection(
     onDelete: async ({ transaction }) => {
       const deletedItem = transaction.mutations[0].original;
       const { txid } = await deleteCuisine({
+        data: { id: deletedItem.id },
+      });
+      return { txid };
+    },
+  })
+);
+
+export const dietsCollection = createCollection(
+  electricCollectionOptions({
+    id: "diets",
+    schema: dietSchema,
+    shapeOptions: {
+      url: getElectricUrl(),
+      params: { table: "diets" },
+      onError: () => {},
+    },
+    getKey: (item) => item.id,
+    onInsert: async ({ transaction }) => {
+      const newItem = transaction.mutations[0].modified;
+      const { txid } = await createDiet({ data: newItem });
+      return { txid };
+    },
+    onUpdate: async ({ transaction }) => {
+      const { original, changes } = transaction.mutations[0];
+      const { txid } = await updateDiet({
+        data: { ...changes, id: original.id },
+      });
+      return { txid };
+    },
+    onDelete: async ({ transaction }) => {
+      const deletedItem = transaction.mutations[0].original;
+      const { txid } = await deleteDiet({
         data: { id: deletedItem.id },
       });
       return { txid };

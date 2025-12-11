@@ -2,24 +2,24 @@ import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
-import { tagSchema } from "@/db/entities";
-import { tags } from "@/db/schema";
+import { diets } from "@/db/schema";
+import { dietSchema } from "@/electric/entities";
 import { getTxId } from "@/fn/helpers";
 
-export const createTag = createServerFn({ method: "POST" })
-  .inputValidator(tagSchema)
+export const createDiet = createServerFn({ method: "POST" })
+  .inputValidator(dietSchema)
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
-      const [tag] = await tx.insert(tags).values(data).returning();
+      const [diet] = await tx.insert(diets).values(data).returning();
       const txid = await getTxId();
 
-      return { tag, txid };
+      return { diet, txid };
     });
   });
 
-export const updateTag = createServerFn({ method: "POST" })
+export const updateDiet = createServerFn({ method: "POST" })
   .inputValidator(
-    tagSchema
+    dietSchema
       .pick({
         id: true,
         title: true,
@@ -32,25 +32,25 @@ export const updateTag = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
-      const [tag] = await tx
-        .update(tags)
+      const [diet] = await tx
+        .update(diets)
         .set({ ...data })
-        .where(eq(tags.id, data.id))
+        .where(eq(diets.id, data.id))
         .returning();
       const txid = await getTxId();
 
-      return { tag, txid };
+      return { diet, txid };
     });
   });
 
-export const deleteTag = createServerFn({ method: "POST" })
-  .inputValidator(tagSchema.pick({ id: true }))
+export const deleteDiet = createServerFn({ method: "POST" })
+  .inputValidator(dietSchema.pick({ id: true }))
   .handler(async ({ data }) => {
     return await db.transaction(async (tx) => {
-      const [tag] = await tx.delete(tags).where(eq(tags.id, data.id)).returning();
+      const [diet] = await tx.delete(diets).where(eq(diets.id, data.id)).returning();
 
       const txid = await getTxId();
 
-      return { tag, txid };
+      return { diet, txid };
     });
   });

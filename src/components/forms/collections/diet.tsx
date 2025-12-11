@@ -3,34 +3,34 @@ import { useLayoutEffect } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { v7 as uuidv7 } from "uuid";
 
-import type { Tag } from "@/db/schema/recipes";
-import { tagsCollection } from "@/electric/collections";
+import type { Diet } from "@/db/schema/recipes";
+import { dietsCollection } from "@/electric/collections";
 
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-interface TagFormProps {
-  tag?: Tag;
+interface DietFormProps {
+  diet?: Diet;
   handleClose: () => void;
 }
 
-export function TagForm({ tag, handleClose }: TagFormProps) {
+export function DietForm({ diet, handleClose }: DietFormProps) {
   const form = useForm({
     defaultValues: {
-      title: tag?.title ?? "",
+      title: diet?.title ?? "",
     },
 
     onSubmit: ({ value }) => {
       try {
-        if (tag?.id) {
-          tagsCollection.update(tag.id, (data) => {
+        if (diet?.id) {
+          dietsCollection.update(diet.id, (data) => {
             data.title = value.title;
           });
         } else {
           const id = uuidv7();
-          tagsCollection.insert({
+          dietsCollection.insert({
             id,
             title: value.title,
           });
@@ -38,16 +38,16 @@ export function TagForm({ tag, handleClose }: TagFormProps) {
 
         handleClose();
       } catch (error) {
-        toast.error("Error submitting tag.");
+        toast.error("Error submitting diet.");
       }
     },
   });
 
   useLayoutEffect(() => {
     form.reset({
-      title: tag?.title ?? "",
+      title: diet?.title ?? "",
     });
-  }, [tag]);
+  }, [diet]);
 
   return (
     <form
@@ -82,7 +82,7 @@ export function TagForm({ tag, handleClose }: TagFormProps) {
           </Button>
         </DialogClose>
         <Button className="cursor-pointer" type="submit">
-          {tag ? "Update" : "Create"}
+          {diet ? "Update" : "Create"}
         </Button>
       </DialogFooter>
     </form>

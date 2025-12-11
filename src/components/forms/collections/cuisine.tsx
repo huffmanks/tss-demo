@@ -4,8 +4,7 @@ import { toast } from "sonner";
 import { v7 as uuidv7 } from "uuid";
 
 import type { Cuisine } from "@/db/schema/recipes";
-import { cuisinesCollection } from "@/lib/collections";
-import { slugify } from "@/lib/utils";
+import { cuisinesCollection } from "@/electric/collections";
 
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
@@ -21,7 +20,6 @@ export function CuisineForm({ cuisine, handleClose }: CuisineFormProps) {
   const form = useForm({
     defaultValues: {
       title: cuisine?.title ?? "",
-      slug: cuisine?.slug ?? "",
     },
 
     onSubmit: ({ value }) => {
@@ -29,14 +27,12 @@ export function CuisineForm({ cuisine, handleClose }: CuisineFormProps) {
         if (cuisine?.id) {
           cuisinesCollection.update(cuisine.id, (data) => {
             data.title = value.title;
-            data.slug = value.slug;
           });
         } else {
           const id = uuidv7();
           cuisinesCollection.insert({
             id,
             title: value.title,
-            slug: value.slug,
           });
         }
 
@@ -50,7 +46,6 @@ export function CuisineForm({ cuisine, handleClose }: CuisineFormProps) {
   useLayoutEffect(() => {
     form.reset({
       title: cuisine?.title ?? "",
-      slug: cuisine?.slug ?? "",
     });
   }, [cuisine]);
 
@@ -60,7 +55,6 @@ export function CuisineForm({ cuisine, handleClose }: CuisineFormProps) {
       onSubmit={async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        form.setFieldValue("slug", slugify(form.getFieldValue("title")));
         await form.handleSubmit();
       }}>
       <FieldGroup>
