@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import { useLiveQuery } from "@tanstack/react-db";
 import { useForm } from "@tanstack/react-form";
 import { useLayoutEffect } from "@tanstack/react-router";
@@ -10,7 +8,7 @@ import type { Recipe } from "@/db/schema/recipes";
 import { categoriesCollection, recipesCollection } from "@/lib/collections";
 import { slugify } from "@/lib/utils";
 
-import MultipleSelectorCreatable from "@/components/spectrumui/multiple-selector-creatable";
+import MultipleSelector from "@/components/custom/multiple-selector";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -18,49 +16,60 @@ import { Textarea } from "@/components/ui/textarea";
 
 interface RecipeFormProps {
   userId: string;
+  organizationId: string;
   recipe?: Recipe;
 }
 
-export function RecipeForm({ userId, recipe }: RecipeFormProps) {
-  const [open, setOpen] = useState(false);
+export function RecipeForm({ userId, organizationId, recipe }: RecipeFormProps) {
+  const { data: categoryData } = useLiveQuery((q) => q.from({ category: categoriesCollection }));
 
-  const { data: categories } = useLiveQuery((q) => q.from({ category: categoriesCollection }));
+  const defaultValues = {
+    title: recipe?.title ?? "",
+    slug: recipe?.slug ?? "",
+    description: recipe?.description ?? "",
+    prepTime: recipe?.prepTime ?? "",
+    cookTime: recipe?.cookTime ?? "",
+    servingSize: recipe?.servingSize ?? "",
+    authorNotes: recipe?.authorNotes ?? "",
+    nutrition: recipe?.nutrition ?? [],
+    category: categoryData.length
+      ? categoryData.map((cat) => {
+          return {
+            label: cat.title,
+            value: cat.id,
+          };
+        })
+      : [],
+  };
 
   const form = useForm({
-    defaultValues: {
-      title: recipe?.title ?? "",
-      slug: recipe?.slug ?? "",
-      description: recipe?.description ?? "",
-      image: recipe?.image ?? "",
-      prepTime: recipe?.prepTime ?? "",
-      cookTime: recipe?.cookTime ?? "",
-      totalTime: recipe?.totalTime ?? "",
-      servingSize: recipe?.servingSize ?? "",
-      category: {
-        label: recipe?.category.title ?? "",
-        value: recipe?.category.id ?? "",
-      },
-    },
-
+    defaultValues,
     onSubmit: ({ value }) => {
       try {
+        // create/update relations
+        // recipeImages
+        // categories
+        // cuisines
+        // tags
+        // diets
+        // ingredients and sections
+        // instructions and sections
+
         if (recipe?.id) {
           recipesCollection.update(recipe.id, (data) => {
             data.title = value.title;
             data.slug = value.slug;
             data.description = value.description;
-            data.image = value.image;
-            data.prepTime = value.prepTime;
-            data.cookTime = value.cookTime;
-            data.totalTime = value.totalTime;
-            data.servingSize = value.servingSize;
-            data.categoryId = value.categoryId;
+            data.prepTime = Number(value.prepTime);
+            data.cookTime = Number(value.cookTime);
+            data.servingSize = Number(value.servingSize);
           });
         } else {
           const id = uuidv7();
           recipesCollection.insert({
             id,
             userId,
+            organizationId,
             ...value,
           });
         }
@@ -70,25 +79,8 @@ export function RecipeForm({ userId, recipe }: RecipeFormProps) {
     },
   });
 
-  function handleClose() {
-    setOpen(false);
-  }
-
   useLayoutEffect(() => {
-    form.reset({
-      title: recipe?.title ?? "",
-      slug: recipe?.slug ?? "",
-      description: recipe?.description ?? "",
-      image: recipe?.image ?? "",
-      prepTime: recipe?.prepTime ?? "",
-      cookTime: recipe?.cookTime ?? "",
-      totalTime: recipe?.totalTime ?? "",
-      servingSize: recipe?.servingSize ?? "",
-      category: {
-        label: recipe?.category.title ?? "",
-        value: recipe?.category.id ?? "",
-      },
-    });
+    form.reset(defaultValues);
   }, [recipe]);
 
   return (
@@ -226,13 +218,10 @@ export function RecipeForm({ userId, recipe }: RecipeFormProps) {
           name="categories"
           children={(field) => (
             <>
-              <MultipleSelectorCreatable />
-              {/* <ComboboxMultiSelect
-          singularLabel="Category"
-          pluralLabel="Categories"
-          items={categories}
-          formComponent={<CategoryForm handleClose={handleClose} />}
-        /> */}
+              <MultipleSelector
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
             </>
           )}
         />

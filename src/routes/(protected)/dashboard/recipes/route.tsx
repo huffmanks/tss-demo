@@ -8,7 +8,7 @@ export const Route = createFileRoute("/(protected)/dashboard/recipes")({
 function RecipesRoute() {
   return (
     <div className="p-4">
-      <RecipeForm userId={"sadf"} />
+      <RecipeForm userId="sadf" organizationId="sfsdfg" />
     </div>
   );
 }

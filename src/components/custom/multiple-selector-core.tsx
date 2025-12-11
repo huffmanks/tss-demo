@@ -24,7 +24,7 @@ interface GroupOption {
   [key: string]: Array<Option>;
 }
 
-interface MultipleSelectorProps {
+interface MultipleSelectorCoreProps {
   value?: Array<Option>;
   defaultOptions?: Array<Option>;
   /** manually controlled options */
@@ -81,7 +81,7 @@ interface MultipleSelectorProps {
   hideClearAllButton?: boolean;
 }
 
-export interface MultipleSelectorRef {
+export interface MultipleSelectorCoreRef {
   selectedValue: Array<Option>;
   input: HTMLInputElement;
   focus: () => void;
@@ -170,7 +170,7 @@ const CommandEmpty = forwardRef<
 
 CommandEmpty.displayName = "CommandEmpty";
 
-const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorProps>(
+const MultipleSelectorCore = React.forwardRef<MultipleSelectorCoreRef, MultipleSelectorCoreProps>(
   (
     {
       value,
@@ -196,8 +196,8 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
       commandProps,
       inputProps,
       hideClearAllButton = false,
-    }: MultipleSelectorProps,
-    ref: React.Ref<MultipleSelectorRef>
+    }: MultipleSelectorCoreProps,
+    ref: React.Ref<MultipleSelectorCoreRef>
   ) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [open, setOpen] = React.useState(false);
@@ -551,10 +551,10 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
               ) : (
                 <>
                   {EmptyItem()}
-                  {CreatableItem()}
                   {!selectFirstItem && <CommandItem value="-" className="hidden" />}
                   {Object.entries(selectables).map(([key, dropdowns]) => (
                     <CommandGroup key={key} heading={key} className="h-full overflow-auto">
+                      {CreatableItem()}
                       <>
                         {dropdowns.map((option) => {
                           return (
@@ -597,5 +597,5 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
   }
 );
 
-MultipleSelector.displayName = "MultipleSelector";
-export default MultipleSelector;
+MultipleSelectorCore.displayName = "MultipleSelectorCore";
+export default MultipleSelectorCore;
