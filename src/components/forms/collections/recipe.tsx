@@ -10,13 +10,11 @@ import type { Recipe } from "@/db/schema/recipes";
 import { categoriesCollection, recipesCollection } from "@/lib/collections";
 import { slugify } from "@/lib/utils";
 
-import ComboboxMultiSelect from "@/components/custom/combobox-multi-select";
+import MultipleSelectorCreatable from "@/components/spectrumui/multiple-selector-creatable";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-import { CategoryForm } from "./category";
 
 interface RecipeFormProps {
   userId: string;
@@ -38,7 +36,10 @@ export function RecipeForm({ userId, recipe }: RecipeFormProps) {
       cookTime: recipe?.cookTime ?? "",
       totalTime: recipe?.totalTime ?? "",
       servingSize: recipe?.servingSize ?? "",
-      categoryId: recipe?.categoryId ?? "",
+      category: {
+        label: recipe?.category.title ?? "",
+        value: recipe?.category.id ?? "",
+      },
     },
 
     onSubmit: ({ value }) => {
@@ -83,7 +84,10 @@ export function RecipeForm({ userId, recipe }: RecipeFormProps) {
       cookTime: recipe?.cookTime ?? "",
       totalTime: recipe?.totalTime ?? "",
       servingSize: recipe?.servingSize ?? "",
-      categoryId: recipe?.categoryId ?? "",
+      category: {
+        label: recipe?.category.title ?? "",
+        value: recipe?.category.id ?? "",
+      },
     });
   }, [recipe]);
 
@@ -218,11 +222,19 @@ export function RecipeForm({ userId, recipe }: RecipeFormProps) {
       </FieldGroup>
 
       <FieldGroup>
-        <ComboboxMultiSelect
+        <form.Field
+          name="categories"
+          children={(field) => (
+            <>
+              <MultipleSelectorCreatable />
+              {/* <ComboboxMultiSelect
           singularLabel="Category"
           pluralLabel="Categories"
           items={categories}
           formComponent={<CategoryForm handleClose={handleClose} />}
+        /> */}
+            </>
+          )}
         />
       </FieldGroup>
       <Button className="cursor-pointer" type="submit">
