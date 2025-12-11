@@ -1,5 +1,5 @@
 {
-  "id": "31b30947-7bf3-470d-badd-74f3c7d25d46",
+  "id": "f7af794d-e47a-445c-833f-0a8a5110f645",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -146,7 +146,15 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "categories_title_unique": {
+          "name": "categories_title_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "title"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -171,7 +179,15 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "cuisines_title_unique": {
+          "name": "cuisines_title_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "title"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -196,7 +212,15 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "diets_title_unique": {
+          "name": "diets_title_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "title"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -250,12 +274,6 @@
           "primaryKey": true,
           "notNull": true
         },
-        "recipe_id": {
-          "name": "recipe_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
         "title": {
           "name": "title",
           "type": "text",
@@ -267,9 +285,31 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "recipe_id": {
+          "name": "recipe_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "ingredient_sections_recipe_id_idx": {
+          "name": "ingredient_sections_recipe_id_idx",
+          "columns": [
+            {
+              "expression": "recipe_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "ingredient_sections_recipe_id_recipes_id_fk": {
           "name": "ingredient_sections_recipe_id_recipes_id_fk",
@@ -287,8 +327,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "ingredient_sections_recipeId_position_unique": {
-          "name": "ingredient_sections_recipeId_position_unique",
+        "ingredient_sections_recipe_position_unique": {
+          "name": "ingredient_sections_recipe_position_unique",
           "nullsNotDistinct": false,
           "columns": [
             "recipe_id",
@@ -322,15 +362,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "section_id": {
-          "name": "section_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
         "position": {
           "name": "position",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "section_id": {
+          "name": "section_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -342,11 +382,26 @@
         }
       },
       "indexes": {
-        "ingredients_sectionId_idx": {
-          "name": "ingredients_sectionId_idx",
+        "ingredients_section_id_idx": {
+          "name": "ingredients_section_id_idx",
           "columns": [
             {
               "expression": "section_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ingredients_unit_id_idx": {
+          "name": "ingredients_unit_id_idx",
+          "columns": [
+            {
+              "expression": "unit_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -382,7 +437,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -411,12 +466,6 @@
           "primaryKey": true,
           "notNull": true
         },
-        "recipe_id": {
-          "name": "recipe_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
         "title": {
           "name": "title",
           "type": "text",
@@ -428,9 +477,31 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "recipe_id": {
+          "name": "recipe_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "instruction_sections_recipe_id_idx": {
+          "name": "instruction_sections_recipe_id_idx",
+          "columns": [
+            {
+              "expression": "recipe_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "instruction_sections_recipe_id_recipes_id_fk": {
           "name": "instruction_sections_recipe_id_recipes_id_fk",
@@ -448,8 +519,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "instruction_sections_recipeId_position_unique": {
-          "name": "instruction_sections_recipeId_position_unique",
+        "instruction_sections_recipe_position_unique": {
+          "name": "instruction_sections_recipe_position_unique",
           "nullsNotDistinct": false,
           "columns": [
             "recipe_id",
@@ -471,12 +542,6 @@
           "primaryKey": true,
           "notNull": true
         },
-        "section_id": {
-          "name": "section_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
         "content": {
           "name": "content",
           "type": "text",
@@ -488,11 +553,17 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "section_id": {
+          "name": "section_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {
-        "instructions_sectionId_idx": {
-          "name": "instructions_sectionId_idx",
+        "instructions_section_id_idx": {
+          "name": "instructions_section_id_idx",
           "columns": [
             {
               "expression": "section_id",
@@ -857,17 +928,26 @@
         }
       },
       "indexes": {
-        "recipe_categories_recipeId_categoryId_unique_idx": {
-          "name": "recipe_categories_recipeId_categoryId_unique_idx",
+        "recipe_categories_category_id_idx": {
+          "name": "recipe_categories_category_id_idx",
           "columns": [
             {
-              "expression": "recipe_id",
+              "expression": "category_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
-            },
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "recipe_categories_recipe_id_idx": {
+          "name": "recipe_categories_recipe_id_idx",
+          "columns": [
             {
-              "expression": "category_id",
+              "expression": "recipe_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -890,7 +970,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "recipe_categories_category_id_categories_id_fk": {
@@ -908,7 +988,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "recipe_categories_recipe_category_unique": {
+          "name": "recipe_categories_recipe_category_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "recipe_id",
+            "category_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -937,17 +1026,26 @@
         }
       },
       "indexes": {
-        "recipe_cuisines_recipeId_cuisineId_unique_idx": {
-          "name": "recipe_cuisines_recipeId_cuisineId_unique_idx",
+        "recipe_cuisines_cuisine_id_idx": {
+          "name": "recipe_cuisines_cuisine_id_idx",
           "columns": [
             {
-              "expression": "recipe_id",
+              "expression": "cuisine_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
-            },
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "recipe_cuisines_recipe_id_idx": {
+          "name": "recipe_cuisines_recipe_id_idx",
+          "columns": [
             {
-              "expression": "cuisine_id",
+              "expression": "recipe_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -970,7 +1068,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "recipe_cuisines_cuisine_id_cuisines_id_fk": {
@@ -988,7 +1086,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "recipe_cuisines_recipe_cuisine_unique": {
+          "name": "recipe_cuisines_recipe_cuisine_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "recipe_id",
+            "cuisine_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1017,17 +1124,26 @@
         }
       },
       "indexes": {
-        "recipe_diets_recipeId_dietId_unique_idx": {
-          "name": "recipe_diets_recipeId_dietId_unique_idx",
+        "recipe_diets_diet_id_idx": {
+          "name": "recipe_diets_diet_id_idx",
           "columns": [
             {
-              "expression": "recipe_id",
+              "expression": "diet_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
-            },
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "recipe_diets_recipe_id_idx": {
+          "name": "recipe_diets_recipe_id_idx",
+          "columns": [
             {
-              "expression": "diet_id",
+              "expression": "recipe_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1050,7 +1166,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "recipe_diets_diet_id_diets_id_fk": {
@@ -1068,7 +1184,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "recipe_diets_recipe_diet_unique": {
+          "name": "recipe_diets_recipe_diet_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "recipe_id",
+            "diet_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1083,6 +1208,12 @@
           "primaryKey": true,
           "notNull": true
         },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "recipe_id": {
           "name": "recipe_id",
           "type": "uuid",
@@ -1094,20 +1225,29 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
-        },
-        "position": {
-          "name": "position",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {
-        "recipe_images_recipeId_idx": {
-          "name": "recipe_images_recipeId_idx",
+        "recipe_images_recipe_id_idx": {
+          "name": "recipe_images_recipe_id_idx",
           "columns": [
             {
               "expression": "recipe_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "recipe_images_image_id_idx": {
+          "name": "recipe_images_image_id_idx",
+          "columns": [
+            {
+              "expression": "image_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1149,8 +1289,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "recipe_images_recipeId_position_unique": {
-          "name": "recipe_images_recipeId_position_unique",
+        "recipe_images_recipe_position_unique": {
+          "name": "recipe_images_recipe_position_unique",
           "nullsNotDistinct": false,
           "columns": [
             "recipe_id",
@@ -1186,8 +1326,23 @@
         }
       },
       "indexes": {
-        "recipe_shares_organizationId_idx": {
-          "name": "recipe_shares_organizationId_idx",
+        "recipe_shares_recipe_id_idx": {
+          "name": "recipe_shares_recipe_id_idx",
+          "columns": [
+            {
+              "expression": "recipe_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "recipe_shares_organization_id_idx": {
+          "name": "recipe_shares_organization_id_idx",
           "columns": [
             {
               "expression": "organization_id",
@@ -1232,8 +1387,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "recipe_shares_recipe_organization_unique": {
-          "name": "recipe_shares_recipe_organization_unique",
+        "recipe_shares_recipe_org_unique": {
+          "name": "recipe_shares_recipe_org_unique",
           "nullsNotDistinct": false,
           "columns": [
             "recipe_id",
@@ -1269,17 +1424,26 @@
         }
       },
       "indexes": {
-        "recipe_tags_recipeId_tagId_unique_idx": {
-          "name": "recipe_tags_recipeId_tagId_unique_idx",
+        "recipe_tags_tag_id_idx": {
+          "name": "recipe_tags_tag_id_idx",
           "columns": [
             {
-              "expression": "recipe_id",
+              "expression": "tag_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
-            },
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "recipe_tags_recipe_id_idx": {
+          "name": "recipe_tags_recipe_id_idx",
+          "columns": [
             {
-              "expression": "tag_id",
+              "expression": "recipe_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1302,7 +1466,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "recipe_tags_tag_id_tags_id_fk": {
@@ -1320,7 +1484,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "recipe_tags_recipe_tag_unique": {
+          "name": "recipe_tags_recipe_tag_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "recipe_id",
+            "tag_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1451,7 +1624,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -1655,7 +1828,22 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "units_name_unique": {
+          "name": "units_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        },
+        "units_abbreviation_unique": {
+          "name": "units_abbreviation_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "abbreviation"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

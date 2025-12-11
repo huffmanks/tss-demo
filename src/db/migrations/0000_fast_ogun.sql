@@ -16,17 +16,20 @@ CREATE TABLE "accounts" (
 --> statement-breakpoint
 CREATE TABLE "categories" (
 	"id" uuid PRIMARY KEY NOT NULL,
-	"title" text NOT NULL
+	"title" text NOT NULL,
+	CONSTRAINT "categories_title_unique" UNIQUE("title")
 );
 --> statement-breakpoint
 CREATE TABLE "cuisines" (
 	"id" uuid PRIMARY KEY NOT NULL,
-	"title" text NOT NULL
+	"title" text NOT NULL,
+	CONSTRAINT "cuisines_title_unique" UNIQUE("title")
 );
 --> statement-breakpoint
 CREATE TABLE "diets" (
 	"id" uuid PRIMARY KEY NOT NULL,
-	"title" text NOT NULL
+	"title" text NOT NULL,
+	CONSTRAINT "diets_title_unique" UNIQUE("title")
 );
 --> statement-breakpoint
 CREATE TABLE "images" (
@@ -38,35 +41,35 @@ CREATE TABLE "images" (
 --> statement-breakpoint
 CREATE TABLE "ingredient_sections" (
 	"id" uuid PRIMARY KEY NOT NULL,
-	"recipe_id" uuid NOT NULL,
 	"title" text,
 	"position" integer NOT NULL,
-	CONSTRAINT "ingredient_sections_recipeId_position_unique" UNIQUE("recipe_id","position")
+	"recipe_id" uuid NOT NULL,
+	CONSTRAINT "ingredient_sections_recipe_position_unique" UNIQUE("recipe_id","position")
 );
 --> statement-breakpoint
 CREATE TABLE "ingredients" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"amount" numeric(9, 3),
 	"name" text NOT NULL,
-	"section_id" uuid NOT NULL,
 	"position" integer NOT NULL,
+	"section_id" uuid NOT NULL,
 	"unit_id" uuid,
 	CONSTRAINT "ingredients_section_position_unique" UNIQUE("section_id","position")
 );
 --> statement-breakpoint
 CREATE TABLE "instruction_sections" (
 	"id" uuid PRIMARY KEY NOT NULL,
-	"recipe_id" uuid NOT NULL,
 	"title" text,
 	"position" integer NOT NULL,
-	CONSTRAINT "instruction_sections_recipeId_position_unique" UNIQUE("recipe_id","position")
+	"recipe_id" uuid NOT NULL,
+	CONSTRAINT "instruction_sections_recipe_position_unique" UNIQUE("recipe_id","position")
 );
 --> statement-breakpoint
 CREATE TABLE "instructions" (
 	"id" uuid PRIMARY KEY NOT NULL,
-	"section_id" uuid NOT NULL,
 	"content" text NOT NULL,
 	"position" integer NOT NULL,
+	"section_id" uuid NOT NULL,
 	CONSTRAINT "instructions_section_position_unique" UNIQUE("section_id","position")
 );
 --> statement-breakpoint
@@ -104,40 +107,44 @@ CREATE TABLE "organizations" (
 CREATE TABLE "recipe_categories" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"recipe_id" uuid NOT NULL,
-	"category_id" uuid NOT NULL
+	"category_id" uuid NOT NULL,
+	CONSTRAINT "recipe_categories_recipe_category_unique" UNIQUE("recipe_id","category_id")
 );
 --> statement-breakpoint
 CREATE TABLE "recipe_cuisines" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"recipe_id" uuid NOT NULL,
-	"cuisine_id" uuid NOT NULL
+	"cuisine_id" uuid NOT NULL,
+	CONSTRAINT "recipe_cuisines_recipe_cuisine_unique" UNIQUE("recipe_id","cuisine_id")
 );
 --> statement-breakpoint
 CREATE TABLE "recipe_diets" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"recipe_id" uuid NOT NULL,
-	"diet_id" uuid NOT NULL
+	"diet_id" uuid NOT NULL,
+	CONSTRAINT "recipe_diets_recipe_diet_unique" UNIQUE("recipe_id","diet_id")
 );
 --> statement-breakpoint
 CREATE TABLE "recipe_images" (
 	"id" uuid PRIMARY KEY NOT NULL,
+	"position" integer NOT NULL,
 	"recipe_id" uuid NOT NULL,
 	"image_id" uuid NOT NULL,
-	"position" integer NOT NULL,
-	CONSTRAINT "recipe_images_recipeId_position_unique" UNIQUE("recipe_id","position")
+	CONSTRAINT "recipe_images_recipe_position_unique" UNIQUE("recipe_id","position")
 );
 --> statement-breakpoint
 CREATE TABLE "recipe_shares" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"recipe_id" uuid NOT NULL,
 	"organization_id" uuid NOT NULL,
-	CONSTRAINT "recipe_shares_recipe_organization_unique" UNIQUE("recipe_id","organization_id")
+	CONSTRAINT "recipe_shares_recipe_org_unique" UNIQUE("recipe_id","organization_id")
 );
 --> statement-breakpoint
 CREATE TABLE "recipe_tags" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"recipe_id" uuid NOT NULL,
-	"tag_id" uuid NOT NULL
+	"tag_id" uuid NOT NULL,
+	CONSTRAINT "recipe_tags_recipe_tag_unique" UNIQUE("recipe_id","tag_id")
 );
 --> statement-breakpoint
 CREATE TABLE "recipes" (
@@ -182,7 +189,9 @@ CREATE TABLE "units" (
 	"name" text NOT NULL,
 	"abbreviation" text NOT NULL,
 	"type" text NOT NULL,
-	"system" text NOT NULL
+	"system" text NOT NULL,
+	CONSTRAINT "units_name_unique" UNIQUE("name"),
+	CONSTRAINT "units_abbreviation_unique" UNIQUE("abbreviation")
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
@@ -208,41 +217,50 @@ CREATE TABLE "verifications" (
 ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "ingredient_sections" ADD CONSTRAINT "ingredient_sections_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "ingredients" ADD CONSTRAINT "ingredients_section_id_ingredient_sections_id_fk" FOREIGN KEY ("section_id") REFERENCES "public"."ingredient_sections"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "ingredients" ADD CONSTRAINT "ingredients_unit_id_units_id_fk" FOREIGN KEY ("unit_id") REFERENCES "public"."units"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "ingredients" ADD CONSTRAINT "ingredients_unit_id_units_id_fk" FOREIGN KEY ("unit_id") REFERENCES "public"."units"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "instruction_sections" ADD CONSTRAINT "instruction_sections_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "instructions" ADD CONSTRAINT "instructions_section_id_instruction_sections_id_fk" FOREIGN KEY ("section_id") REFERENCES "public"."instruction_sections"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "invitations" ADD CONSTRAINT "invitations_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "invitations" ADD CONSTRAINT "invitations_inviter_id_users_id_fk" FOREIGN KEY ("inviter_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "members" ADD CONSTRAINT "members_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "members" ADD CONSTRAINT "members_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "recipe_categories" ADD CONSTRAINT "recipe_categories_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "recipe_categories" ADD CONSTRAINT "recipe_categories_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_categories" ADD CONSTRAINT "recipe_categories_category_id_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."categories"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "recipe_cuisines" ADD CONSTRAINT "recipe_cuisines_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "recipe_cuisines" ADD CONSTRAINT "recipe_cuisines_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_cuisines" ADD CONSTRAINT "recipe_cuisines_cuisine_id_cuisines_id_fk" FOREIGN KEY ("cuisine_id") REFERENCES "public"."cuisines"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "recipe_diets" ADD CONSTRAINT "recipe_diets_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "recipe_diets" ADD CONSTRAINT "recipe_diets_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_diets" ADD CONSTRAINT "recipe_diets_diet_id_diets_id_fk" FOREIGN KEY ("diet_id") REFERENCES "public"."diets"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_images" ADD CONSTRAINT "recipe_images_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_images" ADD CONSTRAINT "recipe_images_image_id_images_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."images"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_shares" ADD CONSTRAINT "recipe_shares_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_shares" ADD CONSTRAINT "recipe_shares_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "recipe_tags" ADD CONSTRAINT "recipe_tags_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "recipe_tags" ADD CONSTRAINT "recipe_tags_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_tags" ADD CONSTRAINT "recipe_tags_tag_id_tags_id_fk" FOREIGN KEY ("tag_id") REFERENCES "public"."tags"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipes" ADD CONSTRAINT "recipes_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "recipes" ADD CONSTRAINT "recipes_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "recipes" ADD CONSTRAINT "recipes_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "accounts_userId_idx" ON "accounts" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "ingredients_sectionId_idx" ON "ingredients" USING btree ("section_id");--> statement-breakpoint
-CREATE INDEX "instructions_sectionId_idx" ON "instructions" USING btree ("section_id");--> statement-breakpoint
+CREATE INDEX "ingredient_sections_recipe_id_idx" ON "ingredient_sections" USING btree ("recipe_id");--> statement-breakpoint
+CREATE INDEX "ingredients_section_id_idx" ON "ingredients" USING btree ("section_id");--> statement-breakpoint
+CREATE INDEX "ingredients_unit_id_idx" ON "ingredients" USING btree ("unit_id");--> statement-breakpoint
+CREATE INDEX "instruction_sections_recipe_id_idx" ON "instruction_sections" USING btree ("recipe_id");--> statement-breakpoint
+CREATE INDEX "instructions_section_id_idx" ON "instructions" USING btree ("section_id");--> statement-breakpoint
 CREATE INDEX "invitations_organizationId_idx" ON "invitations" USING btree ("organization_id");--> statement-breakpoint
 CREATE INDEX "invitations_email_idx" ON "invitations" USING btree ("email");--> statement-breakpoint
 CREATE INDEX "members_organizationId_idx" ON "members" USING btree ("organization_id");--> statement-breakpoint
 CREATE INDEX "members_userId_idx" ON "members" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "recipe_categories_recipeId_categoryId_unique_idx" ON "recipe_categories" USING btree ("recipe_id","category_id");--> statement-breakpoint
-CREATE INDEX "recipe_cuisines_recipeId_cuisineId_unique_idx" ON "recipe_cuisines" USING btree ("recipe_id","cuisine_id");--> statement-breakpoint
-CREATE INDEX "recipe_diets_recipeId_dietId_unique_idx" ON "recipe_diets" USING btree ("recipe_id","diet_id");--> statement-breakpoint
-CREATE INDEX "recipe_images_recipeId_idx" ON "recipe_images" USING btree ("recipe_id");--> statement-breakpoint
-CREATE INDEX "recipe_shares_organizationId_idx" ON "recipe_shares" USING btree ("organization_id");--> statement-breakpoint
-CREATE INDEX "recipe_tags_recipeId_tagId_unique_idx" ON "recipe_tags" USING btree ("recipe_id","tag_id");--> statement-breakpoint
+CREATE INDEX "recipe_categories_category_id_idx" ON "recipe_categories" USING btree ("category_id");--> statement-breakpoint
+CREATE INDEX "recipe_categories_recipe_id_idx" ON "recipe_categories" USING btree ("recipe_id");--> statement-breakpoint
+CREATE INDEX "recipe_cuisines_cuisine_id_idx" ON "recipe_cuisines" USING btree ("cuisine_id");--> statement-breakpoint
+CREATE INDEX "recipe_cuisines_recipe_id_idx" ON "recipe_cuisines" USING btree ("recipe_id");--> statement-breakpoint
+CREATE INDEX "recipe_diets_diet_id_idx" ON "recipe_diets" USING btree ("diet_id");--> statement-breakpoint
+CREATE INDEX "recipe_diets_recipe_id_idx" ON "recipe_diets" USING btree ("recipe_id");--> statement-breakpoint
+CREATE INDEX "recipe_images_recipe_id_idx" ON "recipe_images" USING btree ("recipe_id");--> statement-breakpoint
+CREATE INDEX "recipe_images_image_id_idx" ON "recipe_images" USING btree ("image_id");--> statement-breakpoint
+CREATE INDEX "recipe_shares_recipe_id_idx" ON "recipe_shares" USING btree ("recipe_id");--> statement-breakpoint
+CREATE INDEX "recipe_shares_organization_id_idx" ON "recipe_shares" USING btree ("organization_id");--> statement-breakpoint
+CREATE INDEX "recipe_tags_tag_id_idx" ON "recipe_tags" USING btree ("tag_id");--> statement-breakpoint
+CREATE INDEX "recipe_tags_recipe_id_idx" ON "recipe_tags" USING btree ("recipe_id");--> statement-breakpoint
 CREATE INDEX "recipes_userId_idx" ON "recipes" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "sessions_userId_idx" ON "sessions" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "verifications_identifier_idx" ON "verifications" USING btree ("identifier");

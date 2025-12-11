@@ -28,7 +28,7 @@ export const recipes = pgTable(
     organizationId: uuid("organization_id")
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
-    userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
@@ -56,17 +56,18 @@ export const recipeImages = pgTable(
   "recipe_images",
   {
     id: uuid("id").primaryKey(),
+    position: integer("position").notNull(),
     recipeId: uuid("recipe_id")
       .notNull()
       .references(() => recipes.id, { onDelete: "cascade" }),
     imageId: uuid("image_id")
       .notNull()
       .references(() => images.id, { onDelete: "cascade" }),
-    position: integer("position").notNull(),
   },
   (table) => [
-    index("recipe_images_recipeId_idx").on(table.recipeId),
-    unique("recipe_images_recipeId_position_unique").on(table.recipeId, table.position),
+    index("recipe_images_recipe_id_idx").on(table.recipeId),
+    index("recipe_images_image_id_idx").on(table.imageId),
+    unique("recipe_images_recipe_position_unique").on(table.recipeId, table.position),
   ]
 );
 
@@ -82,14 +83,15 @@ export const recipeShares = pgTable(
       .references(() => organizations.id, { onDelete: "cascade" }),
   },
   (table) => [
-    index("recipe_shares_organizationId_idx").on(table.organizationId),
-    unique("recipe_shares_recipe_organization_unique").on(table.recipeId, table.organizationId),
+    index("recipe_shares_recipe_id_idx").on(table.recipeId),
+    index("recipe_shares_organization_id_idx").on(table.organizationId),
+    unique("recipe_shares_recipe_org_unique").on(table.recipeId, table.organizationId),
   ]
 );
 
 export const categories = pgTable("categories", {
   id: uuid("id").primaryKey(),
-  title: text("title").notNull(),
+  title: text("title").notNull().unique(),
 });
 
 export const recipeCategories = pgTable(
@@ -97,20 +99,22 @@ export const recipeCategories = pgTable(
   {
     id: uuid("id").primaryKey(),
     recipeId: uuid("recipe_id")
-      .references(() => recipes.id)
+      .references(() => recipes.id, { onDelete: "cascade" })
       .notNull(),
     categoryId: uuid("category_id")
       .references(() => categories.id, { onDelete: "cascade" })
       .notNull(),
   },
   (table) => [
-    index("recipe_categories_recipeId_categoryId_unique_idx").on(table.recipeId, table.categoryId),
+    unique("recipe_categories_recipe_category_unique").on(table.recipeId, table.categoryId),
+    index("recipe_categories_category_id_idx").on(table.categoryId),
+    index("recipe_categories_recipe_id_idx").on(table.recipeId),
   ]
 );
 
 export const cuisines = pgTable("cuisines", {
   id: uuid("id").primaryKey(),
-  title: text("title").notNull(),
+  title: text("title").notNull().unique(),
 });
 
 export const recipeCuisines = pgTable(
@@ -118,20 +122,22 @@ export const recipeCuisines = pgTable(
   {
     id: uuid("id").primaryKey(),
     recipeId: uuid("recipe_id")
-      .references(() => recipes.id)
+      .references(() => recipes.id, { onDelete: "cascade" })
       .notNull(),
     cuisineId: uuid("cuisine_id")
       .references(() => cuisines.id, { onDelete: "cascade" })
       .notNull(),
   },
   (table) => [
-    index("recipe_cuisines_recipeId_cuisineId_unique_idx").on(table.recipeId, table.cuisineId),
+    unique("recipe_cuisines_recipe_cuisine_unique").on(table.recipeId, table.cuisineId),
+    index("recipe_cuisines_cuisine_id_idx").on(table.cuisineId),
+    index("recipe_cuisines_recipe_id_idx").on(table.recipeId),
   ]
 );
 
 export const diets = pgTable("diets", {
   id: uuid("id").primaryKey(),
-  title: text("title").notNull(),
+  title: text("title").notNull().unique(),
 });
 
 export const recipeDiets = pgTable(
@@ -139,13 +145,17 @@ export const recipeDiets = pgTable(
   {
     id: uuid("id").primaryKey(),
     recipeId: uuid("recipe_id")
-      .references(() => recipes.id)
+      .references(() => recipes.id, { onDelete: "cascade" })
       .notNull(),
     dietId: uuid("diet_id")
       .references(() => diets.id, { onDelete: "cascade" })
       .notNull(),
   },
-  (table) => [index("recipe_diets_recipeId_dietId_unique_idx").on(table.recipeId, table.dietId)]
+  (table) => [
+    unique("recipe_diets_recipe_diet_unique").on(table.recipeId, table.dietId),
+    index("recipe_diets_diet_id_idx").on(table.dietId),
+    index("recipe_diets_recipe_id_idx").on(table.recipeId),
+  ]
 );
 
 export const tags = pgTable("tags", {
@@ -158,19 +168,23 @@ export const recipeTags = pgTable(
   {
     id: uuid("id").primaryKey(),
     recipeId: uuid("recipe_id")
-      .references(() => recipes.id)
+      .references(() => recipes.id, { onDelete: "cascade" })
       .notNull(),
     tagId: uuid("tag_id")
       .references(() => tags.id, { onDelete: "cascade" })
       .notNull(),
   },
-  (table) => [index("recipe_tags_recipeId_tagId_unique_idx").on(table.recipeId, table.tagId)]
+  (table) => [
+    unique("recipe_tags_recipe_tag_unique").on(table.recipeId, table.tagId),
+    index("recipe_tags_tag_id_idx").on(table.tagId),
+    index("recipe_tags_recipe_id_idx").on(table.recipeId),
+  ]
 );
 
 export const units = pgTable("units", {
   id: uuid("id").primaryKey(),
-  name: text("name").notNull(),
-  abbreviation: text("abbreviation").notNull(),
+  name: text("name").notNull().unique(),
+  abbreviation: text("abbreviation").notNull().unique(),
   type: text("type").notNull(),
   system: text("system").notNull(),
 });
@@ -179,14 +193,15 @@ export const ingredientSections = pgTable(
   "ingredient_sections",
   {
     id: uuid("id").primaryKey(),
+    title: text("title"),
+    position: integer("position").notNull(),
     recipeId: uuid("recipe_id")
       .references(() => recipes.id, { onDelete: "cascade" })
       .notNull(),
-    title: text("title"),
-    position: integer("position").notNull(),
   },
   (table) => [
-    unique("ingredient_sections_recipeId_position_unique").on(table.recipeId, table.position),
+    unique("ingredient_sections_recipe_position_unique").on(table.recipeId, table.position),
+    index("ingredient_sections_recipe_id_idx").on(table.recipeId),
   ]
 );
 
@@ -196,15 +211,16 @@ export const ingredients = pgTable(
     id: uuid("id").primaryKey(),
     amount: numeric("amount", { precision: 9, scale: 3 }),
     name: text("name").notNull(),
+    position: integer("position").notNull(),
     sectionId: uuid("section_id")
       .references(() => ingredientSections.id, { onDelete: "cascade" })
       .notNull(),
-    position: integer("position").notNull(),
-    unitId: uuid("unit_id").references(() => units.id),
+    unitId: uuid("unit_id").references(() => units.id, { onDelete: "set null" }),
   },
   (table) => [
-    index("ingredients_sectionId_idx").on(table.sectionId),
+    index("ingredients_section_id_idx").on(table.sectionId),
     unique("ingredients_section_position_unique").on(table.sectionId, table.position),
+    index("ingredients_unit_id_idx").on(table.unitId),
   ]
 );
 
@@ -212,14 +228,15 @@ export const instructionSections = pgTable(
   "instruction_sections",
   {
     id: uuid("id").primaryKey(),
+    title: text("title"),
+    position: integer("position").notNull(),
     recipeId: uuid("recipe_id")
       .references(() => recipes.id, { onDelete: "cascade" })
       .notNull(),
-    title: text("title"),
-    position: integer("position").notNull(),
   },
   (table) => [
-    unique("instruction_sections_recipeId_position_unique").on(table.recipeId, table.position),
+    unique("instruction_sections_recipe_position_unique").on(table.recipeId, table.position),
+    index("instruction_sections_recipe_id_idx").on(table.recipeId),
   ]
 );
 
@@ -227,14 +244,14 @@ export const instructions = pgTable(
   "instructions",
   {
     id: uuid("id").primaryKey(),
+    content: text("content").notNull(),
+    position: integer("position").notNull(),
     sectionId: uuid("section_id")
       .references(() => instructionSections.id, { onDelete: "cascade" })
       .notNull(),
-    content: text("content").notNull(),
-    position: integer("position").notNull(),
   },
   (table) => [
-    index("instructions_sectionId_idx").on(table.sectionId),
+    index("instructions_section_id_idx").on(table.sectionId),
     unique("instructions_section_position_unique").on(table.sectionId, table.position),
   ]
 );
