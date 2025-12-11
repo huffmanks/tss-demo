@@ -124,23 +124,6 @@ export function RecipeForm({ userId, organizationId, recipe }: RecipeFormProps) 
             </Field>
           )}
         />
-
-        <form.Field
-          name="image"
-          children={(field) => (
-            <Field>
-              <FieldLabel htmlFor="image">Image</FieldLabel>
-              <Input
-                id="image"
-                type="text"
-                required
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            </Field>
-          )}
-        />
       </FieldGroup>
 
       <FieldGroup>
@@ -179,23 +162,6 @@ export function RecipeForm({ userId, organizationId, recipe }: RecipeFormProps) 
         />
 
         <form.Field
-          name="totalTime"
-          children={(field) => (
-            <Field>
-              <FieldLabel htmlFor="totalTime">Total time</FieldLabel>
-              <Input
-                id="totalTime"
-                type="text"
-                required
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-            </Field>
-          )}
-        />
-
-        <form.Field
           name="servingSize"
           children={(field) => (
             <Field>
@@ -215,7 +181,7 @@ export function RecipeForm({ userId, organizationId, recipe }: RecipeFormProps) 
 
       <FieldGroup>
         <form.Field
-          name="categories"
+          name="category"
           children={(field) => (
             <>
               <MultipleSelector
