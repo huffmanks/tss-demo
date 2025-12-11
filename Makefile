@@ -12,7 +12,8 @@ PROD_COMPOSE_FILES = $(BASE_COMPOSE_FILES) -f docker-compose.production.yml
 PROD_ENV_FILE = .env.production
 
 # --- Global Commands ---
-all: dev-up-all ## Run the full development startup (docker-up + db:migrate + pnpm dev)
+all: dev-up-all ## Run the full development startup
+all-prod: prod-up-all-graceful ## Run the full production startup
 
 DOCKER_COMPOSE = docker compose $(DOCKER_FILES) --env-file $(ENV_FILE)
 
@@ -45,12 +46,14 @@ dev-docker-down: ## Stop the Docker services (db, electric) and remove volumes
 dev-up-all: dev-docker-up
 	@echo "--- Migrating database... ---"
 	$(shell cat $(DEV_ENV_FILE) | xargs) pnpm db:migrate:dev
-	@echo "--- Database migration complete. Starting app via (pnpm dev) ---"
+	@echo "--- Seeding database... ---"
+	$(shell cat $(DEV_ENV_FILE) | xargs) pnpm db:seed:dev
+	@echo "--- Database operations complete. Starting app via (pnpm dev) ---"
 	$(shell cat $(DEV_ENV_FILE) | xargs) pnpm dev
 
 # --- Production Targets ---
 
-.PHONY: prod-docker-up prod-docker-down
+.PHONY: prod-docker-up prod-docker-down prod-up-all prod-up-all-graceful
 prod-docker-up: DOCKER_FILES = $(PROD_COMPOSE_FILES)
 prod-docker-up: ENV_FILE = $(PROD_ENV_FILE)
 prod-docker-up: ## Start the production environment
@@ -67,4 +70,17 @@ prod-docker-down: ## Stop the production environment
 	@echo "\033[1;33m╭─────────────────────────────────────╮\033[0m"
 	@echo "\033[1;33m│ \033[33m🐳 Shutting down Docker services...\033[0m \033[1;33m│\033[0m"
 	@echo "\033[1;33m╰─────────────────────────────────────╯\033[0m"
-	@$(DOCKER_COMPOSE) down -v
+	@$(DOCKER_COMPOSE) down
+
+# The main production target:
+prod-up-all: prod-docker-up
+	@echo "--- Migrating database... ---"
+	$(shell cat $(DEV_ENV_FILE) | xargs) pnpm db:migrate:prod
+	@echo "--- Seeding database... ---"
+	$(shell cat $(DEV_ENV_FILE) | xargs) pnpm db:seed:prod
+	@echo "--- Database operations complete. ---"
+
+# Run prod-up-all, and prod-docker-down on failure
+.PHONY: prod-up-all-graceful
+prod-up-all-graceful: ## Run prod-up-all, and prod-docker-down on failure
+	@$(MAKE) prod-up-all || (echo "\033[1;31m🚨 prod-up-all FAILED. Running cleanup...\033[0m" && $(MAKE) prod-docker-down && exit 1)

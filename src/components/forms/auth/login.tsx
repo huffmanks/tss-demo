@@ -12,8 +12,8 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui
 import { Input } from "@/components/ui/input";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("tim@mylab.com");
+  const [password, setPassword] = useState("password");
 
   const navigate = useNavigate();
 
@@ -49,6 +49,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  value={email}
                   required
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -65,6 +66,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                 <Input
                   id="password"
                   type="password"
+                  value={password}
                   required
                   onChange={(e) => setPassword(e.target.value)}
                 />

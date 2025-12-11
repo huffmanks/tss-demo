@@ -11,16 +11,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
-import { organizations, users } from "@/db/schema/auth";
-import {
-  categoryEnum,
-  cuisineEnum,
-  dietEnum,
-  unitAbbrevEnum,
-  unitNameEnum,
-  unitSystemEnum,
-  unitTypeEnum,
-} from "@/db/schema/enums";
+import { organizations, users } from "./auth.ts";
 
 export const recipes = pgTable(
   "recipes",
@@ -29,7 +20,6 @@ export const recipes = pgTable(
     title: text("title").notNull(),
     slug: text("slug").notNull(),
     description: text("description").notNull(),
-    category: categoryEnum("category").notNull(),
     prepTime: integer("prep_time"),
     cookTime: integer("cook_time"),
     servingSize: integer("serving_size").notNull(),
@@ -97,9 +87,30 @@ export const recipeShares = pgTable(
   ]
 );
 
+export const categories = pgTable("categories", {
+  id: uuid("id").primaryKey(),
+  title: text("title").notNull(),
+});
+
+export const recipeCategories = pgTable(
+  "recipe_categories",
+  {
+    id: uuid("id").primaryKey(),
+    recipeId: uuid("recipe_id")
+      .references(() => recipes.id)
+      .notNull(),
+    categoryId: uuid("category_id")
+      .references(() => categories.id, { onDelete: "cascade" })
+      .notNull(),
+  },
+  (table) => [
+    index("recipe_categories_recipeId_categoryId_unique_idx").on(table.recipeId, table.categoryId),
+  ]
+);
+
 export const cuisines = pgTable("cuisines", {
   id: uuid("id").primaryKey(),
-  title: cuisineEnum("title").notNull(),
+  title: text("title").notNull(),
 });
 
 export const recipeCuisines = pgTable(
@@ -120,7 +131,7 @@ export const recipeCuisines = pgTable(
 
 export const diets = pgTable("diets", {
   id: uuid("id").primaryKey(),
-  title: dietEnum("title").notNull(),
+  title: text("title").notNull(),
 });
 
 export const recipeDiets = pgTable(
@@ -158,10 +169,10 @@ export const recipeTags = pgTable(
 
 export const units = pgTable("units", {
   id: uuid("id").primaryKey(),
-  name: unitNameEnum("name").notNull(),
-  abbreviation: unitAbbrevEnum("abbrev").notNull(),
-  type: unitTypeEnum("type").notNull(),
-  system: unitSystemEnum("system").notNull(),
+  name: text("name").notNull(),
+  abbreviation: text("abbreviation").notNull(),
+  type: text("type").notNull(),
+  system: text("system").notNull(),
 });
 
 export const ingredientSections = pgTable(
@@ -233,6 +244,7 @@ export const recipeRelations = relations(recipes, ({ one, many }) => ({
     fields: [recipes.userId],
     references: [users.id],
   }),
+  categories: many(recipeCategories),
   cuisines: many(recipeCuisines),
   tags: many(recipeTags),
   ingredientSections: many(ingredientSections),
@@ -263,6 +275,21 @@ export const recipeImagesRelations = relations(recipeImages, ({ one }) => ({
   image: one(images, {
     fields: [recipeImages.imageId],
     references: [images.id],
+  }),
+}));
+
+export const categoryRelations = relations(categories, ({ many }) => ({
+  recipes: many(recipeCategories),
+}));
+
+export const recipeCategoryRelations = relations(recipeCategories, ({ one }) => ({
+  recipe: one(recipes, {
+    fields: [recipeCategories.recipeId],
+    references: [recipes.id],
+  }),
+  category: one(categories, {
+    fields: [recipeCategories.categoryId],
+    references: [categories.id],
   }),
 }));
 

@@ -1,13 +1,38 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { count } from "drizzle-orm";
 
+import { db } from "@/db";
+import { users } from "@/db/schema";
+import { initialUsers } from "@/db/seed/data";
+import { auth } from "@/lib/auth";
 import { redirectIfAuthenticated } from "@/middleware/auth";
 
 import { Button } from "@/components/ui/button";
+
+const seedUsers = createServerFn().handler(async () => {
+  try {
+    if (process.env.NODE_ENV === "development") {
+      const [u] = await db.select({ count: count() }).from(users);
+      if (u.count < 1) {
+        for await (const user of initialUsers) {
+          await auth.api.signUpEmail({ body: user });
+        }
+      }
+    }
+  } catch (error) {
+    console.info("Failed to seed users.");
+    throw error;
+  }
+});
 
 export const Route = createFileRoute("/")({
   component: HomeRoute,
   server: {
     middleware: [redirectIfAuthenticated],
+  },
+  loader: () => {
+    seedUsers();
   },
 });
 
