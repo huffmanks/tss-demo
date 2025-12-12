@@ -16,7 +16,8 @@ WORKDIR /app
 COPY --from=installer /app/node_modules ./node_modules
 COPY . .
 
-RUN pnpm run build \
+RUN chmod +x entrypoint.sh \
+    && pnpm run build \
     && rm -rf node_modules \
     && pnpm store prune
 
@@ -27,13 +28,16 @@ WORKDIR /app
 
 COPY package*.json pnpm-lock.yaml ./
 
-RUN chown -R node:node /app
+RUN mkdir -p /app/.state \
+    && chown -R node:node /app
 
 COPY --from=builder --chown=node:node /app/.output .output
+COPY --from=builder --chown=node:node /app/src/db db
+COPY --from=builder --chown=node:node /app/entrypoint.sh entrypoint.sh
 
 USER node
 
 ENV PORT=3000
 EXPOSE 3000
 
-CMD ["node", ".output/server/index.mjs"]
+ENTRYPOINT ["./entrypoint.sh"]

@@ -17,7 +17,8 @@
     "db:push:dev": "dotenvx run -f .env.development -- drizzle-kit push",
     "db:studio:dev": "dotenvx run -f .env.development -- drizzle-kit studio",
     "db:prod:dev": "dotenvx run -f .env.production -- node src/db/seed/index.ts",
-    "db:migrate:prod": "dotenvx run -f .env.production -- drizzle-kit migrate",
+    "db:seed:prod": "node db/seed/index.ts",
+    "db:migrate:prod": "node db/migrate.ts",
     "db:push:prod": "dotenvx run -f .env.production -- drizzle-kit push",
     "db:studio:prod": "dotenvx run -f .env.production -- drizzle-kit studio",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal-2023 public/logo192.png"
