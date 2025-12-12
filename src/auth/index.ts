@@ -24,7 +24,7 @@ export const auth = betterAuth({
       //   return subscription.plan === "pro";
       // },
       organizationHooks: {
-        afterCreateOrganization: async ({ organization: org, user }) => {
+        beforeCreateOrganization: async ({ organization: org, user }) => {
           await auth.api.addMember({
             body: {
               userId: user.id,

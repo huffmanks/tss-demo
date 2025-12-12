@@ -1,8 +1,8 @@
 import { useForm } from "@tanstack/react-form";
-import { useLayoutEffect, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
-import { createFirstOrg } from "@/fn/onboarding";
+import { authClient } from "@/auth/auth-client";
 import { cn, slugify } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -24,17 +24,18 @@ export function CreateOrgForm({ userId, className, ...props }: CreateOrgFormProp
 
     onSubmit: async ({ value }) => {
       try {
-        const data = await createFirstOrg({
-          data: {
-            name: value.name,
-            slug: slugify(value.name),
-            userId,
-          },
+        const { data, error } = await authClient.organization.create({
+          name: value.name,
+          slug: slugify(value.name),
+          userId,
+          keepCurrentActiveOrganization: false,
         });
 
-        console.log("form submitted___ ", data);
+        if (error) {
+          toast.error("Error creating organization.");
+        }
 
-        if (data?.id) {
+        if (data) {
           navigate({ to: "/dashboard/recipes" });
         }
       } catch (error) {
@@ -42,12 +43,6 @@ export function CreateOrgForm({ userId, className, ...props }: CreateOrgFormProp
       }
     },
   });
-
-  useLayoutEffect(() => {
-    form.reset({
-      name: "",
-    });
-  }, []);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
