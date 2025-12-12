@@ -2,6 +2,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
+import { siteConfig } from "@/lib/site-config";
 import appCss from "@/styles.css?url";
 
 import ErrorPage from "@/components/error-page";
@@ -19,10 +20,79 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "TanStack Start Starter",
+        title: siteConfig.title,
+      },
+      {
+        name: "title",
+        content: siteConfig.title,
+      },
+      {
+        name: "description",
+        content: siteConfig.description,
+      },
+      {
+        property: "og:type",
+        content: "website",
+      },
+      // {
+      //   property: "og:url",
+      //   content: currentUrl
+      // },
+      {
+        property: "og:title",
+        content: siteConfig.title,
+      },
+      {
+        property: "og:description",
+        content: siteConfig.description,
+      },
+      {
+        property: "og:image",
+        content: siteConfig.image, // currentImage
+      },
+      {
+        property: "og:image:width",
+        content: "512",
+      },
+      {
+        property: "og:image:height",
+        content: "512",
+      },
+      {
+        property: "og:image:alt",
+        content: siteConfig.description,
+      },
+      {
+        property: "twitter:card",
+        content: "summary_large_image",
+      },
+      // {
+      //   property: "twitter:url",
+      //   content: currentUrl
+      // },
+      {
+        property: "twitter:title",
+        content: siteConfig.title,
+      },
+      {
+        property: "twitter:description",
+        content: siteConfig.description,
+      },
+      {
+        property: "twitter:image",
+        content: siteConfig.image, // currentImage
+      },
+      {
+        property: "twitter:image:alt",
+        content: siteConfig.description,
       },
     ],
     links: [
+      {
+        rel: "apple-touch-icon",
+        sizes: "180x180",
+        href: "/apple-touch-icon-180x180.png",
+      },
       {
         rel: "stylesheet",
         href: appCss,

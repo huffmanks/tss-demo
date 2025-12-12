@@ -21,6 +21,7 @@ import { Route as protectedDashboardTagsRouteRouteImport } from './routes/(prote
 import { Route as protectedDashboardSettingsRouteRouteImport } from './routes/(protected)/dashboard/settings/route'
 import { Route as protectedDashboardRecipesRouteRouteImport } from './routes/(protected)/dashboard/recipes/route'
 import { Route as protectedDashboardProfileRouteRouteImport } from './routes/(protected)/dashboard/profile/route'
+import { Route as protectedDashboardDietsRouteRouteImport } from './routes/(protected)/dashboard/diets/route'
 import { Route as protectedDashboardCuisinesRouteRouteImport } from './routes/(protected)/dashboard/cuisines/route'
 import { Route as protectedDashboardCategoriesRouteRouteImport } from './routes/(protected)/dashboard/categories/route'
 import { Route as protectedDashboardOrganizationsIdRouteImport } from './routes/(protected)/dashboard/organizations/$id'
@@ -88,6 +89,12 @@ const protectedDashboardProfileRouteRoute =
     path: '/profile',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
+const protectedDashboardDietsRouteRoute =
+  protectedDashboardDietsRouteRouteImport.update({
+    id: '/diets',
+    path: '/diets',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
 const protectedDashboardCuisinesRouteRoute =
   protectedDashboardCuisinesRouteRouteImport.update({
     id: '/cuisines',
@@ -116,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/api/electric': typeof ApiElectricRoute
   '/dashboard/categories': typeof protectedDashboardCategoriesRouteRoute
   '/dashboard/cuisines': typeof protectedDashboardCuisinesRouteRoute
+  '/dashboard/diets': typeof protectedDashboardDietsRouteRoute
   '/dashboard/profile': typeof protectedDashboardProfileRouteRoute
   '/dashboard/recipes': typeof protectedDashboardRecipesRouteRoute
   '/dashboard/settings': typeof protectedDashboardSettingsRouteRoute
@@ -132,6 +140,7 @@ export interface FileRoutesByTo {
   '/api/electric': typeof ApiElectricRoute
   '/dashboard/categories': typeof protectedDashboardCategoriesRouteRoute
   '/dashboard/cuisines': typeof protectedDashboardCuisinesRouteRoute
+  '/dashboard/diets': typeof protectedDashboardDietsRouteRoute
   '/dashboard/profile': typeof protectedDashboardProfileRouteRoute
   '/dashboard/recipes': typeof protectedDashboardRecipesRouteRoute
   '/dashboard/settings': typeof protectedDashboardSettingsRouteRoute
@@ -150,6 +159,7 @@ export interface FileRoutesById {
   '/api/electric': typeof ApiElectricRoute
   '/(protected)/dashboard/categories': typeof protectedDashboardCategoriesRouteRoute
   '/(protected)/dashboard/cuisines': typeof protectedDashboardCuisinesRouteRoute
+  '/(protected)/dashboard/diets': typeof protectedDashboardDietsRouteRoute
   '/(protected)/dashboard/profile': typeof protectedDashboardProfileRouteRoute
   '/(protected)/dashboard/recipes': typeof protectedDashboardRecipesRouteRoute
   '/(protected)/dashboard/settings': typeof protectedDashboardSettingsRouteRoute
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/api/electric'
     | '/dashboard/categories'
     | '/dashboard/cuisines'
+    | '/dashboard/diets'
     | '/dashboard/profile'
     | '/dashboard/recipes'
     | '/dashboard/settings'
@@ -184,6 +195,7 @@ export interface FileRouteTypes {
     | '/api/electric'
     | '/dashboard/categories'
     | '/dashboard/cuisines'
+    | '/dashboard/diets'
     | '/dashboard/profile'
     | '/dashboard/recipes'
     | '/dashboard/settings'
@@ -201,6 +213,7 @@ export interface FileRouteTypes {
     | '/api/electric'
     | '/(protected)/dashboard/categories'
     | '/(protected)/dashboard/cuisines'
+    | '/(protected)/dashboard/diets'
     | '/(protected)/dashboard/profile'
     | '/(protected)/dashboard/recipes'
     | '/(protected)/dashboard/settings'
@@ -303,6 +316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedDashboardProfileRouteRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
+    '/(protected)/dashboard/diets': {
+      id: '/(protected)/dashboard/diets'
+      path: '/diets'
+      fullPath: '/dashboard/diets'
+      preLoaderRoute: typeof protectedDashboardDietsRouteRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
     '/(protected)/dashboard/cuisines': {
       id: '/(protected)/dashboard/cuisines'
       path: '/cuisines'
@@ -346,6 +366,7 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 interface protectedDashboardRouteRouteChildren {
   protectedDashboardCategoriesRouteRoute: typeof protectedDashboardCategoriesRouteRoute
   protectedDashboardCuisinesRouteRoute: typeof protectedDashboardCuisinesRouteRoute
+  protectedDashboardDietsRouteRoute: typeof protectedDashboardDietsRouteRoute
   protectedDashboardProfileRouteRoute: typeof protectedDashboardProfileRouteRoute
   protectedDashboardRecipesRouteRoute: typeof protectedDashboardRecipesRouteRoute
   protectedDashboardSettingsRouteRoute: typeof protectedDashboardSettingsRouteRoute
@@ -358,6 +379,7 @@ const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren
     protectedDashboardCategoriesRouteRoute:
       protectedDashboardCategoriesRouteRoute,
     protectedDashboardCuisinesRouteRoute: protectedDashboardCuisinesRouteRoute,
+    protectedDashboardDietsRouteRoute: protectedDashboardDietsRouteRoute,
     protectedDashboardProfileRouteRoute: protectedDashboardProfileRouteRoute,
     protectedDashboardRecipesRouteRoute: protectedDashboardRecipesRouteRoute,
     protectedDashboardSettingsRouteRoute: protectedDashboardSettingsRouteRoute,
