@@ -4,7 +4,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronsUpDownIcon, LogOutIcon, UserIcon } from "lucide-react";
 import { toast } from "sonner";
 
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/auth/auth-client";
 import { createAcronym } from "@/lib/utils";
 import type { AuthUser } from "@/types";
 

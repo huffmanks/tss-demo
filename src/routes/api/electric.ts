@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { auth } from "@/lib/auth";
+import { auth } from "@/auth";
 import { json } from "@/lib/utils";
 
 // Proxy-auth pattern based on ElectricSQL example

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/auth/auth-client";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     }
 
     if (data) {
-      navigate({ to: "/dashboard/recipes" });
+      navigate({ to: "/onboarding" });
     }
   }
 

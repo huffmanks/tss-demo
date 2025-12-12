@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+export const createOrgSchema = z.object({
+  name: z.string(),
+  slug: z.string(),
+  userId: z.uuidv7(),
+});
+
 export const recipeSchema = z.object({
   id: z.uuidv7(),
   title: z.string(),

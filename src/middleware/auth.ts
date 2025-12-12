@@ -1,7 +1,7 @@
 import { redirect } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
 
-import { auth } from "@/lib/auth";
+import { auth } from "@/auth";
 
 export const redirectIfAuthenticated = createMiddleware().server(async ({ next, request }) => {
   const session = await auth.api.getSession({ headers: request.headers });

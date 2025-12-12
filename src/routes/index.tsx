@@ -2,10 +2,10 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { count } from "drizzle-orm";
 
+import { auth } from "@/auth";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { initialUsers } from "@/db/seed/data";
-import { auth } from "@/lib/auth";
 import { redirectIfAuthenticated } from "@/middleware/auth";
 
 import { Button } from "@/components/ui/button";
@@ -29,8 +29,8 @@ export const Route = createFileRoute("/")({
   server: {
     middleware: [redirectIfAuthenticated],
   },
-  loader: () => {
-    seedUsers();
+  loader: async () => {
+    await seedUsers();
   },
 });
 
