@@ -31,7 +31,6 @@ const config = defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-  // nitro: {},
 });
 
 export default config;

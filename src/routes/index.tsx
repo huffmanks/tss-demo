@@ -12,12 +12,10 @@ import { Button } from "@/components/ui/button";
 
 const seedUsers = createServerFn().handler(async () => {
   try {
-    if (process.env.NODE_ENV === "development") {
-      const [u] = await db.select({ count: count() }).from(users);
-      if (u.count < 1) {
-        for await (const user of initialUsers) {
-          await auth.api.signUpEmail({ body: user });
-        }
+    const [u] = await db.select({ count: count() }).from(users);
+    if (u.count < 1) {
+      for await (const user of initialUsers) {
+        await auth.api.signUpEmail({ body: user });
       }
     }
   } catch (error) {
