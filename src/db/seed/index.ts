@@ -32,4 +32,7 @@ async function main() {
   await db.$client.end();
 }
 
-main();
+main().catch((error) => {
+  console.log(error);
+  console.error("Seeding failed!");
+});
