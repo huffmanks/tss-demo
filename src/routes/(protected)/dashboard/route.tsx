@@ -1,6 +1,7 @@
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
 import { authUser } from "@/fn/auth";
+import { doesOrgExist } from "@/fn/onboarding";
 
 import { AppSidebar } from "@/components/blocks/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/blocks/sidebar/site-header";
@@ -15,6 +16,15 @@ export const Route = createFileRoute("/(protected)/dashboard")({
       throw redirect({
         to: "/login",
         search: { redirect: location.href },
+      });
+    }
+
+    const orgExists = await doesOrgExist();
+
+    if (!orgExists) {
+      throw redirect({
+        to: "/onboarding",
+        replace: true,
       });
     }
 

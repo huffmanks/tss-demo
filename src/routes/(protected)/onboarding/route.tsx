@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 
 import { authUser } from "@/fn/auth";
 import { doesOrgExist } from "@/fn/onboarding";
@@ -17,15 +17,18 @@ export const Route = createFileRoute("/(protected)/onboarding")({
       });
     }
 
-    const { user } = await authUser();
-    return user;
+    return await authUser();
   },
 });
 
 function DashboardOnboardingRoute() {
-  const user = Route.useLoaderData();
+  const { user, orgId } = Route.useLoaderData();
+  const navigate = useNavigate();
 
-  if (!user) return null;
+  // eslint-disable-next-line no-extra-boolean-cast
+  if (!!orgId) {
+    navigate({ to: "/dashboard/recipes" });
+  }
 
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">

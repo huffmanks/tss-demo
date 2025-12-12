@@ -1,6 +1,5 @@
-import { useState } from "react";
-
-import { useNavigate } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
+import { useLayoutEffect, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 import { createFirstOrg } from "@/fn/onboarding";
@@ -16,28 +15,39 @@ type CreateOrgFormProps = React.ComponentProps<"div"> & {
 };
 
 export function CreateOrgForm({ userId, className, ...props }: CreateOrgFormProps) {
-  const [name, setName] = useState("My Family");
-
   const navigate = useNavigate();
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  const form = useForm({
+    defaultValues: {
+      name: "My family",
+    },
 
-    try {
-      const data = await createFirstOrg({
-        data: {
-          name,
-          slug: slugify(name),
-          userId,
-        },
-      });
-      if (data?.id) {
-        navigate({ to: "/dashboard/recipes" });
+    onSubmit: async ({ value }) => {
+      try {
+        const data = await createFirstOrg({
+          data: {
+            name: value.name,
+            slug: slugify(value.name),
+            userId,
+          },
+        });
+
+        console.log("form submitted___ ", data);
+
+        if (data?.id) {
+          navigate({ to: "/dashboard/recipes" });
+        }
+      } catch (error) {
+        toast.error("Error creating organization.");
       }
-    } catch (error) {
-      toast.error("Creating organization failed!");
-    }
-  }
+    },
+  });
+
+  useLayoutEffect(() => {
+    form.reset({
+      name: "",
+    });
+  }, []);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -47,19 +57,29 @@ export function CreateOrgForm({ userId, className, ...props }: CreateOrgFormProp
           <CardDescription>Enter a title to create the first organization.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              await form.handleSubmit();
+            }}>
             <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="name">Organization name</FieldLabel>
-                <Input
-                  id="name"
-                  type="name"
-                  placeholder="My Family"
-                  value={name}
-                  required
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </Field>
+              <form.Field
+                name="name"
+                children={(field) => (
+                  <Field>
+                    <FieldLabel htmlFor="name">Organization name</FieldLabel>
+                    <Input
+                      id="name"
+                      type="name"
+                      required
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                  </Field>
+                )}
+              />
 
               <Field>
                 <Button className="cursor-pointer" type="submit">

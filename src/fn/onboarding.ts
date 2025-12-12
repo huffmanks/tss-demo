@@ -11,7 +11,7 @@ export const doesOrgExist = createServerFn().handler(async () => {
   return o.count > 0;
 });
 
-export const createFirstOrg = createServerFn()
+export const createFirstOrg = createServerFn({ method: "POST" })
   .inputValidator(createOrgSchema)
   .handler(async ({ data }) => {
     const { name, slug, userId } = data;
