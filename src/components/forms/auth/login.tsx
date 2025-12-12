@@ -29,7 +29,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     }
 
     if (data) {
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/dashboard/recipes" });
     }
   }
 

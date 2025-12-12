@@ -14,19 +14,19 @@ const db = drizzle(process.env.DATABASE_URL!, {
 
 async function main() {
   for await (const category of initialCategories) {
-    await db.insert(categories).values(category);
+    await db.insert(categories).values(category).execute();
   }
 
   for await (const cuisine of initialCuisines) {
-    await db.insert(cuisines).values(cuisine);
+    await db.insert(cuisines).values(cuisine).execute();
   }
 
   for await (const diet of initialDiets) {
-    await db.insert(diets).values(diet);
+    await db.insert(diets).values(diet).execute();
   }
 
   for await (const unit of initialUnits) {
-    await db.insert(units).values(unit);
+    await db.insert(units).values(unit).execute();
   }
 
   await db.$client.end();

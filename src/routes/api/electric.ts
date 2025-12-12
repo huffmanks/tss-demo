@@ -24,6 +24,7 @@ export const Route = createFileRoute("/api/electric")({
           "recipes",
           "categories",
           "cuisines",
+          "diets",
           "tags",
           "ingredients",
           "instructions",

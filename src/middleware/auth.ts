@@ -7,7 +7,7 @@ export const redirectIfAuthenticated = createMiddleware().server(async ({ next, 
   const session = await auth.api.getSession({ headers: request.headers });
 
   if (session) {
-    throw redirect({ to: "/dashboard" });
+    throw redirect({ to: "/dashboard/recipes" });
   }
 
   return await next();

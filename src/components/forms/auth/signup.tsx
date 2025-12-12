@@ -37,7 +37,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     }
 
     if (data) {
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/dashboard/recipes" });
     }
   }
 

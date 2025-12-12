@@ -1,7 +1,15 @@
 import * as React from "react";
 
 import { Link } from "@tanstack/react-router";
-import { BookOpenIcon, ChefHatIcon, EarthIcon, FrameIcon, Settings2Icon } from "lucide-react";
+import {
+  AppleIcon,
+  BookOpenIcon,
+  ChefHatIcon,
+  EarthIcon,
+  FrameIcon,
+  Settings2Icon,
+  ShieldUserIcon,
+} from "lucide-react";
 
 import type { AuthUser } from "@/types";
 
@@ -52,12 +60,22 @@ const data = {
       icon: EarthIcon,
     },
     {
+      title: "Diets",
+      url: "/dashboard/diets",
+      icon: AppleIcon,
+    },
+    {
       title: "Tags",
       url: "/dashboard/tags",
       icon: FrameIcon,
     },
   ],
   navSecondary: [
+    {
+      title: "Admin",
+      url: "/admin",
+      icon: ShieldUserIcon,
+    },
     {
       title: "Settings",
       url: "/dashboard/settings",

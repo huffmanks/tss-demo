@@ -16,15 +16,20 @@ import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as protectedDashboardRouteRouteImport } from './routes/(protected)/dashboard/route'
+import { Route as protectedAdminRouteRouteImport } from './routes/(protected)/admin/route'
+import { Route as protectedDashboardIndexRouteImport } from './routes/(protected)/dashboard/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as protectedDashboardTagsRouteRouteImport } from './routes/(protected)/dashboard/tags/route'
 import { Route as protectedDashboardSettingsRouteRouteImport } from './routes/(protected)/dashboard/settings/route'
-import { Route as protectedDashboardRecipesRouteRouteImport } from './routes/(protected)/dashboard/recipes/route'
 import { Route as protectedDashboardProfileRouteRouteImport } from './routes/(protected)/dashboard/profile/route'
 import { Route as protectedDashboardDietsRouteRouteImport } from './routes/(protected)/dashboard/diets/route'
 import { Route as protectedDashboardCuisinesRouteRouteImport } from './routes/(protected)/dashboard/cuisines/route'
 import { Route as protectedDashboardCategoriesRouteRouteImport } from './routes/(protected)/dashboard/categories/route'
+import { Route as protectedDashboardRecipesIndexRouteImport } from './routes/(protected)/dashboard/recipes/index'
 import { Route as protectedDashboardOrganizationsIdRouteImport } from './routes/(protected)/dashboard/organizations/$id'
+import { Route as protectedDashboardRecipesSharedRouteRouteImport } from './routes/(protected)/dashboard/recipes/shared/route'
+import { Route as protectedDashboardRecipesFavoritesRouteRouteImport } from './routes/(protected)/dashboard/recipes/favorites/route'
+import { Route as protectedDashboardRecipesAddRouteRouteImport } from './routes/(protected)/dashboard/recipes/add/route'
 
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
@@ -60,6 +65,16 @@ const protectedDashboardRouteRoute = protectedDashboardRouteRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const protectedAdminRouteRoute = protectedAdminRouteRouteImport.update({
+  id: '/(protected)/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const protectedDashboardIndexRoute = protectedDashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => protectedDashboardRouteRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -75,12 +90,6 @@ const protectedDashboardSettingsRouteRoute =
   protectedDashboardSettingsRouteRouteImport.update({
     id: '/settings',
     path: '/settings',
-    getParentRoute: () => protectedDashboardRouteRoute,
-  } as any)
-const protectedDashboardRecipesRouteRoute =
-  protectedDashboardRecipesRouteRouteImport.update({
-    id: '/recipes',
-    path: '/recipes',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
 const protectedDashboardProfileRouteRoute =
@@ -107,15 +116,40 @@ const protectedDashboardCategoriesRouteRoute =
     path: '/categories',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
+const protectedDashboardRecipesIndexRoute =
+  protectedDashboardRecipesIndexRouteImport.update({
+    id: '/recipes/',
+    path: '/recipes/',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
 const protectedDashboardOrganizationsIdRoute =
   protectedDashboardOrganizationsIdRouteImport.update({
     id: '/organizations/$id',
     path: '/organizations/$id',
     getParentRoute: () => protectedDashboardRouteRoute,
   } as any)
+const protectedDashboardRecipesSharedRouteRoute =
+  protectedDashboardRecipesSharedRouteRouteImport.update({
+    id: '/recipes/shared',
+    path: '/recipes/shared',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardRecipesFavoritesRouteRoute =
+  protectedDashboardRecipesFavoritesRouteRouteImport.update({
+    id: '/recipes/favorites',
+    path: '/recipes/favorites',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
+const protectedDashboardRecipesAddRouteRoute =
+  protectedDashboardRecipesAddRouteRouteImport.update({
+    id: '/recipes/add',
+    path: '/recipes/add',
+    getParentRoute: () => protectedDashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof protectedAdminRouteRoute
   '/dashboard': typeof protectedDashboardRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
   '/login': typeof authLoginRoute
@@ -125,15 +159,19 @@ export interface FileRoutesByFullPath {
   '/dashboard/cuisines': typeof protectedDashboardCuisinesRouteRoute
   '/dashboard/diets': typeof protectedDashboardDietsRouteRoute
   '/dashboard/profile': typeof protectedDashboardProfileRouteRoute
-  '/dashboard/recipes': typeof protectedDashboardRecipesRouteRoute
   '/dashboard/settings': typeof protectedDashboardSettingsRouteRoute
   '/dashboard/tags': typeof protectedDashboardTagsRouteRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/dashboard/': typeof protectedDashboardIndexRoute
+  '/dashboard/recipes/add': typeof protectedDashboardRecipesAddRouteRoute
+  '/dashboard/recipes/favorites': typeof protectedDashboardRecipesFavoritesRouteRoute
+  '/dashboard/recipes/shared': typeof protectedDashboardRecipesSharedRouteRoute
   '/dashboard/organizations/$id': typeof protectedDashboardOrganizationsIdRoute
+  '/dashboard/recipes': typeof protectedDashboardRecipesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof protectedDashboardRouteRouteWithChildren
+  '/admin': typeof protectedAdminRouteRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
@@ -142,16 +180,21 @@ export interface FileRoutesByTo {
   '/dashboard/cuisines': typeof protectedDashboardCuisinesRouteRoute
   '/dashboard/diets': typeof protectedDashboardDietsRouteRoute
   '/dashboard/profile': typeof protectedDashboardProfileRouteRoute
-  '/dashboard/recipes': typeof protectedDashboardRecipesRouteRoute
   '/dashboard/settings': typeof protectedDashboardSettingsRouteRoute
   '/dashboard/tags': typeof protectedDashboardTagsRouteRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/dashboard': typeof protectedDashboardIndexRoute
+  '/dashboard/recipes/add': typeof protectedDashboardRecipesAddRouteRoute
+  '/dashboard/recipes/favorites': typeof protectedDashboardRecipesFavoritesRouteRoute
+  '/dashboard/recipes/shared': typeof protectedDashboardRecipesSharedRouteRoute
   '/dashboard/organizations/$id': typeof protectedDashboardOrganizationsIdRoute
+  '/dashboard/recipes': typeof protectedDashboardRecipesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(auth)': typeof authRouteRouteWithChildren
+  '/(protected)/admin': typeof protectedAdminRouteRoute
   '/(protected)/dashboard': typeof protectedDashboardRouteRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/login': typeof authLoginRoute
@@ -161,16 +204,21 @@ export interface FileRoutesById {
   '/(protected)/dashboard/cuisines': typeof protectedDashboardCuisinesRouteRoute
   '/(protected)/dashboard/diets': typeof protectedDashboardDietsRouteRoute
   '/(protected)/dashboard/profile': typeof protectedDashboardProfileRouteRoute
-  '/(protected)/dashboard/recipes': typeof protectedDashboardRecipesRouteRoute
   '/(protected)/dashboard/settings': typeof protectedDashboardSettingsRouteRoute
   '/(protected)/dashboard/tags': typeof protectedDashboardTagsRouteRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/(protected)/dashboard/': typeof protectedDashboardIndexRoute
+  '/(protected)/dashboard/recipes/add': typeof protectedDashboardRecipesAddRouteRoute
+  '/(protected)/dashboard/recipes/favorites': typeof protectedDashboardRecipesFavoritesRouteRoute
+  '/(protected)/dashboard/recipes/shared': typeof protectedDashboardRecipesSharedRouteRoute
   '/(protected)/dashboard/organizations/$id': typeof protectedDashboardOrganizationsIdRoute
+  '/(protected)/dashboard/recipes/': typeof protectedDashboardRecipesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/dashboard'
     | '/forgot-password'
     | '/login'
@@ -180,15 +228,19 @@ export interface FileRouteTypes {
     | '/dashboard/cuisines'
     | '/dashboard/diets'
     | '/dashboard/profile'
-    | '/dashboard/recipes'
     | '/dashboard/settings'
     | '/dashboard/tags'
     | '/api/auth/$'
+    | '/dashboard/'
+    | '/dashboard/recipes/add'
+    | '/dashboard/recipes/favorites'
+    | '/dashboard/recipes/shared'
     | '/dashboard/organizations/$id'
+    | '/dashboard/recipes'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/dashboard'
+    | '/admin'
     | '/forgot-password'
     | '/login'
     | '/signup'
@@ -197,15 +249,20 @@ export interface FileRouteTypes {
     | '/dashboard/cuisines'
     | '/dashboard/diets'
     | '/dashboard/profile'
-    | '/dashboard/recipes'
     | '/dashboard/settings'
     | '/dashboard/tags'
     | '/api/auth/$'
+    | '/dashboard'
+    | '/dashboard/recipes/add'
+    | '/dashboard/recipes/favorites'
+    | '/dashboard/recipes/shared'
     | '/dashboard/organizations/$id'
+    | '/dashboard/recipes'
   id:
     | '__root__'
     | '/'
     | '/(auth)'
+    | '/(protected)/admin'
     | '/(protected)/dashboard'
     | '/(auth)/forgot-password'
     | '/(auth)/login'
@@ -215,16 +272,21 @@ export interface FileRouteTypes {
     | '/(protected)/dashboard/cuisines'
     | '/(protected)/dashboard/diets'
     | '/(protected)/dashboard/profile'
-    | '/(protected)/dashboard/recipes'
     | '/(protected)/dashboard/settings'
     | '/(protected)/dashboard/tags'
     | '/api/auth/$'
+    | '/(protected)/dashboard/'
+    | '/(protected)/dashboard/recipes/add'
+    | '/(protected)/dashboard/recipes/favorites'
+    | '/(protected)/dashboard/recipes/shared'
     | '/(protected)/dashboard/organizations/$id'
+    | '/(protected)/dashboard/recipes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   authRouteRoute: typeof authRouteRouteWithChildren
+  protectedAdminRouteRoute: typeof protectedAdminRouteRoute
   protectedDashboardRouteRoute: typeof protectedDashboardRouteRouteWithChildren
   ApiElectricRoute: typeof ApiElectricRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -281,6 +343,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedDashboardRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(protected)/admin': {
+      id: '/(protected)/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof protectedAdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(protected)/dashboard/': {
+      id: '/(protected)/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof protectedDashboardIndexRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -300,13 +376,6 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/dashboard/settings'
       preLoaderRoute: typeof protectedDashboardSettingsRouteRouteImport
-      parentRoute: typeof protectedDashboardRouteRoute
-    }
-    '/(protected)/dashboard/recipes': {
-      id: '/(protected)/dashboard/recipes'
-      path: '/recipes'
-      fullPath: '/dashboard/recipes'
-      preLoaderRoute: typeof protectedDashboardRecipesRouteRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
     '/(protected)/dashboard/profile': {
@@ -337,11 +406,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedDashboardCategoriesRouteRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
+    '/(protected)/dashboard/recipes/': {
+      id: '/(protected)/dashboard/recipes/'
+      path: '/recipes'
+      fullPath: '/dashboard/recipes'
+      preLoaderRoute: typeof protectedDashboardRecipesIndexRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
     '/(protected)/dashboard/organizations/$id': {
       id: '/(protected)/dashboard/organizations/$id'
       path: '/organizations/$id'
       fullPath: '/dashboard/organizations/$id'
       preLoaderRoute: typeof protectedDashboardOrganizationsIdRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/recipes/shared': {
+      id: '/(protected)/dashboard/recipes/shared'
+      path: '/recipes/shared'
+      fullPath: '/dashboard/recipes/shared'
+      preLoaderRoute: typeof protectedDashboardRecipesSharedRouteRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/recipes/favorites': {
+      id: '/(protected)/dashboard/recipes/favorites'
+      path: '/recipes/favorites'
+      fullPath: '/dashboard/recipes/favorites'
+      preLoaderRoute: typeof protectedDashboardRecipesFavoritesRouteRouteImport
+      parentRoute: typeof protectedDashboardRouteRoute
+    }
+    '/(protected)/dashboard/recipes/add': {
+      id: '/(protected)/dashboard/recipes/add'
+      path: '/recipes/add'
+      fullPath: '/dashboard/recipes/add'
+      preLoaderRoute: typeof protectedDashboardRecipesAddRouteRouteImport
       parentRoute: typeof protectedDashboardRouteRoute
     }
   }
@@ -368,10 +465,14 @@ interface protectedDashboardRouteRouteChildren {
   protectedDashboardCuisinesRouteRoute: typeof protectedDashboardCuisinesRouteRoute
   protectedDashboardDietsRouteRoute: typeof protectedDashboardDietsRouteRoute
   protectedDashboardProfileRouteRoute: typeof protectedDashboardProfileRouteRoute
-  protectedDashboardRecipesRouteRoute: typeof protectedDashboardRecipesRouteRoute
   protectedDashboardSettingsRouteRoute: typeof protectedDashboardSettingsRouteRoute
   protectedDashboardTagsRouteRoute: typeof protectedDashboardTagsRouteRoute
+  protectedDashboardIndexRoute: typeof protectedDashboardIndexRoute
+  protectedDashboardRecipesAddRouteRoute: typeof protectedDashboardRecipesAddRouteRoute
+  protectedDashboardRecipesFavoritesRouteRoute: typeof protectedDashboardRecipesFavoritesRouteRoute
+  protectedDashboardRecipesSharedRouteRoute: typeof protectedDashboardRecipesSharedRouteRoute
   protectedDashboardOrganizationsIdRoute: typeof protectedDashboardOrganizationsIdRoute
+  protectedDashboardRecipesIndexRoute: typeof protectedDashboardRecipesIndexRoute
 }
 
 const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren =
@@ -381,11 +482,18 @@ const protectedDashboardRouteRouteChildren: protectedDashboardRouteRouteChildren
     protectedDashboardCuisinesRouteRoute: protectedDashboardCuisinesRouteRoute,
     protectedDashboardDietsRouteRoute: protectedDashboardDietsRouteRoute,
     protectedDashboardProfileRouteRoute: protectedDashboardProfileRouteRoute,
-    protectedDashboardRecipesRouteRoute: protectedDashboardRecipesRouteRoute,
     protectedDashboardSettingsRouteRoute: protectedDashboardSettingsRouteRoute,
     protectedDashboardTagsRouteRoute: protectedDashboardTagsRouteRoute,
+    protectedDashboardIndexRoute: protectedDashboardIndexRoute,
+    protectedDashboardRecipesAddRouteRoute:
+      protectedDashboardRecipesAddRouteRoute,
+    protectedDashboardRecipesFavoritesRouteRoute:
+      protectedDashboardRecipesFavoritesRouteRoute,
+    protectedDashboardRecipesSharedRouteRoute:
+      protectedDashboardRecipesSharedRouteRoute,
     protectedDashboardOrganizationsIdRoute:
       protectedDashboardOrganizationsIdRoute,
+    protectedDashboardRecipesIndexRoute: protectedDashboardRecipesIndexRoute,
   }
 
 const protectedDashboardRouteRouteWithChildren =
@@ -396,6 +504,7 @@ const protectedDashboardRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
+  protectedAdminRouteRoute: protectedAdminRouteRoute,
   protectedDashboardRouteRoute: protectedDashboardRouteRouteWithChildren,
   ApiElectricRoute: ApiElectricRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
