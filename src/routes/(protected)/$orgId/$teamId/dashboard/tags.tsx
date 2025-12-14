@@ -2,13 +2,13 @@ import { useState } from "react";
 
 import { useLiveQuery } from "@tanstack/react-db";
 import { createFileRoute } from "@tanstack/react-router";
-import { EarthIcon, EllipsisIcon, PlusIcon } from "lucide-react";
+import { EllipsisIcon, FrameIcon, PlusIcon } from "lucide-react";
 
-import type { Cuisine } from "@/db/schema/recipes";
-import { cuisinesCollection } from "@/electric/collections";
+import type { Tag } from "@/db/schema/recipes";
+import { tagsCollection } from "@/electric/collections";
 import { cn } from "@/lib/utils";
 
-import { CuisineForm } from "@/components/forms/collections/cuisine";
+import { TagForm } from "@/components/forms/collections/tag";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -53,17 +53,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export const Route = createFileRoute("/(protected)/dashboard/cuisines")({
+export const Route = createFileRoute("/(protected)/$orgId/$teamId/dashboard/tags")({
   ssr: false,
-  component: CuisinesRoute,
+  component: TagsRoute,
 });
 
-function CuisinesRoute() {
+function TagsRoute() {
   const [open, setOpen] = useState(false);
   const [modalId, setModalId] = useState<string | null>(null);
-  const { data: cuisines } = useLiveQuery((q) => q.from({ cuisine: cuisinesCollection }));
+  const { data: tags } = useLiveQuery((q) => q.from({ tag: tagsCollection }));
 
-  const cuisine = cuisines.find((cat) => cat.id === modalId);
+  const tag = tags.find((cat) => cat.id === modalId);
 
   function handleOpen(id: string | null) {
     setModalId(id);
@@ -78,9 +78,9 @@ function CuisinesRoute() {
   return (
     <div className="p-4">
       <div className="mb-4 flex items-center justify-between gap-4">
-        <h1 className="text-xl font-bold">Cuisines</h1>
+        <h1 className="text-xl font-bold">Tags</h1>
         <Button
-          className={cn("cursor-pointer", !cuisines.length && "hidden")}
+          className={cn("cursor-pointer", !tags.length && "hidden")}
           onClick={() => handleOpen(null)}>
           <PlusIcon />
           <span className="hidden sm:inline-flex">Create</span>
@@ -88,16 +88,16 @@ function CuisinesRoute() {
       </div>
 
       <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
-        {cuisines.length ? (
-          <CuisineTable cuisines={cuisines} handleOpen={handleOpen} />
+        {tags.length ? (
+          <TagTable tags={tags} handleOpen={handleOpen} />
         ) : (
           <Empty className="from-muted/50 to-background h-full bg-linear-to-b from-30%">
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <EarthIcon />
+                <FrameIcon />
               </EmptyMedia>
-              <EmptyTitle>No Cuisines</EmptyTitle>
-              <EmptyDescription>Create a cuisine. New cuisines will appear here.</EmptyDescription>
+              <EmptyTitle>No Tags</EmptyTitle>
+              <EmptyDescription>Create a tag. New tags will appear here.</EmptyDescription>
             </EmptyHeader>
 
             <EmptyContent>
@@ -110,29 +110,27 @@ function CuisinesRoute() {
 
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Cuisine</DialogTitle>
-            <DialogDescription>
-              {cuisine ? "Edit this cuisine." : "Create a new cuisine."}
-            </DialogDescription>
+            <DialogTitle>Tag</DialogTitle>
+            <DialogDescription>{tag ? "Edit this tag." : "Create a new tag."}</DialogDescription>
           </DialogHeader>
-          <CuisineForm cuisine={cuisine} handleClose={handleClose} />
+          <TagForm tag={tag} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
     </div>
   );
 }
 
-function CuisineTable({
-  cuisines,
+function TagTable({
+  tags,
   handleOpen,
 }: {
-  cuisines: Array<Cuisine> | null;
+  tags: Array<Tag> | null;
   handleOpen: (id: string) => void;
 }) {
-  if (!cuisines || !cuisines.length) return null;
+  if (!tags || !tags.length) return null;
 
   function handleDelete(id: string) {
-    cuisinesCollection.delete(id);
+    tagsCollection.delete(id);
   }
 
   return (
@@ -145,10 +143,10 @@ function CuisineTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {cuisines.map((cuisine) => (
-          <TableRow key={cuisine.id} className="odd:bg-muted/25">
-            <TableCell>{cuisine.id}</TableCell>
-            <TableCell>{cuisine.title}</TableCell>
+        {tags.map((tag) => (
+          <TableRow key={tag.id} className="odd:bg-muted/25">
+            <TableCell>{tag.id}</TableCell>
+            <TableCell>{tag.title}</TableCell>
             <TableCell className="w-12">
               <DropdownMenu>
                 <DropdownMenuTrigger
@@ -158,12 +156,10 @@ function CuisineTable({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="text-muted-foreground truncate text-sm">
-                    {cuisine.title}
+                    {tag.title}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => handleOpen(cuisine.id)}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleOpen(tag.id)}>
                     <span>Edit</span>
                   </DropdownMenuItem>
                   <AlertDialog>
@@ -178,14 +174,14 @@ function CuisineTable({
                       <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action cannot be undone. This will permanently delete the cuisine.
+                          This action cannot be undone. This will permanently delete the tag.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                           className="cursor-pointer"
-                          onClick={() => handleDelete(cuisine.id)}>
+                          onClick={() => handleDelete(tag.id)}>
                           Delete
                         </AlertDialogAction>
                       </AlertDialogFooter>

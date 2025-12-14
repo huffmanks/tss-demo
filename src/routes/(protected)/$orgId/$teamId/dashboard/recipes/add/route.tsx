@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { RecipeForm } from "@/components/forms/collections/recipe";
 
-export const Route = createFileRoute("/(protected)/dashboard/recipes/add")({
+export const Route = createFileRoute("/(protected)/$orgId/$teamId/dashboard/recipes/add")({
   component: AddRecipeRoute,
 });
 

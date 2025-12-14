@@ -1,12 +1,18 @@
 import { passkey } from "@better-auth/passkey";
+import { getRequestHeaders } from "@tanstack/react-start/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin as adminPlugin, organization, twoFactor } from "better-auth/plugins";
+import {
+  admin as adminPlugin,
+  organization as organizationPlugin,
+  twoFactor,
+} from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
 import { ac, member, owner } from "@/auth/permissions";
 import { db } from "@/db";
 import * as schema from "@/db/schema";
+import { seedNewTeamData } from "@/fn/onboarding";
 import { siteConfig } from "@/lib/site-config";
 
 export const auth = betterAuth({
@@ -52,9 +58,21 @@ export const auth = betterAuth({
     }),
     passkey(),
     twoFactor(),
-    organization({
+    organizationPlugin({
       teams: {
         enabled: true,
+      },
+      schema: {
+        team: {
+          additionalFields: {
+            slug: {
+              fieldName: "slug",
+              type: "string",
+              required: true,
+              input: true,
+            },
+          },
+        },
       },
       ac,
       roles: {
@@ -62,24 +80,30 @@ export const auth = betterAuth({
         owner,
       },
       allowUserToCreateOrganization: (user) => {
-        // const [firstUser] = await db
-        //   .select()
-        //   .from(schema.users)
-        //   .where(eq(schema.users.id, user.id))
-        //   .orderBy(asc(schema.users.createdAt))
-        //   .limit(1);
-        // return user.id === firstUser.id;
         return user.role === "admin";
       },
       organizationHooks: {
-        beforeCreateOrganization: async ({ organization: org, user }) => {
+        beforeCreateOrganization: async ({ organization, user }) => {
           await auth.api.addMember({
             body: {
               userId: user.id,
               role: ["owner"],
-              organizationId: org.id,
+              organizationId: organization.id,
             },
           });
+        },
+        beforeCreateTeam: async ({ team, user }) => {
+          const headers = getRequestHeaders();
+          await auth.api.addTeamMember({
+            body: {
+              userId: user?.id,
+              teamId: team.id,
+            },
+            headers,
+          });
+        },
+        afterCreateTeam: async ({ team }) => {
+          await seedNewTeamData({ data: { teamId: team.id } });
         },
       },
     }),

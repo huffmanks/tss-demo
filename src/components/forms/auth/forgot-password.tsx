@@ -1,7 +1,8 @@
-import { useState } from "react";
-
+import { useForm } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
+import { toast } from "sonner";
 
+import { authClient } from "@/auth/auth-client";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -10,14 +11,18 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui
 import { Input } from "@/components/ui/input";
 
 export function ForgotPasswordForm({ className, ...props }: React.ComponentProps<"div">) {
-  const [email, setEmail] = useState("");
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    // @TODO
-    // setup reset password flow
-  }
-
+  const form = useForm({
+    defaultValues: {
+      email: "tim@mylab.com",
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        const { data, error } = await authClient.requestPasswordReset(value);
+      } catch (error) {
+        toast.error("Sign in failed.");
+      }
+    },
+  });
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -26,19 +31,32 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
           <CardDescription>Enter your email below to reset your password</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} autoComplete="off">
+          <form
+            autoComplete="off"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              await form.handleSubmit();
+            }}>
             <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  autoComplete="off"
-                  required
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Field>
+              <form.Field
+                name="email"
+                children={(field) => (
+                  <Field>
+                    <FieldLabel htmlFor="email">Email</FieldLabel>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="m@example.com"
+                      autoComplete="off"
+                      required
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                  </Field>
+                )}
+              />
 
               <Field>
                 <Button className="cursor-pointer" type="submit">

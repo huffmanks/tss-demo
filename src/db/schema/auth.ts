@@ -1,5 +1,14 @@
 import { relations } from "drizzle-orm";
-import { boolean, index, integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  index,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  unique,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { v7 as uuidv7 } from "uuid";
 
 export const users = pgTable("users", {
@@ -36,14 +45,18 @@ export const sessions = pgTable(
       .notNull(),
     ipAddress: text("ip_address"),
     userAgent: text("user_agent"),
-    userId: text("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     impersonatedBy: text("impersonated_by"),
-    activeOrganizationId: text("active_organization_id"),
-    activeTeamId: text("active_team_id"),
+    activeOrganizationId: uuid("active_organization_id").references(() => organizations.id),
+    activeTeamId: uuid("active_team_id").references(() => teams.id),
   },
-  (table) => [index("sessions_userId_idx").on(table.userId)]
+  (table) => [
+    index("sessions_userId_idx").on(table.userId),
+    index("sessions_activeOrganizationId_idx").on(table.activeOrganizationId),
+    index("sessions_activeTeamId_idx").on(table.activeTeamId),
+  ]
 );
 
 export const accounts = pgTable(
@@ -54,7 +67,7 @@ export const accounts = pgTable(
       .primaryKey(),
     accountId: text("account_id").notNull(),
     providerId: text("provider_id").notNull(),
-    userId: text("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     accessToken: text("access_token"),
@@ -98,10 +111,10 @@ export const passkeys = pgTable(
       .primaryKey(),
     name: text("name"),
     publicKey: text("public_key").notNull(),
-    userId: text("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    credentialID: text("credential_id").notNull(),
+    credentialId: text("credential_id").notNull(),
     counter: integer("counter").notNull(),
     deviceType: text("device_type").notNull(),
     backedUp: boolean("backed_up").notNull(),
@@ -111,7 +124,7 @@ export const passkeys = pgTable(
   },
   (table) => [
     index("passkeys_userId_idx").on(table.userId),
-    index("passkeys_credentialID_idx").on(table.credentialID),
+    index("passkeys_credentialID_idx").on(table.credentialId),
   ]
 );
 
@@ -123,7 +136,7 @@ export const twoFactors = pgTable(
       .primaryKey(),
     secret: text("secret").notNull(),
     backupCodes: text("backup_codes").notNull(),
-    userId: text("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
   },
@@ -137,11 +150,12 @@ export const organizations = pgTable("organizations", {
   id: uuid("id")
     .$defaultFn(() => uuidv7())
     .primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   slug: text("slug").notNull().unique(),
   logo: text("logo"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
   metadata: text("metadata"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").$onUpdate(() => /* @__PURE__ */ new Date()),
 });
 
 export const teams = pgTable(
@@ -151,13 +165,18 @@ export const teams = pgTable(
       .$defaultFn(() => uuidv7())
       .primaryKey(),
     name: text("name").notNull(),
-    organizationId: text("organization_id")
+    slug: text("slug").notNull(),
+    organizationId: uuid("organization_id")
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").$onUpdate(() => /* @__PURE__ */ new Date()),
   },
-  (table) => [index("teams_organizationId_idx").on(table.organizationId)]
+  (table) => [
+    unique().on(table.organizationId, table.name),
+    unique().on(table.organizationId, table.slug),
+    index("teams_organizationId_idx").on(table.organizationId),
+  ]
 );
 
 export const teamMembers = pgTable(
@@ -166,10 +185,10 @@ export const teamMembers = pgTable(
     id: uuid("id")
       .$defaultFn(() => uuidv7())
       .primaryKey(),
-    teamId: text("team_id")
+    teamId: uuid("team_id")
       .notNull()
       .references(() => teams.id, { onDelete: "cascade" }),
-    userId: text("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -186,10 +205,10 @@ export const members = pgTable(
     id: uuid("id")
       .$defaultFn(() => uuidv7())
       .primaryKey(),
-    organizationId: text("organization_id")
+    organizationId: uuid("organization_id")
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
-    userId: text("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     role: text("role").default("member").notNull(),
@@ -207,21 +226,22 @@ export const invitations = pgTable(
     id: uuid("id")
       .$defaultFn(() => uuidv7())
       .primaryKey(),
-    organizationId: text("organization_id")
+    organizationId: uuid("organization_id")
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
     email: text("email").notNull(),
     role: text("role").default("member").notNull(),
-    teamId: text("team_id"),
+    teamId: uuid("team_id").references(() => organizations.id, { onDelete: "cascade" }),
     status: text("status").default("pending").notNull(),
     expiresAt: timestamp("expires_at").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
-    inviterId: text("inviter_id")
+    inviterId: uuid("inviter_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
   },
   (table) => [
     index("invitations_organizationId_idx").on(table.organizationId),
+    index("invitations_teamId_idx").on(table.teamId),
     index("invitations_email_idx").on(table.email),
   ]
 );
@@ -240,6 +260,14 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   users: one(users, {
     fields: [sessions.userId],
     references: [users.id],
+  }),
+  organizations: one(organizations, {
+    fields: [sessions.activeOrganizationId],
+    references: [organizations.id],
+  }),
+  teams: one(teams, {
+    fields: [sessions.activeTeamId],
+    references: [teams.id],
   }),
 }));
 
@@ -304,6 +332,10 @@ export const invitationsRelations = relations(invitations, ({ one }) => ({
   organizations: one(organizations, {
     fields: [invitations.organizationId],
     references: [organizations.id],
+  }),
+  teams: one(teams, {
+    fields: [invitations.teamId],
+    references: [teams.id],
   }),
   users: one(users, {
     fields: [invitations.inviterId],

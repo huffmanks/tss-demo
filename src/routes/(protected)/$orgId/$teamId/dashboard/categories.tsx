@@ -2,13 +2,13 @@ import { useState } from "react";
 
 import { useLiveQuery } from "@tanstack/react-db";
 import { createFileRoute } from "@tanstack/react-router";
-import { EllipsisIcon, FrameIcon, PlusIcon } from "lucide-react";
+import { BookOpenIcon, EllipsisIcon, PlusIcon } from "lucide-react";
 
-import type { Tag } from "@/db/schema/recipes";
-import { tagsCollection } from "@/electric/collections";
+import type { Category } from "@/db/schema/recipes";
+import { categoriesCollection } from "@/electric/collections";
 import { cn } from "@/lib/utils";
 
-import { TagForm } from "@/components/forms/collections/tag";
+import { CategoryForm } from "@/components/forms/collections/category";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -53,17 +53,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export const Route = createFileRoute("/(protected)/dashboard/tags")({
+export const Route = createFileRoute("/(protected)/$orgId/$teamId/dashboard/categories")({
   ssr: false,
-  component: TagsRoute,
+  component: CategoriesRoute,
 });
 
-function TagsRoute() {
+function CategoriesRoute() {
   const [open, setOpen] = useState(false);
   const [modalId, setModalId] = useState<string | null>(null);
-  const { data: tags } = useLiveQuery((q) => q.from({ tag: tagsCollection }));
+  const { data: categories } = useLiveQuery((q) => q.from({ category: categoriesCollection }));
 
-  const tag = tags.find((cat) => cat.id === modalId);
+  const category = categories.find((cat) => cat.id === modalId);
 
   function handleOpen(id: string | null) {
     setModalId(id);
@@ -78,9 +78,9 @@ function TagsRoute() {
   return (
     <div className="p-4">
       <div className="mb-4 flex items-center justify-between gap-4">
-        <h1 className="text-xl font-bold">Tags</h1>
+        <h1 className="text-xl font-bold">Categories</h1>
         <Button
-          className={cn("cursor-pointer", !tags.length && "hidden")}
+          className={cn("cursor-pointer", !categories.length && "hidden")}
           onClick={() => handleOpen(null)}>
           <PlusIcon />
           <span className="hidden sm:inline-flex">Create</span>
@@ -88,16 +88,18 @@ function TagsRoute() {
       </div>
 
       <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
-        {tags.length ? (
-          <TagTable tags={tags} handleOpen={handleOpen} />
+        {categories.length ? (
+          <CategoryTable categories={categories} handleOpen={handleOpen} />
         ) : (
           <Empty className="from-muted/50 to-background h-full bg-linear-to-b from-30%">
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <FrameIcon />
+                <BookOpenIcon />
               </EmptyMedia>
-              <EmptyTitle>No Tags</EmptyTitle>
-              <EmptyDescription>Create a tag. New tags will appear here.</EmptyDescription>
+              <EmptyTitle>No Categories</EmptyTitle>
+              <EmptyDescription>
+                Create a category. New categories will appear here.
+              </EmptyDescription>
             </EmptyHeader>
 
             <EmptyContent>
@@ -110,27 +112,29 @@ function TagsRoute() {
 
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Tag</DialogTitle>
-            <DialogDescription>{tag ? "Edit this tag." : "Create a new tag."}</DialogDescription>
+            <DialogTitle>Category</DialogTitle>
+            <DialogDescription>
+              {category ? "Edit this category." : "Create a new category."}
+            </DialogDescription>
           </DialogHeader>
-          <TagForm tag={tag} handleClose={handleClose} />
+          <CategoryForm category={category} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
     </div>
   );
 }
 
-function TagTable({
-  tags,
+function CategoryTable({
+  categories,
   handleOpen,
 }: {
-  tags: Array<Tag> | null;
+  categories: Array<Category> | null;
   handleOpen: (id: string) => void;
 }) {
-  if (!tags || !tags.length) return null;
+  if (!categories || !categories.length) return null;
 
   function handleDelete(id: string) {
-    tagsCollection.delete(id);
+    categoriesCollection.delete(id);
   }
 
   return (
@@ -143,10 +147,10 @@ function TagTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {tags.map((tag) => (
-          <TableRow key={tag.id} className="odd:bg-muted/25">
-            <TableCell>{tag.id}</TableCell>
-            <TableCell>{tag.title}</TableCell>
+        {categories.map((category) => (
+          <TableRow key={category.id} className="odd:bg-muted/25">
+            <TableCell>{category.id}</TableCell>
+            <TableCell>{category.title}</TableCell>
             <TableCell className="w-12">
               <DropdownMenu>
                 <DropdownMenuTrigger
@@ -156,12 +160,15 @@ function TagTable({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="text-muted-foreground truncate text-sm">
-                    {tag.title}
+                    {category.title}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleOpen(tag.id)}>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => handleOpen(category.id)}>
                     <span>Edit</span>
                   </DropdownMenuItem>
+
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <DropdownMenuItem
@@ -174,14 +181,14 @@ function TagTable({
                       <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action cannot be undone. This will permanently delete the tag.
+                          This action cannot be undone. This will permanently delete the category.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                           className="cursor-pointer"
-                          onClick={() => handleDelete(tag.id)}>
+                          onClick={() => handleDelete(category.id)}>
                           Delete
                         </AlertDialogAction>
                       </AlertDialogFooter>

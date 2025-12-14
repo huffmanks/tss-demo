@@ -1,16 +1,16 @@
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
 import { authUser } from "@/fn/auth";
-import { doesOrgExist } from "@/fn/onboarding";
+import { doesOrganizationExist } from "@/fn/onboarding";
 
 import { AppSidebar } from "@/components/blocks/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/blocks/sidebar/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-export const Route = createFileRoute("/(protected)/dashboard")({
+export const Route = createFileRoute("/(protected)/$orgId/$teamId/dashboard")({
   component: DashboardRoute,
   loader: async ({ location }) => {
-    const { user, orgId } = await authUser();
+    const { user, session } = await authUser();
 
     if (!user.id) {
       throw redirect({
@@ -19,11 +19,18 @@ export const Route = createFileRoute("/(protected)/dashboard")({
       });
     }
 
-    const orgExists = await doesOrgExist();
-
-    if (!orgExists) {
+    if (!(await doesOrganizationExist())) {
       throw redirect({
-        to: "/onboarding",
+        to: "/onboarding/first-user",
+        replace: true,
+      });
+    }
+
+    const orgId = session.activeOrganizationId;
+
+    if (!orgId) {
+      throw redirect({
+        to: "/onboarding/join",
         replace: true,
       });
     }

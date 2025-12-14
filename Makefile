@@ -40,14 +40,12 @@ dev-docker-down: ## Stop the Docker services (db, electric) and remove volumes
 	@echo "\033[1;33m╭─────────────────────────────────────╮\033[0m"
 	@echo "\033[1;33m│ \033[33m🐳 Shutting down Docker services...\033[0m \033[1;33m│\033[0m"
 	@echo "\033[1;33m╰─────────────────────────────────────╯\033[0m"
-	@$(DOCKER_COMPOSE) down
+	@$(DOCKER_COMPOSE) down -v
 
 # The main development target:
 dev-up-all: dev-docker-up
 	@echo "--- Migrating database... ---"
 	$(shell cat $(DEV_ENV_FILE) | xargs) pnpm db:migrate:dev
-	@echo "--- Seeding database... ---"
-	$(shell cat $(DEV_ENV_FILE) | xargs) pnpm db:seed:dev
 	@echo "--- Database operations complete. Starting app via (pnpm dev) ---"
 	$(shell cat $(DEV_ENV_FILE) | xargs) pnpm dev
 
@@ -76,8 +74,6 @@ prod-docker-down: ## Stop the production environment
 # prod-up-all: prod-docker-up
 # 	@echo "--- Migrating database... ---"
 # 	$(shell cat $(DEV_ENV_FILE) | xargs) pnpm db:migrate:prod
-# 	@echo "--- Seeding database... ---"
-# 	$(shell cat $(DEV_ENV_FILE) | xargs) pnpm db:seed:prod
 # 	@echo "--- Database operations complete. ---"
 
 # Run prod-up-all, and prod-docker-down on failure

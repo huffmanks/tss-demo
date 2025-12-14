@@ -5,11 +5,11 @@ import { auth } from "@/auth";
 
 export const authUser = createServerFn().handler(async () => {
   const headers = getRequestHeaders();
-  const session = await auth.api.getSession({ headers });
+  const data = await auth.api.getSession({ headers });
 
-  if (!session?.user) {
+  if (!data?.user) {
     throw new Error("Unauthorized");
   }
 
-  return { user: session.user, orgId: session.session.activeOrganizationId };
+  return { user: data.user, session: data.session };
 });

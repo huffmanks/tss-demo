@@ -1,45 +1,59 @@
-import { useState } from "react";
-
+import { useForm } from "@tanstack/react-form";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 
 import { authClient } from "@/auth/auth-client";
+import { createAdminUser, createUser } from "@/fn/onboarding";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+type SignupFormProps = React.ComponentProps<typeof Card> & {
+  doesOrganizationExist: boolean;
+  doesUserExist: boolean;
+};
 
+export function SignupForm({ doesOrganizationExist, doesUserExist, ...props }: SignupFormProps) {
   const navigate = useNavigate();
+  const createAdminUserFn = useServerFn(createAdminUser);
+  const createUserFn = useServerFn(createUser);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  const form = useForm({
+    defaultValues: {
+      name: "Tim Lab",
+      email: "tim@mylab.com",
+      password: "password",
+      confirmPassword: "password",
+    },
+    onSubmit: async ({ value }) => {
+      if (value.password !== value.confirmPassword) {
+        toast.error("Passwords do not match.");
+        return;
+      }
 
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match.");
-      return;
-    }
+      const { confirmPassword, ...rest } = value;
 
-    const { data, error } = await authClient.signUp.email({
-      name,
-      email,
-      password,
-    });
+      if (!doesUserExist) {
+        await createAdminUserFn({ data: rest });
+      } else {
+        await createUserFn({ data: rest });
+      }
 
-    if (error) {
-      toast.error(error.message || "Sign up failed.");
-    }
+      await authClient.signIn.email({
+        email: value.email,
+        password: value.password,
+      });
 
-    if (data) {
-      navigate({ to: "/onboarding" });
-    }
-  }
+      if (!doesOrganizationExist) {
+        navigate({ to: "/onboarding/first-user" });
+      } else {
+        navigate({ to: "/onboarding/join" });
+      }
+    },
+  });
 
   return (
     <Card {...props}>
@@ -48,55 +62,94 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         <CardDescription>Enter your information below to create your account</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} autoComplete="off">
+        <form
+          autoComplete="off"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            await form.handleSubmit();
+          }}>
           <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="name">Full Name</FieldLabel>
-              <Input
-                id="name"
-                type="text"
-                placeholder="John Doe"
-                autoComplete="off"
-                required
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                autoComplete="off"
-                required
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <FieldDescription>
-                We&apos;ll use this to contact you. We will not share your email with anyone else.
-              </FieldDescription>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                autoComplete="off"
-                required
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <FieldDescription>Must be at least 8 characters long.</FieldDescription>
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
-              <Input
-                id="confirm-password"
-                type="password"
-                autoComplete="off"
-                required
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              <FieldDescription>Please confirm your password.</FieldDescription>
-            </Field>
+            <form.Field
+              name="name"
+              children={(field) => (
+                <Field>
+                  <FieldLabel htmlFor="name">Full Name</FieldLabel>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="John Doe"
+                    autoComplete="off"
+                    required
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                </Field>
+              )}
+            />
+
+            <form.Field
+              name="email"
+              children={(field) => (
+                <Field>
+                  <FieldLabel htmlFor="email">Email</FieldLabel>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    autoComplete="off"
+                    required
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  <FieldDescription>
+                    We&apos;ll use this to contact you. We will not share your email with anyone
+                    else.
+                  </FieldDescription>
+                </Field>
+              )}
+            />
+
+            <form.Field
+              name="password"
+              children={(field) => (
+                <Field>
+                  <FieldLabel htmlFor="password">Password</FieldLabel>
+                  <Input
+                    id="password"
+                    type="password"
+                    autoComplete="off"
+                    required
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  <FieldDescription>Must be at least 8 characters long.</FieldDescription>
+                </Field>
+              )}
+            />
+
+            <form.Field
+              name="confirmPassword"
+              children={(field) => (
+                <Field>
+                  <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    autoComplete="off"
+                    required
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  <FieldDescription>Please confirm your password.</FieldDescription>
+                </Field>
+              )}
+            />
+
             <FieldGroup>
               <Field>
                 <Button className="cursor-pointer" type="submit">

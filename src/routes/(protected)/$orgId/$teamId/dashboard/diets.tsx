@@ -53,7 +53,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export const Route = createFileRoute("/(protected)/dashboard/diets")({
+export const Route = createFileRoute("/(protected)/$orgId/$teamId/dashboard/diets")({
   ssr: false,
   component: DietsRoute,
 });

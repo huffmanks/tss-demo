@@ -268,20 +268,3 @@ export const initialUnits = [
     type: "volume",
   },
 ];
-
-export const initialUsers = [
-  {
-    id: "019b0ec9-ea0a-707f-bbd5-e0a97378d5ca",
-    name: "Tim Lab",
-    password: "password",
-    email: "tim@mylab.com",
-    role: "admin",
-  },
-  {
-    id: "3001720c-4f5d-4ff7-b1d9-5590fccfbab0",
-    name: "January Rite",
-    password: "password",
-    email: "jrite@aau.edu",
-    role: "user",
-  },
-];

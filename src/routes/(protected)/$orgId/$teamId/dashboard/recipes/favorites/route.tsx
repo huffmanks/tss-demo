@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/(protected)/dashboard/recipes/favorites")({
+export const Route = createFileRoute("/(protected)/$orgId/$teamId/dashboard/recipes/favorites")({
   component: FavoriteRecipesRoute,
 });
 

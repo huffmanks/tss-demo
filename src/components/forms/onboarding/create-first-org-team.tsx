@@ -1,8 +1,9 @@
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 
-import { authClient } from "@/auth/auth-client";
+import { createFirstOrgTeam } from "@/fn/onboarding";
 import { cn, slugify } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -10,34 +11,42 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-type CreateOrgFormProps = React.ComponentProps<"div"> & {
+type CreateFirstOrgTeamFormProps = React.ComponentProps<"div"> & {
+  doesOrganizationExist: boolean;
   userId: string;
 };
 
-export function CreateOrgForm({ userId, className, ...props }: CreateOrgFormProps) {
+export function CreateFirstOrgTeamForm({
+  doesOrganizationExist,
+  userId,
+  className,
+  ...props
+}: CreateFirstOrgTeamFormProps) {
   const navigate = useNavigate();
+  const createFirstOrgTeamFn = useServerFn(createFirstOrgTeam);
 
   const form = useForm({
     defaultValues: {
-      name: "My family",
+      orgName: "My Org",
+      teamName: "My Team",
     },
-
     onSubmit: async ({ value }) => {
       try {
-        const { data, error } = await authClient.organization.create({
-          name: value.name,
-          slug: slugify(value.name),
-          userId,
-          keepCurrentActiveOrganization: false,
+        const { orgName, teamName } = value;
+        const orgSlug = slugify(orgName);
+        const teamSlug = slugify(teamName);
+        const result = await createFirstOrgTeamFn({
+          data: { orgName, orgSlug, teamName, teamSlug, userId },
         });
 
-        if (error) {
-          toast.error("Error creating organization.");
+        if (!result) {
+          throw Error;
         }
 
-        if (data) {
-          navigate({ to: "/dashboard/recipes" });
-        }
+        navigate({
+          to: "/$orgId/$teamId/dashboard",
+          params: { orgId: result.organization.id, teamId: result.team.id },
+        });
       } catch (error) {
         toast.error("Error creating organization.");
       }
@@ -48,8 +57,8 @@ export function CreateOrgForm({ userId, className, ...props }: CreateOrgFormProp
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Create organization</CardTitle>
-          <CardDescription>Enter a title to create the first organization.</CardDescription>
+          <CardTitle>Create organization/team</CardTitle>
+          <CardDescription>Create the first organization and team to get started.</CardDescription>
         </CardHeader>
         <CardContent>
           <form
@@ -60,10 +69,27 @@ export function CreateOrgForm({ userId, className, ...props }: CreateOrgFormProp
             }}>
             <FieldGroup>
               <form.Field
-                name="name"
+                name="orgName"
                 children={(field) => (
                   <Field>
                     <FieldLabel htmlFor="name">Organization name</FieldLabel>
+                    <Input
+                      id="name"
+                      type="name"
+                      required
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                  </Field>
+                )}
+              />
+
+              <form.Field
+                name="teamName"
+                children={(field) => (
+                  <Field>
+                    <FieldLabel htmlFor="name">Team name</FieldLabel>
                     <Input
                       id="name"
                       type="name"
