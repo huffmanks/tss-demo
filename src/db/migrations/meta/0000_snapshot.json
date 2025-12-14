@@ -1,5 +1,5 @@
 {
-  "id": "2df60f3f-8110-4144-8069-06d0043f78ce",
+  "id": "012fe76c-cd83-4200-ac80-95c422d582ec",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -141,16 +141,53 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
+      "indexes": {
+        "categories_team_id_idx": {
+          "name": "categories_team_id_idx",
+          "columns": [
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "categories_team_id_teams_id_fk": {
+          "name": "categories_team_id_teams_id_fk",
+          "tableFrom": "categories",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "categories_title_unique": {
-          "name": "categories_title_unique",
+        "categories_team_title_unique": {
+          "name": "categories_team_title_unique",
           "nullsNotDistinct": false,
           "columns": [
+            "team_id",
             "title"
           ]
         }
@@ -174,16 +211,53 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
+      "indexes": {
+        "cuisines_team_id_idx": {
+          "name": "cuisines_team_id_idx",
+          "columns": [
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cuisines_team_id_teams_id_fk": {
+          "name": "cuisines_team_id_teams_id_fk",
+          "tableFrom": "cuisines",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "cuisines_title_unique": {
-          "name": "cuisines_title_unique",
+        "cuisines_team_title_unique": {
+          "name": "cuisines_team_title_unique",
           "nullsNotDistinct": false,
           "columns": [
+            "team_id",
             "title"
           ]
         }
@@ -207,16 +281,53 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
+      "indexes": {
+        "diets_team_id_idx": {
+          "name": "diets_team_id_idx",
+          "columns": [
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "diets_team_id_teams_id_fk": {
+          "name": "diets_team_id_teams_id_fk",
+          "tableFrom": "diets",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "diets_title_unique": {
-          "name": "diets_title_unique",
+        "diets_team_title_unique": {
+          "name": "diets_team_title_unique",
           "nullsNotDistinct": false,
           "columns": [
+            "team_id",
             "title"
           ]
         }
@@ -763,7 +874,7 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "default": "'user'"
+          "default": "'member'"
         },
         "created_at": {
           "name": "created_at",
@@ -1043,6 +1154,12 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {
@@ -1075,6 +1192,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "recipe_categories_team_id_idx": {
+          "name": "recipe_categories_team_id_idx",
+          "columns": [
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -1097,6 +1229,19 @@
           "tableTo": "categories",
           "columnsFrom": [
             "category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "recipe_categories_team_id_teams_id_fk": {
+          "name": "recipe_categories_team_id_teams_id_fk",
+          "tableFrom": "recipe_categories",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
           ],
           "columnsTo": [
             "id"
@@ -1141,6 +1286,12 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {
@@ -1173,6 +1324,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "recipe_cuisines_team_id_idx": {
+          "name": "recipe_cuisines_team_id_idx",
+          "columns": [
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -1195,6 +1361,19 @@
           "tableTo": "cuisines",
           "columnsFrom": [
             "cuisine_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "recipe_cuisines_team_id_teams_id_fk": {
+          "name": "recipe_cuisines_team_id_teams_id_fk",
+          "tableFrom": "recipe_cuisines",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
           ],
           "columnsTo": [
             "id"
@@ -1239,6 +1418,12 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {
@@ -1271,6 +1456,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "recipe_diets_team_id_idx": {
+          "name": "recipe_diets_team_id_idx",
+          "columns": [
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -1293,6 +1493,19 @@
           "tableTo": "diets",
           "columnsFrom": [
             "diet_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "recipe_diets_team_id_teams_id_fk": {
+          "name": "recipe_diets_team_id_teams_id_fk",
+          "tableFrom": "recipe_diets",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
           ],
           "columnsTo": [
             "id"
@@ -1343,6 +1556,12 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {
@@ -1375,6 +1594,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "recipe_images_team_id_idx": {
+          "name": "recipe_images_team_id_idx",
+          "columns": [
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -1397,6 +1631,19 @@
           "tableTo": "images",
           "columnsFrom": [
             "image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "recipe_images_team_id_teams_id_fk": {
+          "name": "recipe_images_team_id_teams_id_fk",
+          "tableFrom": "recipe_images",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
           ],
           "columnsTo": [
             "id"
@@ -1441,6 +1688,12 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -1473,6 +1726,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "recipe_shares_team_id_idx": {
+          "name": "recipe_shares_team_id_idx",
+          "columns": [
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -1495,6 +1763,19 @@
           "tableTo": "organizations",
           "columnsFrom": [
             "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "recipe_shares_team_id_teams_id_fk": {
+          "name": "recipe_shares_team_id_teams_id_fk",
+          "tableFrom": "recipe_shares",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
           ],
           "columnsTo": [
             "id"
@@ -1539,6 +1820,12 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {
@@ -1571,6 +1858,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "recipe_tags_team_id_idx": {
+          "name": "recipe_tags_team_id_idx",
+          "columns": [
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -1593,6 +1895,19 @@
           "tableTo": "tags",
           "columnsFrom": [
             "tag_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "recipe_tags_team_id_teams_id_fk": {
+          "name": "recipe_tags_team_id_teams_id_fk",
+          "tableFrom": "recipe_tags",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
           ],
           "columnsTo": [
             "id"
@@ -1674,8 +1989,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "organization_id": {
-          "name": "organization_id",
+        "team_id": {
+          "name": "team_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -1716,15 +2031,30 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "recipes_teamId_idx": {
+          "name": "recipes_teamId_idx",
+          "columns": [
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "recipes_organization_id_organizations_id_fk": {
-          "name": "recipes_organization_id_organizations_id_fk",
+        "recipes_team_id_teams_id_fk": {
+          "name": "recipes_team_id_teams_id_fk",
           "tableFrom": "recipes",
-          "tableTo": "organizations",
+          "tableTo": "teams",
           "columnsFrom": [
-            "organization_id"
+            "team_id"
           ],
           "columnsTo": [
             "id"
@@ -1748,19 +2078,19 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "recipes_organization_id_title_unique": {
-          "name": "recipes_organization_id_title_unique",
+        "recipes_team_id_title_unique": {
+          "name": "recipes_team_id_title_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "organization_id",
+            "team_id",
             "title"
           ]
         },
-        "recipes_organization_id_slug_unique": {
-          "name": "recipes_organization_id_slug_unique",
+        "recipes_team_id_slug_unique": {
+          "name": "recipes_team_id_slug_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "organization_id",
+            "team_id",
             "slug"
           ]
         }
@@ -1902,16 +2232,53 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
+      "indexes": {
+        "tags_team_id_idx": {
+          "name": "tags_team_id_idx",
+          "columns": [
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "tags_team_id_teams_id_fk": {
+          "name": "tags_team_id_teams_id_fk",
+          "tableFrom": "tags",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "tags_title_unique": {
-          "name": "tags_title_unique",
+        "tags_team_title_unique": {
+          "name": "tags_team_title_unique",
           "nullsNotDistinct": false,
           "columns": [
+            "team_id",
             "title"
           ]
         }
@@ -2205,23 +2572,61 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
+      "indexes": {
+        "units_team_id_idx": {
+          "name": "units_team_id_idx",
+          "columns": [
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "units_team_id_teams_id_fk": {
+          "name": "units_team_id_teams_id_fk",
+          "tableFrom": "units",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "units_name_unique": {
-          "name": "units_name_unique",
+        "units_name_team_unique": {
+          "name": "units_name_team_unique",
           "nullsNotDistinct": false,
           "columns": [
+            "team_id",
             "name"
           ]
         },
-        "units_abbreviation_unique": {
-          "name": "units_abbreviation_unique",
+        "units_abbr_team_unique": {
+          "name": "units_abbr_team_unique",
           "nullsNotDistinct": false,
           "columns": [
+            "team_id",
             "abbreviation"
           ]
         }

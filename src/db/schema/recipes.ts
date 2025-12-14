@@ -11,7 +11,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
-import { organizations, users } from "./auth.ts";
+import { organizations, teams, users } from "./auth.ts";
 
 export const recipes = pgTable(
   "recipes",
@@ -25,9 +25,9 @@ export const recipes = pgTable(
     servingSize: integer("serving_size").notNull(),
     authorNotes: text("author_notes"),
     nutrition: jsonb("nutrition"),
-    organizationId: uuid("organization_id")
+    teamId: uuid("team_id")
       .notNull()
-      .references(() => organizations.id, { onDelete: "cascade" }),
+      .references(() => teams.id, { onDelete: "cascade" }),
     userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
@@ -37,8 +37,9 @@ export const recipes = pgTable(
   },
   (table) => [
     index("recipes_userId_idx").on(table.userId),
-    unique().on(table.organizationId, table.title),
-    unique().on(table.organizationId, table.slug),
+    index("recipes_teamId_idx").on(table.teamId),
+    unique().on(table.teamId, table.title),
+    unique().on(table.teamId, table.slug),
   ]
 );
 
@@ -63,10 +64,14 @@ export const recipeImages = pgTable(
     imageId: uuid("image_id")
       .notNull()
       .references(() => images.id, { onDelete: "cascade" }),
+    teamId: uuid("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
   },
   (table) => [
     index("recipe_images_recipe_id_idx").on(table.recipeId),
     index("recipe_images_image_id_idx").on(table.imageId),
+    index("recipe_images_team_id_idx").on(table.teamId),
     unique("recipe_images_recipe_position_unique").on(table.recipeId, table.position),
   ]
 );
@@ -81,18 +86,30 @@ export const recipeShares = pgTable(
     organizationId: uuid("organization_id")
       .notNull()
       .references(() => organizations.id, { onDelete: "cascade" }),
+    teamId: uuid("team_id").references(() => teams.id, { onDelete: "cascade" }),
   },
   (table) => [
     index("recipe_shares_recipe_id_idx").on(table.recipeId),
     index("recipe_shares_organization_id_idx").on(table.organizationId),
+    index("recipe_shares_team_id_idx").on(table.teamId),
     unique("recipe_shares_recipe_org_unique").on(table.recipeId, table.organizationId),
   ]
 );
 
-export const categories = pgTable("categories", {
-  id: uuid("id").primaryKey(),
-  title: text("title").notNull().unique(),
-});
+export const categories = pgTable(
+  "categories",
+  {
+    id: uuid("id").primaryKey(),
+    title: text("title").notNull(),
+    teamId: uuid("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    unique("categories_team_title_unique").on(table.teamId, table.title),
+    index("categories_team_id_idx").on(table.teamId),
+  ]
+);
 
 export const recipeCategories = pgTable(
   "recipe_categories",
@@ -104,18 +121,32 @@ export const recipeCategories = pgTable(
     categoryId: uuid("category_id")
       .references(() => categories.id, { onDelete: "cascade" })
       .notNull(),
+    teamId: uuid("team_id")
+      .references(() => teams.id, { onDelete: "cascade" })
+      .notNull(),
   },
   (table) => [
     unique("recipe_categories_recipe_category_unique").on(table.recipeId, table.categoryId),
     index("recipe_categories_category_id_idx").on(table.categoryId),
     index("recipe_categories_recipe_id_idx").on(table.recipeId),
+    index("recipe_categories_team_id_idx").on(table.teamId),
   ]
 );
 
-export const cuisines = pgTable("cuisines", {
-  id: uuid("id").primaryKey(),
-  title: text("title").notNull().unique(),
-});
+export const cuisines = pgTable(
+  "cuisines",
+  {
+    id: uuid("id").primaryKey(),
+    title: text("title").notNull(),
+    teamId: uuid("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    unique("cuisines_team_title_unique").on(table.teamId, table.title),
+    index("cuisines_team_id_idx").on(table.teamId),
+  ]
+);
 
 export const recipeCuisines = pgTable(
   "recipe_cuisines",
@@ -127,18 +158,32 @@ export const recipeCuisines = pgTable(
     cuisineId: uuid("cuisine_id")
       .references(() => cuisines.id, { onDelete: "cascade" })
       .notNull(),
+    teamId: uuid("team_id")
+      .references(() => teams.id, { onDelete: "cascade" })
+      .notNull(),
   },
   (table) => [
     unique("recipe_cuisines_recipe_cuisine_unique").on(table.recipeId, table.cuisineId),
     index("recipe_cuisines_cuisine_id_idx").on(table.cuisineId),
     index("recipe_cuisines_recipe_id_idx").on(table.recipeId),
+    index("recipe_cuisines_team_id_idx").on(table.teamId),
   ]
 );
 
-export const diets = pgTable("diets", {
-  id: uuid("id").primaryKey(),
-  title: text("title").notNull().unique(),
-});
+export const diets = pgTable(
+  "diets",
+  {
+    id: uuid("id").primaryKey(),
+    title: text("title").notNull(),
+    teamId: uuid("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    unique("diets_team_title_unique").on(table.teamId, table.title),
+    index("diets_team_id_idx").on(table.teamId),
+  ]
+);
 
 export const recipeDiets = pgTable(
   "recipe_diets",
@@ -150,18 +195,32 @@ export const recipeDiets = pgTable(
     dietId: uuid("diet_id")
       .references(() => diets.id, { onDelete: "cascade" })
       .notNull(),
+    teamId: uuid("team_id")
+      .references(() => teams.id, { onDelete: "cascade" })
+      .notNull(),
   },
   (table) => [
     unique("recipe_diets_recipe_diet_unique").on(table.recipeId, table.dietId),
     index("recipe_diets_diet_id_idx").on(table.dietId),
     index("recipe_diets_recipe_id_idx").on(table.recipeId),
+    index("recipe_diets_team_id_idx").on(table.teamId),
   ]
 );
 
-export const tags = pgTable("tags", {
-  id: uuid("id").primaryKey(),
-  title: text("title").notNull().unique(),
-});
+export const tags = pgTable(
+  "tags",
+  {
+    id: uuid("id").primaryKey(),
+    title: text("title").notNull(),
+    teamId: uuid("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    unique("tags_team_title_unique").on(table.teamId, table.title),
+    index("tags_team_id_idx").on(table.teamId),
+  ]
+);
 
 export const recipeTags = pgTable(
   "recipe_tags",
@@ -173,21 +232,36 @@ export const recipeTags = pgTable(
     tagId: uuid("tag_id")
       .references(() => tags.id, { onDelete: "cascade" })
       .notNull(),
+    teamId: uuid("team_id")
+      .references(() => teams.id, { onDelete: "cascade" })
+      .notNull(),
   },
   (table) => [
     unique("recipe_tags_recipe_tag_unique").on(table.recipeId, table.tagId),
     index("recipe_tags_tag_id_idx").on(table.tagId),
     index("recipe_tags_recipe_id_idx").on(table.recipeId),
+    index("recipe_tags_team_id_idx").on(table.teamId),
   ]
 );
 
-export const units = pgTable("units", {
-  id: uuid("id").primaryKey(),
-  name: text("name").notNull().unique(),
-  abbreviation: text("abbreviation").notNull().unique(),
-  type: text("type").notNull(),
-  system: text("system").notNull(),
-});
+export const units = pgTable(
+  "units",
+  {
+    id: uuid("id").primaryKey(),
+    name: text("name").notNull(),
+    abbreviation: text("abbreviation").notNull(),
+    type: text("type").notNull(),
+    system: text("system").notNull(),
+    teamId: uuid("team_id")
+      .references(() => teams.id, { onDelete: "cascade" })
+      .notNull(),
+  },
+  (table) => [
+    unique("units_name_team_unique").on(table.teamId, table.name),
+    unique("units_abbr_team_unique").on(table.teamId, table.abbreviation),
+    index("units_team_id_idx").on(table.teamId),
+  ]
+);
 
 export const ingredientSections = pgTable(
   "ingredient_sections",

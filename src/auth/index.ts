@@ -3,7 +3,6 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin as adminPlugin, organization, twoFactor } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
-import { asc, eq } from "drizzle-orm";
 
 import { ac, member, owner } from "@/auth/permissions";
 import { db } from "@/db";
@@ -27,6 +26,19 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  user: {
+    changeEmail: {
+      enabled: true,
+    },
+    additionalFields: {
+      role: {
+        type: "string",
+        required: true,
+        defaultValue: "user",
+        input: false,
+      },
+    },
+  },
   session: {
     cookieCache: {
       enabled: true,
@@ -34,7 +46,10 @@ export const auth = betterAuth({
     },
   },
   plugins: [
-    adminPlugin(),
+    adminPlugin({
+      defaultRole: "user",
+      adminRoles: ["admin"],
+    }),
     passkey(),
     twoFactor(),
     organization({
@@ -46,15 +61,15 @@ export const auth = betterAuth({
         member,
         owner,
       },
-      allowUserToCreateOrganization: async (user) => {
-        user.role === "admin";
-        const [firstUser] = await db
-          .select()
-          .from(schema.users)
-          .where(eq(schema.users.id, user.id))
-          .orderBy(asc(schema.users.createdAt))
-          .limit(1);
-        return user.id === firstUser.id;
+      allowUserToCreateOrganization: (user) => {
+        // const [firstUser] = await db
+        //   .select()
+        //   .from(schema.users)
+        //   .where(eq(schema.users.id, user.id))
+        //   .orderBy(asc(schema.users.createdAt))
+        //   .limit(1);
+        // return user.id === firstUser.id;
+        return user.role === "admin";
       },
       organizationHooks: {
         beforeCreateOrganization: async ({ organization: org, user }) => {

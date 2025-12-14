@@ -40,7 +40,7 @@ dev-docker-down: ## Stop the Docker services (db, electric) and remove volumes
 	@echo "\033[1;33m╭─────────────────────────────────────╮\033[0m"
 	@echo "\033[1;33m│ \033[33m🐳 Shutting down Docker services...\033[0m \033[1;33m│\033[0m"
 	@echo "\033[1;33m╰─────────────────────────────────────╯\033[0m"
-	@$(DOCKER_COMPOSE) down -v
+	@$(DOCKER_COMPOSE) down
 
 # The main development target:
 dev-up-all: dev-docker-up

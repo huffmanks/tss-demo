@@ -275,11 +275,13 @@ export const initialUsers = [
     name: "Tim Lab",
     password: "password",
     email: "tim@mylab.com",
+    role: "admin",
   },
   {
     id: "3001720c-4f5d-4ff7-b1d9-5590fccfbab0",
     name: "January Rite",
     password: "password",
     email: "jrite@aau.edu",
+    role: "user",
   },
 ];
