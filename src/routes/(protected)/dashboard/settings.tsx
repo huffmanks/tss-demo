@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/(protected)/$orgId/dashboard/settings")({
+export const Route = createFileRoute("/(protected)/dashboard/settings")({
   component: SettingsRoute,
 });
 

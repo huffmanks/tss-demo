@@ -202,32 +202,32 @@ export const usersRelations = relations(users, ({ many }) => ({
 }));
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
-  users: one(users, {
+  user: one(users, {
     fields: [sessions.userId],
     references: [users.id],
   }),
-  organizations: one(organizations, {
+  activeOrganization: one(organizations, {
     fields: [sessions.activeOrganizationId],
     references: [organizations.id],
   }),
 }));
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
-  users: one(users, {
+  user: one(users, {
     fields: [accounts.userId],
     references: [users.id],
   }),
 }));
 
 export const passkeysRelations = relations(passkeys, ({ one }) => ({
-  users: one(users, {
+  user: one(users, {
     fields: [passkeys.userId],
     references: [users.id],
   }),
 }));
 
 export const twoFactorsRelations = relations(twoFactors, ({ one }) => ({
-  users: one(users, {
+  user: one(users, {
     fields: [twoFactors.userId],
     references: [users.id],
   }),
@@ -239,22 +239,22 @@ export const organizationsRelations = relations(organizations, ({ many }) => ({
 }));
 
 export const membersRelations = relations(members, ({ one }) => ({
-  organizations: one(organizations, {
+  organization: one(organizations, {
     fields: [members.organizationId],
     references: [organizations.id],
   }),
-  users: one(users, {
+  user: one(users, {
     fields: [members.userId],
     references: [users.id],
   }),
 }));
 
 export const invitationsRelations = relations(invitations, ({ one }) => ({
-  organizations: one(organizations, {
+  organization: one(organizations, {
     fields: [invitations.organizationId],
     references: [organizations.id],
   }),
-  users: one(users, {
+  user: one(users, {
     fields: [invitations.inviterId],
     references: [users.id],
   }),

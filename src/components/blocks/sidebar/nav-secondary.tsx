@@ -1,4 +1,4 @@
-import * as React from "react";
+import type { ComponentPropsWithoutRef } from "react";
 
 import { Link } from "@tanstack/react-router";
 import { type LucideIcon } from "lucide-react";
@@ -20,7 +20,7 @@ export function NavSecondary({
     url: string;
     icon: LucideIcon;
   }>;
-} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+} & ComponentPropsWithoutRef<typeof SidebarGroup>) {
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>

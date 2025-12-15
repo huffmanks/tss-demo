@@ -1,13 +1,13 @@
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
 import { authUser } from "@/fn/auth";
-import { doesOrganizationExist } from "@/fn/onboarding";
+import { getOrganizationById } from "@/fn/collections/organizations";
 
 import { AppSidebar } from "@/components/blocks/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/blocks/sidebar/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-export const Route = createFileRoute("/(protected)/$orgId/dashboard")({
+export const Route = createFileRoute("/(protected)/dashboard")({
   component: DashboardRoute,
   loader: async ({ location }) => {
     const { user, session } = await authUser();
@@ -18,35 +18,28 @@ export const Route = createFileRoute("/(protected)/$orgId/dashboard")({
         search: { redirect: location.href },
       });
     }
-
-    if (!(await doesOrganizationExist())) {
-      throw redirect({
-        to: "/onboarding/first-user",
-        replace: true,
-      });
-    }
-
     const orgId = session.activeOrganizationId;
 
-    if (!orgId) {
-      throw redirect({
-        to: "/onboarding/join",
-        replace: true,
-      });
-    }
+    if (!orgId) return { user };
 
-    return { user, orgId };
+    const [organization] = await getOrganizationById({ data: { orgId } });
+
+    return { user, organization };
   },
 });
 
 function DashboardRoute() {
-  const { user, orgId } = Route.useLoaderData();
+  const { user, organization } = Route.useLoaderData();
+
+  // TODO: if admin and no organization prompt user to create org first
+  // if user redirect to /invite page and await invitation
+
   return (
     <div className="[--header-height:calc(--spacing(14))]">
       <SidebarProvider className="flex flex-col">
         <SiteHeader />
         <div className="flex flex-1">
-          <AppSidebar user={user} orgId={orgId} />
+          <AppSidebar user={user} organization={organization} />
           <SidebarInset>
             <div className="p-4">
               <Outlet />

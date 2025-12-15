@@ -1,6 +1,7 @@
-import * as React from "react";
+import type { ComponentProps } from "react";
 
 import { Link } from "@tanstack/react-router";
+import type { Organization } from "better-auth/plugins";
 import {
   AppleIcon,
   BookOpenIcon,
@@ -11,6 +12,7 @@ import {
   ShieldUserIcon,
 } from "lucide-react";
 
+import { createAcronym } from "@/lib/utils";
 import type { AuthUser } from "@/types";
 
 import { NavMain } from "@/components/blocks/sidebar/nav-main";
@@ -84,28 +86,29 @@ const data = {
   ],
 };
 
-type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
+type AppSidebarProps = ComponentProps<typeof Sidebar> & {
   user: AuthUser;
-  orgId?: string | null;
+  organization?: Organization;
 };
 
-export function AppSidebar({ user, orgId, ...props }: AppSidebarProps) {
-  orgId = "yes";
+export function AppSidebar({ user, organization, ...props }: AppSidebarProps) {
   return (
     <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!" {...props}>
-      {orgId && (
+      {organization && (
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild>
-                <Link to="/dashboard/organizations/$id" params={{ id: orgId }}>
+                <Link to="/dashboard">
                   <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                     <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarFallback className="rounded-lg">mf</AvatarFallback>
+                      <AvatarFallback className="rounded-lg">
+                        {createAcronym(organization.name)}
+                      </AvatarFallback>
                     </Avatar>
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">My Family</span>
+                    <span className="truncate font-medium">{organization.name}</span>
                   </div>
                 </Link>
               </SidebarMenuButton>

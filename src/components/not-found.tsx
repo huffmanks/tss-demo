@@ -18,7 +18,7 @@ export default function NotFound() {
       </EmptyHeader>
       <EmptyContent>
         <Button asChild className="cursor-pointer">
-          <Link to="/dashboard/recipes">Go to Dashboard</Link>
+          <Link to="/dashboard">Go to Dashboard</Link>
         </Button>
       </EmptyContent>
     </Empty>

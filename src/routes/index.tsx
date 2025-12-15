@@ -9,9 +9,9 @@ export const Route = createFileRoute("/")({
   },
   beforeLoad: async () => {
     if (!(await doesUserExist())) {
-      throw redirect({ to: "/signup" });
+      throw redirect({ to: "/signup", replace: true });
     } else {
-      throw redirect({ to: "/login" });
+      throw redirect({ to: "/login", replace: true });
     }
   },
 });

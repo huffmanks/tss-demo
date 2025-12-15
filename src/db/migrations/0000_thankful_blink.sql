@@ -157,6 +157,24 @@ CREATE TABLE "recipe_images" (
 	CONSTRAINT "recipe_images_recipe_position_unique" UNIQUE("recipe_id","organization_id","position")
 );
 --> statement-breakpoint
+CREATE TABLE "recipe_organization_shares" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	"recipe_id" uuid NOT NULL,
+	"source_organization_id" uuid NOT NULL,
+	"target_organization_id" uuid NOT NULL,
+	CONSTRAINT "recipe_organization_shares_recipe_target_org_unique" UNIQUE("recipe_id","target_organization_id")
+);
+--> statement-breakpoint
+CREATE TABLE "recipe_public_shares" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	"recipe_id" uuid NOT NULL,
+	"organization_id" uuid NOT NULL,
+	"is_active" boolean DEFAULT true NOT NULL,
+	"expires_at" timestamp,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "recipe_public_shares_recipe_org_unique" UNIQUE("organization_id","recipe_id")
+);
+--> statement-breakpoint
 CREATE TABLE "recipe_tags" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"recipe_id" uuid NOT NULL,
@@ -276,6 +294,11 @@ ALTER TABLE "recipe_diets" ADD CONSTRAINT "recipe_diets_organization_id_organiza
 ALTER TABLE "recipe_images" ADD CONSTRAINT "recipe_images_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_images" ADD CONSTRAINT "recipe_images_image_id_images_id_fk" FOREIGN KEY ("image_id") REFERENCES "public"."images"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_images" ADD CONSTRAINT "recipe_images_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "recipe_organization_shares" ADD CONSTRAINT "recipe_organization_shares_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "recipe_organization_shares" ADD CONSTRAINT "recipe_organization_shares_source_organization_id_organizations_id_fk" FOREIGN KEY ("source_organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "recipe_organization_shares" ADD CONSTRAINT "recipe_organization_shares_target_organization_id_organizations_id_fk" FOREIGN KEY ("target_organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "recipe_public_shares" ADD CONSTRAINT "recipe_public_shares_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "recipe_public_shares" ADD CONSTRAINT "recipe_public_shares_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_tags" ADD CONSTRAINT "recipe_tags_recipe_id_recipes_id_fk" FOREIGN KEY ("recipe_id") REFERENCES "public"."recipes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_tags" ADD CONSTRAINT "recipe_tags_tag_id_tags_id_fk" FOREIGN KEY ("tag_id") REFERENCES "public"."tags"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "recipe_tags" ADD CONSTRAINT "recipe_tags_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -316,6 +339,11 @@ CREATE INDEX "recipe_diets_organization_id_idx" ON "recipe_diets" USING btree ("
 CREATE INDEX "recipe_images_recipe_id_idx" ON "recipe_images" USING btree ("recipe_id");--> statement-breakpoint
 CREATE INDEX "recipe_images_image_id_idx" ON "recipe_images" USING btree ("image_id");--> statement-breakpoint
 CREATE INDEX "recipe_images_organization_id_idx" ON "recipe_images" USING btree ("organization_id");--> statement-breakpoint
+CREATE INDEX "recipe_organization_shares_recipe_id_idx" ON "recipe_organization_shares" USING btree ("recipe_id");--> statement-breakpoint
+CREATE INDEX "recipe_organization_shares_source_org_id_idx" ON "recipe_organization_shares" USING btree ("source_organization_id");--> statement-breakpoint
+CREATE INDEX "recipe_organization_shares_target_org_id_idx" ON "recipe_organization_shares" USING btree ("target_organization_id");--> statement-breakpoint
+CREATE INDEX "recipe_public_shares_recipe_id_idx" ON "recipe_public_shares" USING btree ("recipe_id");--> statement-breakpoint
+CREATE INDEX "recipe_public_shares_organization_id_idx" ON "recipe_public_shares" USING btree ("organization_id");--> statement-breakpoint
 CREATE INDEX "recipe_tags_tag_id_idx" ON "recipe_tags" USING btree ("tag_id");--> statement-breakpoint
 CREATE INDEX "recipe_tags_recipe_id_idx" ON "recipe_tags" USING btree ("recipe_id");--> statement-breakpoint
 CREATE INDEX "recipe_tags_organization_id_idx" ON "recipe_tags" USING btree ("organization_id");--> statement-breakpoint

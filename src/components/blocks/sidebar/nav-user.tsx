@@ -1,5 +1,3 @@
-"use client";
-
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronsUpDownIcon, LogOutIcon, UserIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -37,7 +35,7 @@ export function NavUser({ user }: { user: AuthUser }) {
     }
 
     if (data) {
-      navigate({ to: "/", reloadDocument: true });
+      navigate({ to: "/login", reloadDocument: true });
     }
   }
 

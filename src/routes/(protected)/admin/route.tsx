@@ -1,7 +1,7 @@
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(protected)/admin")({
-  component: RouteComponent,
+  component: AdminRoute,
   loader: async ({ location }) => {
     // TODO
     // if not logged in or admin
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/(protected)/admin")({
   },
 });
 
-function RouteComponent() {
+function AdminRoute() {
   return (
     <div className="mx-auto max-w-xl p-8">
       <div>Admin layout</div>

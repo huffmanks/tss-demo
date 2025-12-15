@@ -5,17 +5,12 @@ import z from "zod";
 
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { categories, cuisines, diets, organizations, units, users } from "@/db/schema";
+import { categories, cuisines, diets, units, users } from "@/db/schema";
 import { initialCategories, initialCuisines, initialDiets, initialUnits } from "@/db/seed/data";
 
 export const doesUserExist = createServerFn().handler(async () => {
   const [user] = await db.select({ count: count() }).from(users);
   return user.count > 0;
-});
-
-export const doesOrganizationExist = createServerFn().handler(async () => {
-  const [organization] = await db.select({ count: count() }).from(organizations);
-  return organization.count > 0;
 });
 
 const createUserSchema = z.object({
@@ -35,30 +30,19 @@ export const createAdminUser = createServerFn()
     });
   });
 
-export const createUser = createServerFn()
-  .inputValidator(createUserSchema)
-  .handler(async ({ data }) => {
-    return await auth.api.createUser({
-      body: {
-        ...data,
-        role: "user",
-      },
-    });
-  });
-
-const createOrgSchema = z.object({
-  orgName: z.string(),
-  orgSlug: z.string(),
+const createOrganizationSchema = z.object({
+  organizationName: z.string(),
+  organizationSlug: z.string(),
   userId: z.uuidv7(),
 });
 
-export const createFirstOrg = createServerFn()
-  .inputValidator(createOrgSchema)
+export const createFirstOrganization = createServerFn()
+  .inputValidator(createOrganizationSchema)
   .handler(async ({ data }) => {
     const organization = await auth.api.createOrganization({
       body: {
-        name: data.orgName,
-        slug: data.orgSlug,
+        name: data.organizationName,
+        slug: data.organizationSlug,
         userId: data.userId,
       },
     });
@@ -83,7 +67,7 @@ export const createFirstOrg = createServerFn()
       headers,
     });
 
-    return { organization };
+    return organization;
   });
 
 const seedNewOrganizationSchema = z.object({

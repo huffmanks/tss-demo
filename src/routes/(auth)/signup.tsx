@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-import { doesOrganizationExist, doesUserExist } from "@/fn/onboarding";
+import { doesUserExist } from "@/fn/onboarding";
 
 import { SignupForm } from "@/components/forms/auth/signup";
 
@@ -8,14 +8,17 @@ export const Route = createFileRoute("/(auth)/signup")({
   component: SignupRoute,
   loader: async () => {
     const userExist = await doesUserExist();
-    const orgExist = await doesOrganizationExist();
 
-    return { userExist, orgExist };
+    if (userExist) {
+      throw redirect({
+        to: "/login",
+        replace: true,
+      });
+    }
+    return null;
   },
 });
 
 function SignupRoute() {
-  const data = Route.useLoaderData();
-
-  return <SignupForm doesOrganizationExist={data.orgExist} doesUserExist={data.userExist} />;
+  return <SignupForm />;
 }

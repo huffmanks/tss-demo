@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 
 export const authUser = createServerFn().handler(async () => {
   const headers = getRequestHeaders();
+
   const data = await auth.api.getSession({ headers });
 
   if (!data?.user) {

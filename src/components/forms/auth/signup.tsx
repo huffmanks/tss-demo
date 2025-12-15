@@ -4,22 +4,21 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 
 import { authClient } from "@/auth/auth-client";
-import { createAdminUser, createUser } from "@/fn/onboarding";
+import { createAdminUser, createFirstOrganization, seedNewOrganizationData } from "@/fn/onboarding";
+import { slugify } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-type SignupFormProps = React.ComponentProps<typeof Card> & {
-  doesOrganizationExist: boolean;
-  doesUserExist: boolean;
-};
+type SignupFormProps = React.ComponentProps<typeof Card>;
 
-export function SignupForm({ doesOrganizationExist, doesUserExist, ...props }: SignupFormProps) {
+export function SignupForm({ ...props }: SignupFormProps) {
   const navigate = useNavigate();
   const createAdminUserFn = useServerFn(createAdminUser);
-  const createUserFn = useServerFn(createUser);
+  const createFirstOrganizationFn = useServerFn(createFirstOrganization);
+  const seedNewOrganizationDataFn = useServerFn(seedNewOrganizationData);
 
   const form = useForm({
     defaultValues: {
@@ -27,30 +26,43 @@ export function SignupForm({ doesOrganizationExist, doesUserExist, ...props }: S
       email: "tim@mylab.com",
       password: "password",
       confirmPassword: "password",
+      organizationName: "My family",
     },
     onSubmit: async ({ value }) => {
-      if (value.password !== value.confirmPassword) {
-        toast.error("Passwords do not match.");
-        return;
-      }
+      try {
+        if (value.password !== value.confirmPassword) {
+          toast.error("Passwords do not match.");
+          return;
+        }
 
-      const { confirmPassword, ...rest } = value;
+        const { user } = await createAdminUserFn({
+          data: {
+            name: value.name,
+            email: value.email,
+            password: value.password,
+          },
+        });
 
-      if (!doesUserExist) {
-        await createAdminUserFn({ data: rest });
-      } else {
-        await createUserFn({ data: rest });
-      }
+        if (!user.id) throw Error;
 
-      await authClient.signIn.email({
-        email: value.email,
-        password: value.password,
-      });
+        const organizationSlug = slugify(value.organizationName);
 
-      if (!doesOrganizationExist) {
-        navigate({ to: "/onboarding/first-user" });
-      } else {
-        navigate({ to: "/onboarding/join" });
+        const organization = await createFirstOrganizationFn({
+          data: { organizationName: value.organizationName, organizationSlug, userId: user.id },
+        });
+
+        if (!organization?.id) throw Error;
+
+        await seedNewOrganizationDataFn({ data: { organizationId: organization.id } });
+
+        await authClient.signIn.email({
+          email: value.email,
+          password: value.password,
+        });
+
+        navigate({ to: "/dashboard" });
+      } catch (error) {
+        toast.error("Error signing up.");
       }
     },
   });
@@ -146,6 +158,25 @@ export function SignupForm({ doesOrganizationExist, doesUserExist, ...props }: S
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
                   <FieldDescription>Please confirm your password.</FieldDescription>
+                </Field>
+              )}
+            />
+
+            <form.Field
+              name="organizationName"
+              children={(field) => (
+                <Field>
+                  <FieldLabel htmlFor="organizationName">Organization name</FieldLabel>
+                  <Input
+                    id="organizationName"
+                    type="text"
+                    placeholder="My family"
+                    autoComplete="off"
+                    required
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
                 </Field>
               )}
             />

@@ -7,14 +7,12 @@ import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-type LoginFormProps = React.ComponentProps<"div"> & {
-  doesOrganizationExist: boolean;
-};
+type LoginFormProps = React.ComponentProps<"div">;
 
-export function LoginForm({ doesOrganizationExist, className, ...props }: LoginFormProps) {
+export function LoginForm({ className, ...props }: LoginFormProps) {
   const navigate = useNavigate();
 
   const form = useForm({
@@ -30,16 +28,7 @@ export function LoginForm({ doesOrganizationExist, className, ...props }: LoginF
           throw Error(error.message);
         }
 
-        const session = await authClient.getSession();
-        const orgId = session.data?.session.activeOrganizationId;
-
-        if (!doesOrganizationExist) {
-          navigate({ to: "/onboarding/first-user" });
-        } else if (!orgId) {
-          navigate({ to: "/onboarding/join" });
-        } else {
-          navigate({ to: "/$orgId/dashboard/recipes", params: { orgId } });
-        }
+        navigate({ to: "/dashboard" });
       } catch (error) {
         toast.error("Sign in failed.");
       }
@@ -107,10 +96,6 @@ export function LoginForm({ doesOrganizationExist, className, ...props }: LoginF
                 <Button className="cursor-pointer" type="submit">
                   Login
                 </Button>
-
-                <FieldDescription className="text-center">
-                  Don&apos;t have an account? <Link to="/signup">Sign up</Link>
-                </FieldDescription>
               </Field>
             </FieldGroup>
           </form>

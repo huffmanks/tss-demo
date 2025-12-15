@@ -1,4 +1,5 @@
 import { passkey } from "@better-auth/passkey";
+import { getRequestHeaders } from "@tanstack/react-start/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
@@ -7,7 +8,6 @@ import {
   twoFactor,
 } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
-import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import * as schema from "@/db/schema";
@@ -49,24 +49,14 @@ export const auth = betterAuth({
       enabled: true,
       maxAge: 5 * 60,
     },
-  },
-  databaseHooks: {
-    session: {
-      create: {
-        before: async (session) => {
-          const [previousSession] = await db
-            .select()
-            .from(schema.sessions)
-            .where(eq(schema.sessions.userId, session.userId));
-
-          const activeOrganizationId = previousSession.activeOrganizationId;
-
-          return {
-            data: {
-              ...session,
-              activeOrganizationId: activeOrganizationId ?? null,
-            },
-          };
+    additionalFields: {
+      activeOrganizationId: {
+        type: "string",
+        required: false,
+        input: false,
+        references: {
+          model: "organizations",
+          field: "id",
         },
       },
     },
@@ -94,6 +84,13 @@ export const auth = betterAuth({
         },
         afterCreateOrganization: async ({ organization }) => {
           await seedNewOrganizationData({ data: { organizationId: organization.id } });
+          await auth.api.setActiveOrganization({
+            body: {
+              organizationId: organization.id,
+              organizationSlug: organization.slug,
+            },
+            headers: getRequestHeaders(),
+          });
         },
       },
     }),

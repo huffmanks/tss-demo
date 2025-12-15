@@ -2,13 +2,13 @@ import { useState } from "react";
 
 import { useLiveQuery } from "@tanstack/react-db";
 import { createFileRoute } from "@tanstack/react-router";
-import { EarthIcon, EllipsisIcon, PlusIcon } from "lucide-react";
+import { BookOpenIcon, EllipsisIcon, PlusIcon } from "lucide-react";
 
-import type { Diet } from "@/db/schema/recipes";
-import { dietsCollection } from "@/electric/collections";
+import type { Category } from "@/db/schema/recipes";
+import { categoriesCollection } from "@/electric/collections";
 import { cn } from "@/lib/utils";
 
-import { DietForm } from "@/components/forms/collections/diet";
+import { CategoryForm } from "@/components/forms/collections/category";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -53,17 +53,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export const Route = createFileRoute("/(protected)/$orgId/dashboard/diets")({
+export const Route = createFileRoute("/(protected)/dashboard/categories")({
   ssr: false,
-  component: DietsRoute,
+  component: CategoriesRoute,
 });
 
-function DietsRoute() {
+function CategoriesRoute() {
   const [open, setOpen] = useState(false);
   const [modalId, setModalId] = useState<string | null>(null);
-  const { data: diets } = useLiveQuery((q) => q.from({ diet: dietsCollection }));
+  const { data: categories } = useLiveQuery((q) => q.from({ category: categoriesCollection }));
 
-  const diet = diets.find((cat) => cat.id === modalId);
+  const category = categories.find((cat) => cat.id === modalId);
 
   function handleOpen(id: string | null) {
     setModalId(id);
@@ -78,9 +78,9 @@ function DietsRoute() {
   return (
     <div className="p-4">
       <div className="mb-4 flex items-center justify-between gap-4">
-        <h1 className="text-xl font-bold">Diets</h1>
+        <h1 className="text-xl font-bold">Categories</h1>
         <Button
-          className={cn("cursor-pointer", !diets.length && "hidden")}
+          className={cn("cursor-pointer", !categories.length && "hidden")}
           onClick={() => handleOpen(null)}>
           <PlusIcon />
           <span className="hidden sm:inline-flex">Create</span>
@@ -88,16 +88,18 @@ function DietsRoute() {
       </div>
 
       <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
-        {diets.length ? (
-          <DietTable diets={diets} handleOpen={handleOpen} />
+        {categories.length ? (
+          <CategoryTable categories={categories} handleOpen={handleOpen} />
         ) : (
           <Empty className="from-muted/50 to-background h-full bg-linear-to-b from-30%">
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <EarthIcon />
+                <BookOpenIcon />
               </EmptyMedia>
-              <EmptyTitle>No Diets</EmptyTitle>
-              <EmptyDescription>Create a diet. New diets will appear here.</EmptyDescription>
+              <EmptyTitle>No Categories</EmptyTitle>
+              <EmptyDescription>
+                Create a category. New categories will appear here.
+              </EmptyDescription>
             </EmptyHeader>
 
             <EmptyContent>
@@ -110,27 +112,29 @@ function DietsRoute() {
 
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Diet</DialogTitle>
-            <DialogDescription>{diet ? "Edit this diet." : "Create a new diet."}</DialogDescription>
+            <DialogTitle>Category</DialogTitle>
+            <DialogDescription>
+              {category ? "Edit this category." : "Create a new category."}
+            </DialogDescription>
           </DialogHeader>
-          <DietForm diet={diet} handleClose={handleClose} />
+          <CategoryForm category={category} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
     </div>
   );
 }
 
-function DietTable({
-  diets,
+function CategoryTable({
+  categories,
   handleOpen,
 }: {
-  diets: Array<Diet> | null;
+  categories: Array<Category> | null;
   handleOpen: (id: string) => void;
 }) {
-  if (!diets || !diets.length) return null;
+  if (!categories || !categories.length) return null;
 
   function handleDelete(id: string) {
-    dietsCollection.delete(id);
+    categoriesCollection.delete(id);
   }
 
   return (
@@ -143,10 +147,10 @@ function DietTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {diets.map((diet) => (
-          <TableRow key={diet.id} className="odd:bg-muted/25">
-            <TableCell>{diet.id}</TableCell>
-            <TableCell>{diet.title}</TableCell>
+        {categories.map((category) => (
+          <TableRow key={category.id} className="odd:bg-muted/25">
+            <TableCell>{category.id}</TableCell>
+            <TableCell>{category.title}</TableCell>
             <TableCell className="w-12">
               <DropdownMenu>
                 <DropdownMenuTrigger
@@ -156,12 +160,15 @@ function DietTable({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="text-muted-foreground truncate text-sm">
-                    {diet.title}
+                    {category.title}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleOpen(diet.id)}>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => handleOpen(category.id)}>
                     <span>Edit</span>
                   </DropdownMenuItem>
+
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <DropdownMenuItem
@@ -174,14 +181,14 @@ function DietTable({
                       <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action cannot be undone. This will permanently delete the diet.
+                          This action cannot be undone. This will permanently delete the category.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                           className="cursor-pointer"
-                          onClick={() => handleDelete(diet.id)}>
+                          onClick={() => handleDelete(category.id)}>
                           Delete
                         </AlertDialogAction>
                       </AlertDialogFooter>
