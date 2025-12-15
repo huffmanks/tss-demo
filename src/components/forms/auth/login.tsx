@@ -32,14 +32,13 @@ export function LoginForm({ doesOrganizationExist, className, ...props }: LoginF
 
         const session = await authClient.getSession();
         const orgId = session.data?.session.activeOrganizationId;
-        const teamId = session.data?.session.activeTeamId;
 
         if (!doesOrganizationExist) {
           navigate({ to: "/onboarding/first-user" });
-        } else if (!orgId || !teamId) {
+        } else if (!orgId) {
           navigate({ to: "/onboarding/join" });
         } else {
-          navigate({ to: "/$orgId/$teamId/dashboard/recipes", params: { orgId, teamId } });
+          navigate({ to: "/$orgId/dashboard/recipes", params: { orgId } });
         }
       } catch (error) {
         toast.error("Sign in failed.");

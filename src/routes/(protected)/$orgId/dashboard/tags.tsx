@@ -53,7 +53,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export const Route = createFileRoute("/(protected)/$orgId/$teamId/dashboard/tags")({
+export const Route = createFileRoute("/(protected)/$orgId/dashboard/tags")({
   ssr: false,
   component: TagsRoute,
 });

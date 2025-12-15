@@ -48,13 +48,11 @@ export const createUser = createServerFn()
 
 const createOrgSchema = z.object({
   orgName: z.string(),
-  teamName: z.string(),
   orgSlug: z.string(),
-  teamSlug: z.string(),
   userId: z.uuidv7(),
 });
 
-export const createFirstOrgTeam = createServerFn()
+export const createFirstOrg = createServerFn()
   .inputValidator(createOrgSchema)
   .handler(async ({ data }) => {
     const organization = await auth.api.createOrganization({
@@ -69,6 +67,14 @@ export const createFirstOrgTeam = createServerFn()
 
     const headers = getRequestHeaders();
 
+    await auth.api.addMember({
+      body: {
+        userId: data.userId,
+        role: "owner",
+        organizationId: organization.id,
+      },
+    });
+
     await auth.api.setActiveOrganization({
       body: {
         organizationId: organization.id,
@@ -77,59 +83,35 @@ export const createFirstOrgTeam = createServerFn()
       headers,
     });
 
-    const team = await auth.api.createTeam({
-      body: {
-        name: data.teamName,
-        slug: data.teamSlug,
-        organizationId: organization.id,
-      },
-    });
-
-    await auth.api.setActiveTeam({
-      body: {
-        teamId: team.id,
-      },
-      headers,
-    });
-
-    await auth.api.addMember({
-      body: {
-        userId: data.userId,
-        role: "owner",
-        organizationId: organization.id,
-        teamId: team.id,
-      },
-    });
-
-    return { organization, team };
+    return { organization };
   });
 
-const seedNewTeamSchema = z.object({
-  teamId: z.uuidv7(),
+const seedNewOrganizationSchema = z.object({
+  organizationId: z.uuidv7(),
 });
 
-export const seedNewTeamData = createServerFn()
-  .inputValidator(seedNewTeamSchema)
+export const seedNewOrganizationData = createServerFn()
+  .inputValidator(seedNewOrganizationSchema)
   .handler(async ({ data }) => {
     try {
-      const teamId = data.teamId;
+      const organizationId = data.organizationId;
       for await (const category of initialCategories) {
-        await db.insert(categories).values({ ...category, teamId });
+        await db.insert(categories).values({ ...category, organizationId });
       }
 
       for await (const cuisine of initialCuisines) {
-        await db.insert(cuisines).values({ ...cuisine, teamId });
+        await db.insert(cuisines).values({ ...cuisine, organizationId });
       }
 
       for await (const diet of initialDiets) {
-        await db.insert(diets).values({ ...diet, teamId });
+        await db.insert(diets).values({ ...diet, organizationId });
       }
 
       for await (const unit of initialUnits) {
-        await db.insert(units).values({ ...unit, teamId });
+        await db.insert(units).values({ ...unit, organizationId });
       }
     } catch (error) {
-      console.info("Failed to seed new team data.");
+      console.info("Failed to seed new organization data.");
       throw error;
     }
   });

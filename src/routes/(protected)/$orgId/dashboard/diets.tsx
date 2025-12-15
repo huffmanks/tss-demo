@@ -4,11 +4,11 @@ import { useLiveQuery } from "@tanstack/react-db";
 import { createFileRoute } from "@tanstack/react-router";
 import { EarthIcon, EllipsisIcon, PlusIcon } from "lucide-react";
 
-import type { Cuisine } from "@/db/schema/recipes";
-import { cuisinesCollection } from "@/electric/collections";
+import type { Diet } from "@/db/schema/recipes";
+import { dietsCollection } from "@/electric/collections";
 import { cn } from "@/lib/utils";
 
-import { CuisineForm } from "@/components/forms/collections/cuisine";
+import { DietForm } from "@/components/forms/collections/diet";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -53,17 +53,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export const Route = createFileRoute("/(protected)/$orgId/$teamId/dashboard/cuisines")({
+export const Route = createFileRoute("/(protected)/$orgId/dashboard/diets")({
   ssr: false,
-  component: CuisinesRoute,
+  component: DietsRoute,
 });
 
-function CuisinesRoute() {
+function DietsRoute() {
   const [open, setOpen] = useState(false);
   const [modalId, setModalId] = useState<string | null>(null);
-  const { data: cuisines } = useLiveQuery((q) => q.from({ cuisine: cuisinesCollection }));
+  const { data: diets } = useLiveQuery((q) => q.from({ diet: dietsCollection }));
 
-  const cuisine = cuisines.find((cat) => cat.id === modalId);
+  const diet = diets.find((cat) => cat.id === modalId);
 
   function handleOpen(id: string | null) {
     setModalId(id);
@@ -78,9 +78,9 @@ function CuisinesRoute() {
   return (
     <div className="p-4">
       <div className="mb-4 flex items-center justify-between gap-4">
-        <h1 className="text-xl font-bold">Cuisines</h1>
+        <h1 className="text-xl font-bold">Diets</h1>
         <Button
-          className={cn("cursor-pointer", !cuisines.length && "hidden")}
+          className={cn("cursor-pointer", !diets.length && "hidden")}
           onClick={() => handleOpen(null)}>
           <PlusIcon />
           <span className="hidden sm:inline-flex">Create</span>
@@ -88,16 +88,16 @@ function CuisinesRoute() {
       </div>
 
       <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
-        {cuisines.length ? (
-          <CuisineTable cuisines={cuisines} handleOpen={handleOpen} />
+        {diets.length ? (
+          <DietTable diets={diets} handleOpen={handleOpen} />
         ) : (
           <Empty className="from-muted/50 to-background h-full bg-linear-to-b from-30%">
             <EmptyHeader>
               <EmptyMedia variant="icon">
                 <EarthIcon />
               </EmptyMedia>
-              <EmptyTitle>No Cuisines</EmptyTitle>
-              <EmptyDescription>Create a cuisine. New cuisines will appear here.</EmptyDescription>
+              <EmptyTitle>No Diets</EmptyTitle>
+              <EmptyDescription>Create a diet. New diets will appear here.</EmptyDescription>
             </EmptyHeader>
 
             <EmptyContent>
@@ -110,29 +110,27 @@ function CuisinesRoute() {
 
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Cuisine</DialogTitle>
-            <DialogDescription>
-              {cuisine ? "Edit this cuisine." : "Create a new cuisine."}
-            </DialogDescription>
+            <DialogTitle>Diet</DialogTitle>
+            <DialogDescription>{diet ? "Edit this diet." : "Create a new diet."}</DialogDescription>
           </DialogHeader>
-          <CuisineForm cuisine={cuisine} handleClose={handleClose} />
+          <DietForm diet={diet} handleClose={handleClose} />
         </DialogContent>
       </Dialog>
     </div>
   );
 }
 
-function CuisineTable({
-  cuisines,
+function DietTable({
+  diets,
   handleOpen,
 }: {
-  cuisines: Array<Cuisine> | null;
+  diets: Array<Diet> | null;
   handleOpen: (id: string) => void;
 }) {
-  if (!cuisines || !cuisines.length) return null;
+  if (!diets || !diets.length) return null;
 
   function handleDelete(id: string) {
-    cuisinesCollection.delete(id);
+    dietsCollection.delete(id);
   }
 
   return (
@@ -145,10 +143,10 @@ function CuisineTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {cuisines.map((cuisine) => (
-          <TableRow key={cuisine.id} className="odd:bg-muted/25">
-            <TableCell>{cuisine.id}</TableCell>
-            <TableCell>{cuisine.title}</TableCell>
+        {diets.map((diet) => (
+          <TableRow key={diet.id} className="odd:bg-muted/25">
+            <TableCell>{diet.id}</TableCell>
+            <TableCell>{diet.title}</TableCell>
             <TableCell className="w-12">
               <DropdownMenu>
                 <DropdownMenuTrigger
@@ -158,12 +156,10 @@ function CuisineTable({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="text-muted-foreground truncate text-sm">
-                    {cuisine.title}
+                    {diet.title}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={() => handleOpen(cuisine.id)}>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => handleOpen(diet.id)}>
                     <span>Edit</span>
                   </DropdownMenuItem>
                   <AlertDialog>
@@ -178,14 +174,14 @@ function CuisineTable({
                       <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action cannot be undone. This will permanently delete the cuisine.
+                          This action cannot be undone. This will permanently delete the diet.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
                         <AlertDialogAction
                           className="cursor-pointer"
-                          onClick={() => handleDelete(cuisine.id)}>
+                          onClick={() => handleDelete(diet.id)}>
                           Delete
                         </AlertDialogAction>
                       </AlertDialogFooter>

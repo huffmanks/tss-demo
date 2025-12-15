@@ -1,5 +1,4 @@
 import { passkey } from "@better-auth/passkey";
-import { getRequestHeaders } from "@tanstack/react-start/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
@@ -8,11 +7,11 @@ import {
   twoFactor,
 } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { eq } from "drizzle-orm";
 
-import { ac, member, owner } from "@/auth/permissions";
 import { db } from "@/db";
 import * as schema from "@/db/schema";
-import { seedNewTeamData } from "@/fn/onboarding";
+import { seedNewOrganizationData } from "@/fn/onboarding";
 import { siteConfig } from "@/lib/site-config";
 
 export const auth = betterAuth({
@@ -51,6 +50,27 @@ export const auth = betterAuth({
       maxAge: 5 * 60,
     },
   },
+  databaseHooks: {
+    session: {
+      create: {
+        before: async (session) => {
+          const [previousSession] = await db
+            .select()
+            .from(schema.sessions)
+            .where(eq(schema.sessions.userId, session.userId));
+
+          const activeOrganizationId = previousSession.activeOrganizationId;
+
+          return {
+            data: {
+              ...session,
+              activeOrganizationId: activeOrganizationId ?? null,
+            },
+          };
+        },
+      },
+    },
+  },
   plugins: [
     adminPlugin({
       defaultRole: "user",
@@ -59,26 +79,6 @@ export const auth = betterAuth({
     passkey(),
     twoFactor(),
     organizationPlugin({
-      teams: {
-        enabled: true,
-      },
-      schema: {
-        team: {
-          additionalFields: {
-            slug: {
-              fieldName: "slug",
-              type: "string",
-              required: true,
-              input: true,
-            },
-          },
-        },
-      },
-      ac,
-      roles: {
-        member,
-        owner,
-      },
       allowUserToCreateOrganization: (user) => {
         return user.role === "admin";
       },
@@ -92,18 +92,8 @@ export const auth = betterAuth({
             },
           });
         },
-        beforeCreateTeam: async ({ team, user }) => {
-          const headers = getRequestHeaders();
-          await auth.api.addTeamMember({
-            body: {
-              userId: user?.id,
-              teamId: team.id,
-            },
-            headers,
-          });
-        },
-        afterCreateTeam: async ({ team }) => {
-          await seedNewTeamData({ data: { teamId: team.id } });
+        afterCreateOrganization: async ({ organization }) => {
+          await seedNewOrganizationData({ data: { organizationId: organization.id } });
         },
       },
     }),

@@ -7,7 +7,7 @@ import { AppSidebar } from "@/components/blocks/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/blocks/sidebar/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-export const Route = createFileRoute("/(protected)/$orgId/$teamId/dashboard")({
+export const Route = createFileRoute("/(protected)/$orgId/dashboard")({
   component: DashboardRoute,
   loader: async ({ location }) => {
     const { user, session } = await authUser();

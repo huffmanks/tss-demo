@@ -20,18 +20,18 @@ import { Route as protectedAdminRouteRouteImport } from './routes/(protected)/ad
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as protectedOnboardingJoinRouteImport } from './routes/(protected)/onboarding/join'
 import { Route as protectedOnboardingFirstUserRouteImport } from './routes/(protected)/onboarding/first-user'
-import { Route as protectedOrgIdTeamIdDashboardRouteRouteImport } from './routes/(protected)/$orgId/$teamId/dashboard/route'
-import { Route as protectedOrgIdTeamIdDashboardTagsRouteImport } from './routes/(protected)/$orgId/$teamId/dashboard/tags'
-import { Route as protectedOrgIdTeamIdDashboardSettingsRouteImport } from './routes/(protected)/$orgId/$teamId/dashboard/settings'
-import { Route as protectedOrgIdTeamIdDashboardProfileRouteImport } from './routes/(protected)/$orgId/$teamId/dashboard/profile'
-import { Route as protectedOrgIdTeamIdDashboardDietsRouteImport } from './routes/(protected)/$orgId/$teamId/dashboard/diets'
-import { Route as protectedOrgIdTeamIdDashboardCuisinesRouteImport } from './routes/(protected)/$orgId/$teamId/dashboard/cuisines'
-import { Route as protectedOrgIdTeamIdDashboardCategoriesRouteImport } from './routes/(protected)/$orgId/$teamId/dashboard/categories'
-import { Route as protectedOrgIdTeamIdDashboardRecipesIndexRouteImport } from './routes/(protected)/$orgId/$teamId/dashboard/recipes/index'
-import { Route as protectedOrgIdTeamIdDashboardOrganizationsIdRouteImport } from './routes/(protected)/$orgId/$teamId/dashboard/organizations/$id'
-import { Route as protectedOrgIdTeamIdDashboardRecipesSharedRouteRouteImport } from './routes/(protected)/$orgId/$teamId/dashboard/recipes/shared/route'
-import { Route as protectedOrgIdTeamIdDashboardRecipesFavoritesRouteRouteImport } from './routes/(protected)/$orgId/$teamId/dashboard/recipes/favorites/route'
-import { Route as protectedOrgIdTeamIdDashboardRecipesAddRouteRouteImport } from './routes/(protected)/$orgId/$teamId/dashboard/recipes/add/route'
+import { Route as protectedOrgIdDashboardRouteRouteImport } from './routes/(protected)/$orgId/dashboard/route'
+import { Route as protectedOrgIdDashboardTagsRouteImport } from './routes/(protected)/$orgId/dashboard/tags'
+import { Route as protectedOrgIdDashboardSettingsRouteImport } from './routes/(protected)/$orgId/dashboard/settings'
+import { Route as protectedOrgIdDashboardProfileRouteImport } from './routes/(protected)/$orgId/dashboard/profile'
+import { Route as protectedOrgIdDashboardDietsRouteImport } from './routes/(protected)/$orgId/dashboard/diets'
+import { Route as protectedOrgIdDashboardCuisinesRouteImport } from './routes/(protected)/$orgId/dashboard/cuisines'
+import { Route as protectedOrgIdDashboardCategoriesRouteImport } from './routes/(protected)/$orgId/dashboard/categories'
+import { Route as protectedOrgIdDashboardRecipesIndexRouteImport } from './routes/(protected)/$orgId/dashboard/recipes/index'
+import { Route as protectedOrgIdDashboardOrganizationsIdRouteImport } from './routes/(protected)/$orgId/dashboard/organizations/$id'
+import { Route as protectedOrgIdDashboardRecipesSharedRouteRouteImport } from './routes/(protected)/$orgId/dashboard/recipes/shared/route'
+import { Route as protectedOrgIdDashboardRecipesFavoritesRouteRouteImport } from './routes/(protected)/$orgId/dashboard/recipes/favorites/route'
+import { Route as protectedOrgIdDashboardRecipesAddRouteRouteImport } from './routes/(protected)/$orgId/dashboard/recipes/add/route'
 
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
@@ -89,77 +89,77 @@ const protectedOnboardingFirstUserRoute =
     path: '/first-user',
     getParentRoute: () => protectedOnboardingRouteRoute,
   } as any)
-const protectedOrgIdTeamIdDashboardRouteRoute =
-  protectedOrgIdTeamIdDashboardRouteRouteImport.update({
-    id: '/(protected)/$orgId/$teamId/dashboard',
-    path: '/$orgId/$teamId/dashboard',
+const protectedOrgIdDashboardRouteRoute =
+  protectedOrgIdDashboardRouteRouteImport.update({
+    id: '/(protected)/$orgId/dashboard',
+    path: '/$orgId/dashboard',
     getParentRoute: () => rootRouteImport,
   } as any)
-const protectedOrgIdTeamIdDashboardTagsRoute =
-  protectedOrgIdTeamIdDashboardTagsRouteImport.update({
+const protectedOrgIdDashboardTagsRoute =
+  protectedOrgIdDashboardTagsRouteImport.update({
     id: '/tags',
     path: '/tags',
-    getParentRoute: () => protectedOrgIdTeamIdDashboardRouteRoute,
+    getParentRoute: () => protectedOrgIdDashboardRouteRoute,
   } as any)
-const protectedOrgIdTeamIdDashboardSettingsRoute =
-  protectedOrgIdTeamIdDashboardSettingsRouteImport.update({
+const protectedOrgIdDashboardSettingsRoute =
+  protectedOrgIdDashboardSettingsRouteImport.update({
     id: '/settings',
     path: '/settings',
-    getParentRoute: () => protectedOrgIdTeamIdDashboardRouteRoute,
+    getParentRoute: () => protectedOrgIdDashboardRouteRoute,
   } as any)
-const protectedOrgIdTeamIdDashboardProfileRoute =
-  protectedOrgIdTeamIdDashboardProfileRouteImport.update({
+const protectedOrgIdDashboardProfileRoute =
+  protectedOrgIdDashboardProfileRouteImport.update({
     id: '/profile',
     path: '/profile',
-    getParentRoute: () => protectedOrgIdTeamIdDashboardRouteRoute,
+    getParentRoute: () => protectedOrgIdDashboardRouteRoute,
   } as any)
-const protectedOrgIdTeamIdDashboardDietsRoute =
-  protectedOrgIdTeamIdDashboardDietsRouteImport.update({
+const protectedOrgIdDashboardDietsRoute =
+  protectedOrgIdDashboardDietsRouteImport.update({
     id: '/diets',
     path: '/diets',
-    getParentRoute: () => protectedOrgIdTeamIdDashboardRouteRoute,
+    getParentRoute: () => protectedOrgIdDashboardRouteRoute,
   } as any)
-const protectedOrgIdTeamIdDashboardCuisinesRoute =
-  protectedOrgIdTeamIdDashboardCuisinesRouteImport.update({
+const protectedOrgIdDashboardCuisinesRoute =
+  protectedOrgIdDashboardCuisinesRouteImport.update({
     id: '/cuisines',
     path: '/cuisines',
-    getParentRoute: () => protectedOrgIdTeamIdDashboardRouteRoute,
+    getParentRoute: () => protectedOrgIdDashboardRouteRoute,
   } as any)
-const protectedOrgIdTeamIdDashboardCategoriesRoute =
-  protectedOrgIdTeamIdDashboardCategoriesRouteImport.update({
+const protectedOrgIdDashboardCategoriesRoute =
+  protectedOrgIdDashboardCategoriesRouteImport.update({
     id: '/categories',
     path: '/categories',
-    getParentRoute: () => protectedOrgIdTeamIdDashboardRouteRoute,
+    getParentRoute: () => protectedOrgIdDashboardRouteRoute,
   } as any)
-const protectedOrgIdTeamIdDashboardRecipesIndexRoute =
-  protectedOrgIdTeamIdDashboardRecipesIndexRouteImport.update({
+const protectedOrgIdDashboardRecipesIndexRoute =
+  protectedOrgIdDashboardRecipesIndexRouteImport.update({
     id: '/recipes/',
     path: '/recipes/',
-    getParentRoute: () => protectedOrgIdTeamIdDashboardRouteRoute,
+    getParentRoute: () => protectedOrgIdDashboardRouteRoute,
   } as any)
-const protectedOrgIdTeamIdDashboardOrganizationsIdRoute =
-  protectedOrgIdTeamIdDashboardOrganizationsIdRouteImport.update({
+const protectedOrgIdDashboardOrganizationsIdRoute =
+  protectedOrgIdDashboardOrganizationsIdRouteImport.update({
     id: '/organizations/$id',
     path: '/organizations/$id',
-    getParentRoute: () => protectedOrgIdTeamIdDashboardRouteRoute,
+    getParentRoute: () => protectedOrgIdDashboardRouteRoute,
   } as any)
-const protectedOrgIdTeamIdDashboardRecipesSharedRouteRoute =
-  protectedOrgIdTeamIdDashboardRecipesSharedRouteRouteImport.update({
+const protectedOrgIdDashboardRecipesSharedRouteRoute =
+  protectedOrgIdDashboardRecipesSharedRouteRouteImport.update({
     id: '/recipes/shared',
     path: '/recipes/shared',
-    getParentRoute: () => protectedOrgIdTeamIdDashboardRouteRoute,
+    getParentRoute: () => protectedOrgIdDashboardRouteRoute,
   } as any)
-const protectedOrgIdTeamIdDashboardRecipesFavoritesRouteRoute =
-  protectedOrgIdTeamIdDashboardRecipesFavoritesRouteRouteImport.update({
+const protectedOrgIdDashboardRecipesFavoritesRouteRoute =
+  protectedOrgIdDashboardRecipesFavoritesRouteRouteImport.update({
     id: '/recipes/favorites',
     path: '/recipes/favorites',
-    getParentRoute: () => protectedOrgIdTeamIdDashboardRouteRoute,
+    getParentRoute: () => protectedOrgIdDashboardRouteRoute,
   } as any)
-const protectedOrgIdTeamIdDashboardRecipesAddRouteRoute =
-  protectedOrgIdTeamIdDashboardRecipesAddRouteRouteImport.update({
+const protectedOrgIdDashboardRecipesAddRouteRoute =
+  protectedOrgIdDashboardRecipesAddRouteRouteImport.update({
     id: '/recipes/add',
     path: '/recipes/add',
-    getParentRoute: () => protectedOrgIdTeamIdDashboardRouteRoute,
+    getParentRoute: () => protectedOrgIdDashboardRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -170,21 +170,21 @@ export interface FileRoutesByFullPath {
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
   '/api/electric': typeof ApiElectricRoute
+  '/$orgId/dashboard': typeof protectedOrgIdDashboardRouteRouteWithChildren
   '/onboarding/first-user': typeof protectedOnboardingFirstUserRoute
   '/onboarding/join': typeof protectedOnboardingJoinRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/$orgId/$teamId/dashboard': typeof protectedOrgIdTeamIdDashboardRouteRouteWithChildren
-  '/$orgId/$teamId/dashboard/categories': typeof protectedOrgIdTeamIdDashboardCategoriesRoute
-  '/$orgId/$teamId/dashboard/cuisines': typeof protectedOrgIdTeamIdDashboardCuisinesRoute
-  '/$orgId/$teamId/dashboard/diets': typeof protectedOrgIdTeamIdDashboardDietsRoute
-  '/$orgId/$teamId/dashboard/profile': typeof protectedOrgIdTeamIdDashboardProfileRoute
-  '/$orgId/$teamId/dashboard/settings': typeof protectedOrgIdTeamIdDashboardSettingsRoute
-  '/$orgId/$teamId/dashboard/tags': typeof protectedOrgIdTeamIdDashboardTagsRoute
-  '/$orgId/$teamId/dashboard/recipes/add': typeof protectedOrgIdTeamIdDashboardRecipesAddRouteRoute
-  '/$orgId/$teamId/dashboard/recipes/favorites': typeof protectedOrgIdTeamIdDashboardRecipesFavoritesRouteRoute
-  '/$orgId/$teamId/dashboard/recipes/shared': typeof protectedOrgIdTeamIdDashboardRecipesSharedRouteRoute
-  '/$orgId/$teamId/dashboard/organizations/$id': typeof protectedOrgIdTeamIdDashboardOrganizationsIdRoute
-  '/$orgId/$teamId/dashboard/recipes': typeof protectedOrgIdTeamIdDashboardRecipesIndexRoute
+  '/$orgId/dashboard/categories': typeof protectedOrgIdDashboardCategoriesRoute
+  '/$orgId/dashboard/cuisines': typeof protectedOrgIdDashboardCuisinesRoute
+  '/$orgId/dashboard/diets': typeof protectedOrgIdDashboardDietsRoute
+  '/$orgId/dashboard/profile': typeof protectedOrgIdDashboardProfileRoute
+  '/$orgId/dashboard/settings': typeof protectedOrgIdDashboardSettingsRoute
+  '/$orgId/dashboard/tags': typeof protectedOrgIdDashboardTagsRoute
+  '/$orgId/dashboard/recipes/add': typeof protectedOrgIdDashboardRecipesAddRouteRoute
+  '/$orgId/dashboard/recipes/favorites': typeof protectedOrgIdDashboardRecipesFavoritesRouteRoute
+  '/$orgId/dashboard/recipes/shared': typeof protectedOrgIdDashboardRecipesSharedRouteRoute
+  '/$orgId/dashboard/organizations/$id': typeof protectedOrgIdDashboardOrganizationsIdRoute
+  '/$orgId/dashboard/recipes': typeof protectedOrgIdDashboardRecipesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -194,21 +194,21 @@ export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
   '/api/electric': typeof ApiElectricRoute
+  '/$orgId/dashboard': typeof protectedOrgIdDashboardRouteRouteWithChildren
   '/onboarding/first-user': typeof protectedOnboardingFirstUserRoute
   '/onboarding/join': typeof protectedOnboardingJoinRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/$orgId/$teamId/dashboard': typeof protectedOrgIdTeamIdDashboardRouteRouteWithChildren
-  '/$orgId/$teamId/dashboard/categories': typeof protectedOrgIdTeamIdDashboardCategoriesRoute
-  '/$orgId/$teamId/dashboard/cuisines': typeof protectedOrgIdTeamIdDashboardCuisinesRoute
-  '/$orgId/$teamId/dashboard/diets': typeof protectedOrgIdTeamIdDashboardDietsRoute
-  '/$orgId/$teamId/dashboard/profile': typeof protectedOrgIdTeamIdDashboardProfileRoute
-  '/$orgId/$teamId/dashboard/settings': typeof protectedOrgIdTeamIdDashboardSettingsRoute
-  '/$orgId/$teamId/dashboard/tags': typeof protectedOrgIdTeamIdDashboardTagsRoute
-  '/$orgId/$teamId/dashboard/recipes/add': typeof protectedOrgIdTeamIdDashboardRecipesAddRouteRoute
-  '/$orgId/$teamId/dashboard/recipes/favorites': typeof protectedOrgIdTeamIdDashboardRecipesFavoritesRouteRoute
-  '/$orgId/$teamId/dashboard/recipes/shared': typeof protectedOrgIdTeamIdDashboardRecipesSharedRouteRoute
-  '/$orgId/$teamId/dashboard/organizations/$id': typeof protectedOrgIdTeamIdDashboardOrganizationsIdRoute
-  '/$orgId/$teamId/dashboard/recipes': typeof protectedOrgIdTeamIdDashboardRecipesIndexRoute
+  '/$orgId/dashboard/categories': typeof protectedOrgIdDashboardCategoriesRoute
+  '/$orgId/dashboard/cuisines': typeof protectedOrgIdDashboardCuisinesRoute
+  '/$orgId/dashboard/diets': typeof protectedOrgIdDashboardDietsRoute
+  '/$orgId/dashboard/profile': typeof protectedOrgIdDashboardProfileRoute
+  '/$orgId/dashboard/settings': typeof protectedOrgIdDashboardSettingsRoute
+  '/$orgId/dashboard/tags': typeof protectedOrgIdDashboardTagsRoute
+  '/$orgId/dashboard/recipes/add': typeof protectedOrgIdDashboardRecipesAddRouteRoute
+  '/$orgId/dashboard/recipes/favorites': typeof protectedOrgIdDashboardRecipesFavoritesRouteRoute
+  '/$orgId/dashboard/recipes/shared': typeof protectedOrgIdDashboardRecipesSharedRouteRoute
+  '/$orgId/dashboard/organizations/$id': typeof protectedOrgIdDashboardOrganizationsIdRoute
+  '/$orgId/dashboard/recipes': typeof protectedOrgIdDashboardRecipesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -220,21 +220,21 @@ export interface FileRoutesById {
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
   '/api/electric': typeof ApiElectricRoute
+  '/(protected)/$orgId/dashboard': typeof protectedOrgIdDashboardRouteRouteWithChildren
   '/(protected)/onboarding/first-user': typeof protectedOnboardingFirstUserRoute
   '/(protected)/onboarding/join': typeof protectedOnboardingJoinRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/(protected)/$orgId/$teamId/dashboard': typeof protectedOrgIdTeamIdDashboardRouteRouteWithChildren
-  '/(protected)/$orgId/$teamId/dashboard/categories': typeof protectedOrgIdTeamIdDashboardCategoriesRoute
-  '/(protected)/$orgId/$teamId/dashboard/cuisines': typeof protectedOrgIdTeamIdDashboardCuisinesRoute
-  '/(protected)/$orgId/$teamId/dashboard/diets': typeof protectedOrgIdTeamIdDashboardDietsRoute
-  '/(protected)/$orgId/$teamId/dashboard/profile': typeof protectedOrgIdTeamIdDashboardProfileRoute
-  '/(protected)/$orgId/$teamId/dashboard/settings': typeof protectedOrgIdTeamIdDashboardSettingsRoute
-  '/(protected)/$orgId/$teamId/dashboard/tags': typeof protectedOrgIdTeamIdDashboardTagsRoute
-  '/(protected)/$orgId/$teamId/dashboard/recipes/add': typeof protectedOrgIdTeamIdDashboardRecipesAddRouteRoute
-  '/(protected)/$orgId/$teamId/dashboard/recipes/favorites': typeof protectedOrgIdTeamIdDashboardRecipesFavoritesRouteRoute
-  '/(protected)/$orgId/$teamId/dashboard/recipes/shared': typeof protectedOrgIdTeamIdDashboardRecipesSharedRouteRoute
-  '/(protected)/$orgId/$teamId/dashboard/organizations/$id': typeof protectedOrgIdTeamIdDashboardOrganizationsIdRoute
-  '/(protected)/$orgId/$teamId/dashboard/recipes/': typeof protectedOrgIdTeamIdDashboardRecipesIndexRoute
+  '/(protected)/$orgId/dashboard/categories': typeof protectedOrgIdDashboardCategoriesRoute
+  '/(protected)/$orgId/dashboard/cuisines': typeof protectedOrgIdDashboardCuisinesRoute
+  '/(protected)/$orgId/dashboard/diets': typeof protectedOrgIdDashboardDietsRoute
+  '/(protected)/$orgId/dashboard/profile': typeof protectedOrgIdDashboardProfileRoute
+  '/(protected)/$orgId/dashboard/settings': typeof protectedOrgIdDashboardSettingsRoute
+  '/(protected)/$orgId/dashboard/tags': typeof protectedOrgIdDashboardTagsRoute
+  '/(protected)/$orgId/dashboard/recipes/add': typeof protectedOrgIdDashboardRecipesAddRouteRoute
+  '/(protected)/$orgId/dashboard/recipes/favorites': typeof protectedOrgIdDashboardRecipesFavoritesRouteRoute
+  '/(protected)/$orgId/dashboard/recipes/shared': typeof protectedOrgIdDashboardRecipesSharedRouteRoute
+  '/(protected)/$orgId/dashboard/organizations/$id': typeof protectedOrgIdDashboardOrganizationsIdRoute
+  '/(protected)/$orgId/dashboard/recipes/': typeof protectedOrgIdDashboardRecipesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -246,21 +246,21 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/api/electric'
+    | '/$orgId/dashboard'
     | '/onboarding/first-user'
     | '/onboarding/join'
     | '/api/auth/$'
-    | '/$orgId/$teamId/dashboard'
-    | '/$orgId/$teamId/dashboard/categories'
-    | '/$orgId/$teamId/dashboard/cuisines'
-    | '/$orgId/$teamId/dashboard/diets'
-    | '/$orgId/$teamId/dashboard/profile'
-    | '/$orgId/$teamId/dashboard/settings'
-    | '/$orgId/$teamId/dashboard/tags'
-    | '/$orgId/$teamId/dashboard/recipes/add'
-    | '/$orgId/$teamId/dashboard/recipes/favorites'
-    | '/$orgId/$teamId/dashboard/recipes/shared'
-    | '/$orgId/$teamId/dashboard/organizations/$id'
-    | '/$orgId/$teamId/dashboard/recipes'
+    | '/$orgId/dashboard/categories'
+    | '/$orgId/dashboard/cuisines'
+    | '/$orgId/dashboard/diets'
+    | '/$orgId/dashboard/profile'
+    | '/$orgId/dashboard/settings'
+    | '/$orgId/dashboard/tags'
+    | '/$orgId/dashboard/recipes/add'
+    | '/$orgId/dashboard/recipes/favorites'
+    | '/$orgId/dashboard/recipes/shared'
+    | '/$orgId/dashboard/organizations/$id'
+    | '/$orgId/dashboard/recipes'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -270,21 +270,21 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/api/electric'
+    | '/$orgId/dashboard'
     | '/onboarding/first-user'
     | '/onboarding/join'
     | '/api/auth/$'
-    | '/$orgId/$teamId/dashboard'
-    | '/$orgId/$teamId/dashboard/categories'
-    | '/$orgId/$teamId/dashboard/cuisines'
-    | '/$orgId/$teamId/dashboard/diets'
-    | '/$orgId/$teamId/dashboard/profile'
-    | '/$orgId/$teamId/dashboard/settings'
-    | '/$orgId/$teamId/dashboard/tags'
-    | '/$orgId/$teamId/dashboard/recipes/add'
-    | '/$orgId/$teamId/dashboard/recipes/favorites'
-    | '/$orgId/$teamId/dashboard/recipes/shared'
-    | '/$orgId/$teamId/dashboard/organizations/$id'
-    | '/$orgId/$teamId/dashboard/recipes'
+    | '/$orgId/dashboard/categories'
+    | '/$orgId/dashboard/cuisines'
+    | '/$orgId/dashboard/diets'
+    | '/$orgId/dashboard/profile'
+    | '/$orgId/dashboard/settings'
+    | '/$orgId/dashboard/tags'
+    | '/$orgId/dashboard/recipes/add'
+    | '/$orgId/dashboard/recipes/favorites'
+    | '/$orgId/dashboard/recipes/shared'
+    | '/$orgId/dashboard/organizations/$id'
+    | '/$orgId/dashboard/recipes'
   id:
     | '__root__'
     | '/'
@@ -295,21 +295,21 @@ export interface FileRouteTypes {
     | '/(auth)/login'
     | '/(auth)/signup'
     | '/api/electric'
+    | '/(protected)/$orgId/dashboard'
     | '/(protected)/onboarding/first-user'
     | '/(protected)/onboarding/join'
     | '/api/auth/$'
-    | '/(protected)/$orgId/$teamId/dashboard'
-    | '/(protected)/$orgId/$teamId/dashboard/categories'
-    | '/(protected)/$orgId/$teamId/dashboard/cuisines'
-    | '/(protected)/$orgId/$teamId/dashboard/diets'
-    | '/(protected)/$orgId/$teamId/dashboard/profile'
-    | '/(protected)/$orgId/$teamId/dashboard/settings'
-    | '/(protected)/$orgId/$teamId/dashboard/tags'
-    | '/(protected)/$orgId/$teamId/dashboard/recipes/add'
-    | '/(protected)/$orgId/$teamId/dashboard/recipes/favorites'
-    | '/(protected)/$orgId/$teamId/dashboard/recipes/shared'
-    | '/(protected)/$orgId/$teamId/dashboard/organizations/$id'
-    | '/(protected)/$orgId/$teamId/dashboard/recipes/'
+    | '/(protected)/$orgId/dashboard/categories'
+    | '/(protected)/$orgId/dashboard/cuisines'
+    | '/(protected)/$orgId/dashboard/diets'
+    | '/(protected)/$orgId/dashboard/profile'
+    | '/(protected)/$orgId/dashboard/settings'
+    | '/(protected)/$orgId/dashboard/tags'
+    | '/(protected)/$orgId/dashboard/recipes/add'
+    | '/(protected)/$orgId/dashboard/recipes/favorites'
+    | '/(protected)/$orgId/dashboard/recipes/shared'
+    | '/(protected)/$orgId/dashboard/organizations/$id'
+    | '/(protected)/$orgId/dashboard/recipes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -318,8 +318,8 @@ export interface RootRouteChildren {
   protectedAdminRouteRoute: typeof protectedAdminRouteRoute
   protectedOnboardingRouteRoute: typeof protectedOnboardingRouteRouteWithChildren
   ApiElectricRoute: typeof ApiElectricRoute
+  protectedOrgIdDashboardRouteRoute: typeof protectedOrgIdDashboardRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  protectedOrgIdTeamIdDashboardRouteRoute: typeof protectedOrgIdTeamIdDashboardRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -401,89 +401,89 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof protectedOnboardingFirstUserRouteImport
       parentRoute: typeof protectedOnboardingRouteRoute
     }
-    '/(protected)/$orgId/$teamId/dashboard': {
-      id: '/(protected)/$orgId/$teamId/dashboard'
-      path: '/$orgId/$teamId/dashboard'
-      fullPath: '/$orgId/$teamId/dashboard'
-      preLoaderRoute: typeof protectedOrgIdTeamIdDashboardRouteRouteImport
+    '/(protected)/$orgId/dashboard': {
+      id: '/(protected)/$orgId/dashboard'
+      path: '/$orgId/dashboard'
+      fullPath: '/$orgId/dashboard'
+      preLoaderRoute: typeof protectedOrgIdDashboardRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(protected)/$orgId/$teamId/dashboard/tags': {
-      id: '/(protected)/$orgId/$teamId/dashboard/tags'
+    '/(protected)/$orgId/dashboard/tags': {
+      id: '/(protected)/$orgId/dashboard/tags'
       path: '/tags'
-      fullPath: '/$orgId/$teamId/dashboard/tags'
-      preLoaderRoute: typeof protectedOrgIdTeamIdDashboardTagsRouteImport
-      parentRoute: typeof protectedOrgIdTeamIdDashboardRouteRoute
+      fullPath: '/$orgId/dashboard/tags'
+      preLoaderRoute: typeof protectedOrgIdDashboardTagsRouteImport
+      parentRoute: typeof protectedOrgIdDashboardRouteRoute
     }
-    '/(protected)/$orgId/$teamId/dashboard/settings': {
-      id: '/(protected)/$orgId/$teamId/dashboard/settings'
+    '/(protected)/$orgId/dashboard/settings': {
+      id: '/(protected)/$orgId/dashboard/settings'
       path: '/settings'
-      fullPath: '/$orgId/$teamId/dashboard/settings'
-      preLoaderRoute: typeof protectedOrgIdTeamIdDashboardSettingsRouteImport
-      parentRoute: typeof protectedOrgIdTeamIdDashboardRouteRoute
+      fullPath: '/$orgId/dashboard/settings'
+      preLoaderRoute: typeof protectedOrgIdDashboardSettingsRouteImport
+      parentRoute: typeof protectedOrgIdDashboardRouteRoute
     }
-    '/(protected)/$orgId/$teamId/dashboard/profile': {
-      id: '/(protected)/$orgId/$teamId/dashboard/profile'
+    '/(protected)/$orgId/dashboard/profile': {
+      id: '/(protected)/$orgId/dashboard/profile'
       path: '/profile'
-      fullPath: '/$orgId/$teamId/dashboard/profile'
-      preLoaderRoute: typeof protectedOrgIdTeamIdDashboardProfileRouteImport
-      parentRoute: typeof protectedOrgIdTeamIdDashboardRouteRoute
+      fullPath: '/$orgId/dashboard/profile'
+      preLoaderRoute: typeof protectedOrgIdDashboardProfileRouteImport
+      parentRoute: typeof protectedOrgIdDashboardRouteRoute
     }
-    '/(protected)/$orgId/$teamId/dashboard/diets': {
-      id: '/(protected)/$orgId/$teamId/dashboard/diets'
+    '/(protected)/$orgId/dashboard/diets': {
+      id: '/(protected)/$orgId/dashboard/diets'
       path: '/diets'
-      fullPath: '/$orgId/$teamId/dashboard/diets'
-      preLoaderRoute: typeof protectedOrgIdTeamIdDashboardDietsRouteImport
-      parentRoute: typeof protectedOrgIdTeamIdDashboardRouteRoute
+      fullPath: '/$orgId/dashboard/diets'
+      preLoaderRoute: typeof protectedOrgIdDashboardDietsRouteImport
+      parentRoute: typeof protectedOrgIdDashboardRouteRoute
     }
-    '/(protected)/$orgId/$teamId/dashboard/cuisines': {
-      id: '/(protected)/$orgId/$teamId/dashboard/cuisines'
+    '/(protected)/$orgId/dashboard/cuisines': {
+      id: '/(protected)/$orgId/dashboard/cuisines'
       path: '/cuisines'
-      fullPath: '/$orgId/$teamId/dashboard/cuisines'
-      preLoaderRoute: typeof protectedOrgIdTeamIdDashboardCuisinesRouteImport
-      parentRoute: typeof protectedOrgIdTeamIdDashboardRouteRoute
+      fullPath: '/$orgId/dashboard/cuisines'
+      preLoaderRoute: typeof protectedOrgIdDashboardCuisinesRouteImport
+      parentRoute: typeof protectedOrgIdDashboardRouteRoute
     }
-    '/(protected)/$orgId/$teamId/dashboard/categories': {
-      id: '/(protected)/$orgId/$teamId/dashboard/categories'
+    '/(protected)/$orgId/dashboard/categories': {
+      id: '/(protected)/$orgId/dashboard/categories'
       path: '/categories'
-      fullPath: '/$orgId/$teamId/dashboard/categories'
-      preLoaderRoute: typeof protectedOrgIdTeamIdDashboardCategoriesRouteImport
-      parentRoute: typeof protectedOrgIdTeamIdDashboardRouteRoute
+      fullPath: '/$orgId/dashboard/categories'
+      preLoaderRoute: typeof protectedOrgIdDashboardCategoriesRouteImport
+      parentRoute: typeof protectedOrgIdDashboardRouteRoute
     }
-    '/(protected)/$orgId/$teamId/dashboard/recipes/': {
-      id: '/(protected)/$orgId/$teamId/dashboard/recipes/'
+    '/(protected)/$orgId/dashboard/recipes/': {
+      id: '/(protected)/$orgId/dashboard/recipes/'
       path: '/recipes'
-      fullPath: '/$orgId/$teamId/dashboard/recipes'
-      preLoaderRoute: typeof protectedOrgIdTeamIdDashboardRecipesIndexRouteImport
-      parentRoute: typeof protectedOrgIdTeamIdDashboardRouteRoute
+      fullPath: '/$orgId/dashboard/recipes'
+      preLoaderRoute: typeof protectedOrgIdDashboardRecipesIndexRouteImport
+      parentRoute: typeof protectedOrgIdDashboardRouteRoute
     }
-    '/(protected)/$orgId/$teamId/dashboard/organizations/$id': {
-      id: '/(protected)/$orgId/$teamId/dashboard/organizations/$id'
+    '/(protected)/$orgId/dashboard/organizations/$id': {
+      id: '/(protected)/$orgId/dashboard/organizations/$id'
       path: '/organizations/$id'
-      fullPath: '/$orgId/$teamId/dashboard/organizations/$id'
-      preLoaderRoute: typeof protectedOrgIdTeamIdDashboardOrganizationsIdRouteImport
-      parentRoute: typeof protectedOrgIdTeamIdDashboardRouteRoute
+      fullPath: '/$orgId/dashboard/organizations/$id'
+      preLoaderRoute: typeof protectedOrgIdDashboardOrganizationsIdRouteImport
+      parentRoute: typeof protectedOrgIdDashboardRouteRoute
     }
-    '/(protected)/$orgId/$teamId/dashboard/recipes/shared': {
-      id: '/(protected)/$orgId/$teamId/dashboard/recipes/shared'
+    '/(protected)/$orgId/dashboard/recipes/shared': {
+      id: '/(protected)/$orgId/dashboard/recipes/shared'
       path: '/recipes/shared'
-      fullPath: '/$orgId/$teamId/dashboard/recipes/shared'
-      preLoaderRoute: typeof protectedOrgIdTeamIdDashboardRecipesSharedRouteRouteImport
-      parentRoute: typeof protectedOrgIdTeamIdDashboardRouteRoute
+      fullPath: '/$orgId/dashboard/recipes/shared'
+      preLoaderRoute: typeof protectedOrgIdDashboardRecipesSharedRouteRouteImport
+      parentRoute: typeof protectedOrgIdDashboardRouteRoute
     }
-    '/(protected)/$orgId/$teamId/dashboard/recipes/favorites': {
-      id: '/(protected)/$orgId/$teamId/dashboard/recipes/favorites'
+    '/(protected)/$orgId/dashboard/recipes/favorites': {
+      id: '/(protected)/$orgId/dashboard/recipes/favorites'
       path: '/recipes/favorites'
-      fullPath: '/$orgId/$teamId/dashboard/recipes/favorites'
-      preLoaderRoute: typeof protectedOrgIdTeamIdDashboardRecipesFavoritesRouteRouteImport
-      parentRoute: typeof protectedOrgIdTeamIdDashboardRouteRoute
+      fullPath: '/$orgId/dashboard/recipes/favorites'
+      preLoaderRoute: typeof protectedOrgIdDashboardRecipesFavoritesRouteRouteImport
+      parentRoute: typeof protectedOrgIdDashboardRouteRoute
     }
-    '/(protected)/$orgId/$teamId/dashboard/recipes/add': {
-      id: '/(protected)/$orgId/$teamId/dashboard/recipes/add'
+    '/(protected)/$orgId/dashboard/recipes/add': {
+      id: '/(protected)/$orgId/dashboard/recipes/add'
       path: '/recipes/add'
-      fullPath: '/$orgId/$teamId/dashboard/recipes/add'
-      preLoaderRoute: typeof protectedOrgIdTeamIdDashboardRecipesAddRouteRouteImport
-      parentRoute: typeof protectedOrgIdTeamIdDashboardRouteRoute
+      fullPath: '/$orgId/dashboard/recipes/add'
+      preLoaderRoute: typeof protectedOrgIdDashboardRecipesAddRouteRouteImport
+      parentRoute: typeof protectedOrgIdDashboardRouteRoute
     }
   }
 }
@@ -520,49 +520,44 @@ const protectedOnboardingRouteRouteWithChildren =
     protectedOnboardingRouteRouteChildren,
   )
 
-interface protectedOrgIdTeamIdDashboardRouteRouteChildren {
-  protectedOrgIdTeamIdDashboardCategoriesRoute: typeof protectedOrgIdTeamIdDashboardCategoriesRoute
-  protectedOrgIdTeamIdDashboardCuisinesRoute: typeof protectedOrgIdTeamIdDashboardCuisinesRoute
-  protectedOrgIdTeamIdDashboardDietsRoute: typeof protectedOrgIdTeamIdDashboardDietsRoute
-  protectedOrgIdTeamIdDashboardProfileRoute: typeof protectedOrgIdTeamIdDashboardProfileRoute
-  protectedOrgIdTeamIdDashboardSettingsRoute: typeof protectedOrgIdTeamIdDashboardSettingsRoute
-  protectedOrgIdTeamIdDashboardTagsRoute: typeof protectedOrgIdTeamIdDashboardTagsRoute
-  protectedOrgIdTeamIdDashboardRecipesAddRouteRoute: typeof protectedOrgIdTeamIdDashboardRecipesAddRouteRoute
-  protectedOrgIdTeamIdDashboardRecipesFavoritesRouteRoute: typeof protectedOrgIdTeamIdDashboardRecipesFavoritesRouteRoute
-  protectedOrgIdTeamIdDashboardRecipesSharedRouteRoute: typeof protectedOrgIdTeamIdDashboardRecipesSharedRouteRoute
-  protectedOrgIdTeamIdDashboardOrganizationsIdRoute: typeof protectedOrgIdTeamIdDashboardOrganizationsIdRoute
-  protectedOrgIdTeamIdDashboardRecipesIndexRoute: typeof protectedOrgIdTeamIdDashboardRecipesIndexRoute
+interface protectedOrgIdDashboardRouteRouteChildren {
+  protectedOrgIdDashboardCategoriesRoute: typeof protectedOrgIdDashboardCategoriesRoute
+  protectedOrgIdDashboardCuisinesRoute: typeof protectedOrgIdDashboardCuisinesRoute
+  protectedOrgIdDashboardDietsRoute: typeof protectedOrgIdDashboardDietsRoute
+  protectedOrgIdDashboardProfileRoute: typeof protectedOrgIdDashboardProfileRoute
+  protectedOrgIdDashboardSettingsRoute: typeof protectedOrgIdDashboardSettingsRoute
+  protectedOrgIdDashboardTagsRoute: typeof protectedOrgIdDashboardTagsRoute
+  protectedOrgIdDashboardRecipesAddRouteRoute: typeof protectedOrgIdDashboardRecipesAddRouteRoute
+  protectedOrgIdDashboardRecipesFavoritesRouteRoute: typeof protectedOrgIdDashboardRecipesFavoritesRouteRoute
+  protectedOrgIdDashboardRecipesSharedRouteRoute: typeof protectedOrgIdDashboardRecipesSharedRouteRoute
+  protectedOrgIdDashboardOrganizationsIdRoute: typeof protectedOrgIdDashboardOrganizationsIdRoute
+  protectedOrgIdDashboardRecipesIndexRoute: typeof protectedOrgIdDashboardRecipesIndexRoute
 }
 
-const protectedOrgIdTeamIdDashboardRouteRouteChildren: protectedOrgIdTeamIdDashboardRouteRouteChildren =
+const protectedOrgIdDashboardRouteRouteChildren: protectedOrgIdDashboardRouteRouteChildren =
   {
-    protectedOrgIdTeamIdDashboardCategoriesRoute:
-      protectedOrgIdTeamIdDashboardCategoriesRoute,
-    protectedOrgIdTeamIdDashboardCuisinesRoute:
-      protectedOrgIdTeamIdDashboardCuisinesRoute,
-    protectedOrgIdTeamIdDashboardDietsRoute:
-      protectedOrgIdTeamIdDashboardDietsRoute,
-    protectedOrgIdTeamIdDashboardProfileRoute:
-      protectedOrgIdTeamIdDashboardProfileRoute,
-    protectedOrgIdTeamIdDashboardSettingsRoute:
-      protectedOrgIdTeamIdDashboardSettingsRoute,
-    protectedOrgIdTeamIdDashboardTagsRoute:
-      protectedOrgIdTeamIdDashboardTagsRoute,
-    protectedOrgIdTeamIdDashboardRecipesAddRouteRoute:
-      protectedOrgIdTeamIdDashboardRecipesAddRouteRoute,
-    protectedOrgIdTeamIdDashboardRecipesFavoritesRouteRoute:
-      protectedOrgIdTeamIdDashboardRecipesFavoritesRouteRoute,
-    protectedOrgIdTeamIdDashboardRecipesSharedRouteRoute:
-      protectedOrgIdTeamIdDashboardRecipesSharedRouteRoute,
-    protectedOrgIdTeamIdDashboardOrganizationsIdRoute:
-      protectedOrgIdTeamIdDashboardOrganizationsIdRoute,
-    protectedOrgIdTeamIdDashboardRecipesIndexRoute:
-      protectedOrgIdTeamIdDashboardRecipesIndexRoute,
+    protectedOrgIdDashboardCategoriesRoute:
+      protectedOrgIdDashboardCategoriesRoute,
+    protectedOrgIdDashboardCuisinesRoute: protectedOrgIdDashboardCuisinesRoute,
+    protectedOrgIdDashboardDietsRoute: protectedOrgIdDashboardDietsRoute,
+    protectedOrgIdDashboardProfileRoute: protectedOrgIdDashboardProfileRoute,
+    protectedOrgIdDashboardSettingsRoute: protectedOrgIdDashboardSettingsRoute,
+    protectedOrgIdDashboardTagsRoute: protectedOrgIdDashboardTagsRoute,
+    protectedOrgIdDashboardRecipesAddRouteRoute:
+      protectedOrgIdDashboardRecipesAddRouteRoute,
+    protectedOrgIdDashboardRecipesFavoritesRouteRoute:
+      protectedOrgIdDashboardRecipesFavoritesRouteRoute,
+    protectedOrgIdDashboardRecipesSharedRouteRoute:
+      protectedOrgIdDashboardRecipesSharedRouteRoute,
+    protectedOrgIdDashboardOrganizationsIdRoute:
+      protectedOrgIdDashboardOrganizationsIdRoute,
+    protectedOrgIdDashboardRecipesIndexRoute:
+      protectedOrgIdDashboardRecipesIndexRoute,
   }
 
-const protectedOrgIdTeamIdDashboardRouteRouteWithChildren =
-  protectedOrgIdTeamIdDashboardRouteRoute._addFileChildren(
-    protectedOrgIdTeamIdDashboardRouteRouteChildren,
+const protectedOrgIdDashboardRouteRouteWithChildren =
+  protectedOrgIdDashboardRouteRoute._addFileChildren(
+    protectedOrgIdDashboardRouteRouteChildren,
   )
 
 const rootRouteChildren: RootRouteChildren = {
@@ -571,9 +566,9 @@ const rootRouteChildren: RootRouteChildren = {
   protectedAdminRouteRoute: protectedAdminRouteRoute,
   protectedOnboardingRouteRoute: protectedOnboardingRouteRouteWithChildren,
   ApiElectricRoute: ApiElectricRoute,
+  protectedOrgIdDashboardRouteRoute:
+    protectedOrgIdDashboardRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  protectedOrgIdTeamIdDashboardRouteRoute:
-    protectedOrgIdTeamIdDashboardRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

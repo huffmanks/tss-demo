@@ -8,7 +8,6 @@ import {
 import { createAuthClient } from "better-auth/react";
 
 import type { auth } from "@/auth";
-import { ac, member, owner } from "@/auth/permissions";
 
 export const authClient = createAuthClient({
   baseURL: process.env.BETTER_AUTH_URL!,
@@ -18,14 +17,6 @@ export const authClient = createAuthClient({
     twoFactorClient(),
     organizationClient({
       schema: inferOrgAdditionalFields<typeof auth>(),
-      teams: {
-        enabled: true,
-      },
-      ac,
-      roles: {
-        member,
-        owner,
-      },
     }),
   ],
 });
