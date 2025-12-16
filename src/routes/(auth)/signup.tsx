@@ -6,7 +6,7 @@ import { SignupForm } from "@/components/forms/auth/signup";
 
 export const Route = createFileRoute("/(auth)/signup")({
   component: SignupRoute,
-  loader: async () => {
+  beforeLoad: async () => {
     const userExist = await doesUserExist();
 
     if (userExist) {

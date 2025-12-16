@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ShieldAlertIcon } from "lucide-react";
+import { FileWarningIcon } from "lucide-react";
 
 import { authClient } from "@/auth/auth-client";
 
@@ -13,21 +13,22 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 
-export default function ErrorPage() {
+export default function NotFoundPage() {
   const { data: session } = authClient.useSession();
 
   const link = {
     to: session ? "/dashboard" : "/login",
     label: session ? "Go to Dashboard" : "Go to Login",
   };
+
   return (
     <Empty className="from-muted/70 to-background h-full rounded-none bg-linear-to-b from-30%">
       <EmptyHeader>
         <EmptyMedia variant="icon">
-          <ShieldAlertIcon />
+          <FileWarningIcon />
         </EmptyMedia>
-        <EmptyTitle>Error</EmptyTitle>
-        <EmptyDescription>Something went wrong!</EmptyDescription>
+        <EmptyTitle>404 | Not Found</EmptyTitle>
+        <EmptyDescription>Page does not exist!</EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
         <Button asChild className="cursor-pointer">

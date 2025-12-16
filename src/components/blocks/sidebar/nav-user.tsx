@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { authClient } from "@/auth/auth-client";
 import { simpleError } from "@/lib/error-handler";
 import { createAcronym } from "@/lib/utils";
-import type { AuthUser } from "@/types";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -24,9 +23,10 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-export function NavUser({ user }: { user: AuthUser }) {
+export function NavUser() {
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
+  const { data: session } = authClient.useSession();
 
   async function handleLogout() {
     try {
@@ -42,6 +42,10 @@ export function NavUser({ user }: { user: AuthUser }) {
       toast.error(message);
     }
   }
+
+  const user = session?.user;
+
+  if (!user) return null;
 
   const initials = createAcronym(user.name);
 

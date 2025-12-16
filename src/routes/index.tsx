@@ -1,12 +1,9 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
 import { doesUserExist } from "@/fn/onboarding";
-import { redirectIfAuthenticated } from "@/middleware/auth";
 
 export const Route = createFileRoute("/")({
-  server: {
-    middleware: [redirectIfAuthenticated],
-  },
+  component: RootComponent,
   beforeLoad: async () => {
     if (!(await doesUserExist())) {
       throw redirect({ to: "/signup", replace: true });
@@ -15,3 +12,7 @@ export const Route = createFileRoute("/")({
     }
   },
 });
+
+function RootComponent() {
+  return <Outlet />;
+}

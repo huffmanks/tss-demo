@@ -6,7 +6,7 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { categories, cuisines, diets, organizations, units, users } from "@/db/schema";
 import { initialCategories, initialCuisines, initialDiets, initialUnits } from "@/db/seed/data";
-import { restrictToInitialSetup } from "@/middleware/auth";
+import { restrictInitialSetupMiddleware } from "@/middleware/auth";
 
 export const doesUserExist = createServerFn().handler(async () => {
   const result = await db.select({ id: users.id }).from(users).limit(1);
@@ -24,7 +24,7 @@ const setupAdminUserOrganizationSchema = z.object({
 
 export const setupAdminUserOrganization = createServerFn()
   .inputValidator(setupAdminUserOrganizationSchema)
-  .middleware([restrictToInitialSetup])
+  .middleware([restrictInitialSetupMiddleware])
   .handler(async ({ data }) => {
     const userExists = await doesUserExist();
     if (userExists) throw new Error("INITIAL_SIGNUP_ALREADY_COMPLETE");

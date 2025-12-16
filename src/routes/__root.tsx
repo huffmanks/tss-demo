@@ -1,12 +1,12 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { siteConfig } from "@/lib/site-config";
 import appCss from "@/styles.css?url";
 
 import ErrorPage from "@/components/error-page";
-import NotFound from "@/components/not-found";
+import NotFoundPage from "@/components/not-found-page";
 import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createRootRoute({
@@ -99,9 +99,10 @@ export const Route = createRootRoute({
       },
     ],
   }),
+  component: () => <Outlet />,
   shellComponent: RootDocument,
   errorComponent: () => <ErrorPage />,
-  notFoundComponent: () => <NotFound />,
+  notFoundComponent: () => <NotFoundPage />,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {

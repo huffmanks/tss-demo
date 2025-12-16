@@ -1,8 +1,10 @@
 import { useForm } from "@tanstack/react-form";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 
 import { authClient } from "@/auth/auth-client";
+import { setActiveOrganization } from "@/fn/auth";
 import { simpleError } from "@/lib/error-handler";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +18,8 @@ type LoginFormProps = React.ComponentProps<"div">;
 export function LoginForm({ className, ...props }: LoginFormProps) {
   const navigate = useNavigate();
 
+  const setActiveOrganizationFn = useServerFn(setActiveOrganization);
+
   const form = useForm({
     defaultValues: {
       email: "tim@mylab.com",
@@ -27,6 +31,15 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
 
         if (error) {
           throw Error(error.message);
+        }
+
+        const orgResult = await setActiveOrganizationFn({ data: { email: value.email } });
+
+        if (orgResult) {
+          await authClient.organization.setActive({
+            organizationId: orgResult.organizationId,
+            organizationSlug: orgResult.organizationSlug,
+          });
         }
 
         navigate({ to: "/dashboard" });

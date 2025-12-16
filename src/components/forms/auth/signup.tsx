@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 
@@ -181,10 +181,6 @@ export function SignupForm({ ...props }: SignupFormProps) {
                 <Button className="cursor-pointer" type="submit">
                   Create Account
                 </Button>
-
-                <FieldDescription className="px-6 text-center">
-                  Already have an account? <Link to="/login">Sign in</Link>
-                </FieldDescription>
               </Field>
             </FieldGroup>
           </FieldGroup>
