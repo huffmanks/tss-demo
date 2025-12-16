@@ -17,6 +17,5 @@ async function runMigration() {
 }
 
 runMigration().catch((error) => {
-  console.log(error);
-  console.error("Migration failed!");
+  console.error(error instanceof Error ? error.message : "Migration failed!");
 });

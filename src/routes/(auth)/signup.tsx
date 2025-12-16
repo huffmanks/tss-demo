@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 
 import { doesUserExist } from "@/fn/onboarding";
 
@@ -10,12 +10,8 @@ export const Route = createFileRoute("/(auth)/signup")({
     const userExist = await doesUserExist();
 
     if (userExist) {
-      throw redirect({
-        to: "/login",
-        replace: true,
-      });
+      throw notFound();
     }
-    return null;
   },
 });
 

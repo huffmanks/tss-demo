@@ -1,78 +1,93 @@
 import { createServerFn } from "@tanstack/react-start";
-import { count } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import z from "zod";
 
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { categories, cuisines, diets, units, users } from "@/db/schema";
+import { categories, cuisines, diets, organizations, units, users } from "@/db/schema";
 import { initialCategories, initialCuisines, initialDiets, initialUnits } from "@/db/seed/data";
+import { restrictToInitialSetup } from "@/middleware/auth";
 
 export const doesUserExist = createServerFn().handler(async () => {
-  const [user] = await db.select({ count: count() }).from(users);
-  return user.count > 0;
+  const result = await db.select({ id: users.id }).from(users).limit(1);
+
+  return result.length > 0;
 });
 
-const createUserSchema = z.object({
+const setupAdminUserOrganizationSchema = z.object({
   name: z.string(),
   email: z.email(),
   password: z.string(),
-});
-
-export const createAdminUser = createServerFn()
-  .inputValidator(createUserSchema)
-  .handler(async ({ data }) => {
-    return await auth.api.createUser({
-      body: {
-        ...data,
-        role: "admin",
-      },
-    });
-  });
-
-const createOrganizationSchema = z.object({
   organizationName: z.string(),
   organizationSlug: z.string(),
-  userId: z.uuidv7(),
 });
 
-export const createFirstOrganization = createServerFn()
-  .inputValidator(createOrganizationSchema)
+export const setupAdminUserOrganization = createServerFn()
+  .inputValidator(setupAdminUserOrganizationSchema)
+  .middleware([restrictToInitialSetup])
   .handler(async ({ data }) => {
-    return await auth.api.createOrganization({
-      body: {
-        name: data.organizationName,
-        slug: data.organizationSlug,
-        userId: data.userId,
-      },
-    });
-  });
+    const userExists = await doesUserExist();
+    if (userExists) throw new Error("INITIAL_SIGNUP_ALREADY_COMPLETE");
 
-const seedNewOrganizationSchema = z.object({
-  organizationId: z.uuidv7(),
-});
+    let userId: string | undefined;
+    let organizationId: string | undefined;
 
-export const seedNewOrganizationData = createServerFn()
-  .inputValidator(seedNewOrganizationSchema)
-  .handler(async ({ data }) => {
     try {
-      const organizationId = data.organizationId;
-      for await (const category of initialCategories) {
-        await db.insert(categories).values({ ...category, organizationId });
+      const userResult = await auth.api.createUser({
+        body: {
+          ...data,
+          role: "admin",
+        },
+      });
+
+      userId = userResult.user.id;
+
+      if (!userId) throw new Error("USER_CREATION_FAILED");
+
+      const organizationResult = await auth.api.createOrganization({
+        body: { name: data.organizationName, slug: data.organizationSlug, userId },
+      });
+
+      if (!organizationResult?.id) throw new Error("ORG_CREATION_FAILED");
+
+      organizationId = organizationResult.id;
+      const safeUserId = userId;
+      const safeOrgId = organizationId;
+
+      await db.transaction(async (tx) => {
+        await tx
+          .insert(categories)
+          .values(initialCategories.map((cat) => ({ ...cat, organizationId: safeOrgId })));
+        await tx
+          .insert(cuisines)
+          .values(initialCuisines.map((cat) => ({ ...cat, organizationId: safeOrgId })));
+        await tx
+          .insert(diets)
+          .values(initialDiets.map((cat) => ({ ...cat, organizationId: safeOrgId })));
+        await tx
+          .insert(units)
+          .values(initialUnits.map((cat) => ({ ...cat, organizationId: safeOrgId })));
+
+        await tx
+          .update(users)
+          .set({ activeOrganizationId: organizationId })
+          .where(eq(users.id, safeUserId));
+      });
+
+      return { success: true, userId, organizationId };
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        if (userId) {
+          await db.delete(users).where(eq(users.id, userId));
+        }
+
+        if (organizationId) {
+          await db.delete(organizations).where(eq(organizations.id, organizationId));
+        }
+
+        throw new Error(error.message);
       }
 
-      for await (const cuisine of initialCuisines) {
-        await db.insert(cuisines).values({ ...cuisine, organizationId });
-      }
-
-      for await (const diet of initialDiets) {
-        await db.insert(diets).values({ ...diet, organizationId });
-      }
-
-      for await (const unit of initialUnits) {
-        await db.insert(units).values({ ...unit, organizationId });
-      }
-    } catch (error) {
-      console.info("Failed to seed new organization data.");
-      throw error;
+      throw new Error("UNKNOWN_ERROR");
     }
   });

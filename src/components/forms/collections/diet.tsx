@@ -5,6 +5,7 @@ import { v7 as uuidv7 } from "uuid";
 
 import type { Diet } from "@/db/schema/recipes";
 import { dietsCollection } from "@/electric/collections";
+import { simpleError } from "@/lib/error-handler";
 
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
@@ -38,7 +39,8 @@ export function DietForm({ diet, handleClose }: DietFormProps) {
 
         handleClose();
       } catch (error) {
-        toast.error("Error submitting diet.");
+        const message = simpleError(error, "Error submitting diet.");
+        toast.error(message);
       }
     },
   });

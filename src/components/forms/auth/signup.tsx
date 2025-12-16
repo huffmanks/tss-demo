@@ -4,8 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 
 import { authClient } from "@/auth/auth-client";
-import { setUserActiveOrganizationId } from "@/fn/auth";
-import { createAdminUser, createFirstOrganization, seedNewOrganizationData } from "@/fn/onboarding";
+import { setupAdminUserOrganization } from "@/fn/onboarding";
+import { errorHandler } from "@/lib/error-handler";
 import { slugify } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -17,10 +17,7 @@ type SignupFormProps = React.ComponentProps<typeof Card>;
 
 export function SignupForm({ ...props }: SignupFormProps) {
   const navigate = useNavigate();
-  const createAdminUserFn = useServerFn(createAdminUser);
-  const createFirstOrganizationFn = useServerFn(createFirstOrganization);
-  const seedNewOrganizationDataFn = useServerFn(seedNewOrganizationData);
-  const setUserActiveOrganizationIdFn = useServerFn(setUserActiveOrganizationId);
+  const setupAdminUserOrganizationFn = useServerFn(setupAdminUserOrganization);
 
   const form = useForm({
     defaultValues: {
@@ -37,28 +34,12 @@ export function SignupForm({ ...props }: SignupFormProps) {
           return;
         }
 
-        const { user } = await createAdminUserFn({
-          data: {
-            name: value.name,
-            email: value.email,
-            password: value.password,
-          },
-        });
-
-        if (!user.id) throw Error;
-
         const organizationSlug = slugify(value.organizationName);
-
-        const organization = await createFirstOrganizationFn({
-          data: { organizationName: value.organizationName, organizationSlug, userId: user.id },
-        });
-
-        if (!organization?.id) throw Error;
-
-        await seedNewOrganizationDataFn({ data: { organizationId: organization.id } });
-
-        await setUserActiveOrganizationIdFn({
-          data: { userId: user.id, organizationId: organization.id },
+        const { organizationId } = await setupAdminUserOrganizationFn({
+          data: {
+            ...value,
+            organizationSlug,
+          },
         });
 
         await authClient.signIn.email({
@@ -67,13 +48,19 @@ export function SignupForm({ ...props }: SignupFormProps) {
         });
 
         await authClient.organization.setActive({
-          organizationId: organization.id,
-          organizationSlug: organization.slug,
+          organizationId,
+          organizationSlug,
         });
 
         navigate({ to: "/dashboard" });
-      } catch (error) {
-        toast.error("Error signing up.");
+      } catch (error: unknown) {
+        const message = errorHandler(error, {
+          USER_CREATION_FAILED: "Creating user failed.",
+          ORG_CREATION_FAILED: "Creating organization failed.",
+          INITIAL_SIGNUP_ALREADY_COMPLETE: "Initial signup is already complete.",
+        });
+
+        toast.error(message);
       }
     },
   });

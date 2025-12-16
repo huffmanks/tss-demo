@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { auth } from "@/auth";
+import { simpleError } from "@/lib/error-handler";
 import { json } from "@/lib/utils";
 
 // Proxy-auth pattern based on ElectricSQL example
@@ -86,8 +87,9 @@ export const Route = createFileRoute("/api/electric")({
             headers,
           });
         } catch (error) {
-          console.error("Electric proxy error:", error);
-          return json({ error: "Failed to connect to Electric server" }, 502);
+          const message = simpleError(error, "Failed to connect to Electric server.");
+          console.error(message);
+          return json({ error: "Failed to connect to Electric server." }, 502);
         }
       },
     },

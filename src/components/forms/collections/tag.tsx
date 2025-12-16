@@ -5,6 +5,7 @@ import { v7 as uuidv7 } from "uuid";
 
 import type { Tag } from "@/db/schema/recipes";
 import { tagsCollection } from "@/electric/collections";
+import { simpleError } from "@/lib/error-handler";
 
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
@@ -38,7 +39,8 @@ export function TagForm({ tag, handleClose }: TagFormProps) {
 
         handleClose();
       } catch (error) {
-        toast.error("Error submitting tag.");
+        const message = simpleError(error, "Error submitting tag.");
+        toast.error(message);
       }
     },
   });

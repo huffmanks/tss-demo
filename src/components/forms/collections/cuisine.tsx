@@ -5,6 +5,7 @@ import { v7 as uuidv7 } from "uuid";
 
 import type { Cuisine } from "@/db/schema/recipes";
 import { cuisinesCollection } from "@/electric/collections";
+import { simpleError } from "@/lib/error-handler";
 
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
@@ -38,7 +39,8 @@ export function CuisineForm({ cuisine, handleClose }: CuisineFormProps) {
 
         handleClose();
       } catch (error) {
-        toast.error("Error submitting cuisine.");
+        const message = simpleError(error, "Error submitting cuisine.");
+        toast.error(message);
       }
     },
   });

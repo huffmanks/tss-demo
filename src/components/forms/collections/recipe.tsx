@@ -6,6 +6,7 @@ import { v7 as uuidv7 } from "uuid";
 
 import type { Recipe } from "@/db/schema/recipes";
 import { categoriesCollection, recipesCollection } from "@/electric/collections";
+import { simpleError } from "@/lib/error-handler";
 import { slugify } from "@/lib/utils";
 
 import MultipleSelector from "@/components/custom/multiple-selector";
@@ -74,7 +75,8 @@ export function RecipeForm({ userId, organizationId, recipe }: RecipeFormProps) 
           });
         }
       } catch (error) {
-        toast.error("Error submitting recipe.");
+        const message = simpleError(error, "Error submitting recipe.");
+        toast.error(message);
       }
     },
   });

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 import { authClient } from "@/auth/auth-client";
+import { simpleError } from "@/lib/error-handler";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,8 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
 
         navigate({ to: "/dashboard" });
       } catch (error) {
-        toast.error("Sign in failed.");
+        const message = simpleError(error, "Sign in failed.");
+        toast.error(message);
       }
     },
   });

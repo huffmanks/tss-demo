@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 import { authClient } from "@/auth/auth-client";
+import { simpleError } from "@/lib/error-handler";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -17,9 +18,14 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
     },
     onSubmit: async ({ value }) => {
       try {
-        const { data, error } = await authClient.requestPasswordReset(value);
+        const { error } = await authClient.requestPasswordReset(value);
+
+        if (error) {
+          throw Error(error.message);
+        }
       } catch (error) {
-        toast.error("Sign in failed.");
+        const message = simpleError(error, "Sign in failed.");
+        toast.error(message);
       }
     },
   });

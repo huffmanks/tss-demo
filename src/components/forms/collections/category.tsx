@@ -5,6 +5,7 @@ import { v7 as uuidv7 } from "uuid";
 
 import type { Category } from "@/db/schema/recipes";
 import { categoriesCollection } from "@/electric/collections";
+import { simpleError } from "@/lib/error-handler";
 
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
@@ -38,7 +39,8 @@ export function CategoryForm({ category, handleClose }: CategoryFormProps) {
 
         handleClose();
       } catch (error) {
-        toast.error("Error submitting category.");
+        const message = simpleError(error, "Error submitting category.");
+        toast.error(message);
       }
     },
   });

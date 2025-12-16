@@ -3,6 +3,7 @@ import { ChevronsUpDownIcon, LogOutIcon, UserIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import { authClient } from "@/auth/auth-client";
+import { simpleError } from "@/lib/error-handler";
 import { createAcronym } from "@/lib/utils";
 import type { AuthUser } from "@/types";
 
@@ -28,14 +29,17 @@ export function NavUser({ user }: { user: AuthUser }) {
   const navigate = useNavigate();
 
   async function handleLogout() {
-    const { data, error } = await authClient.signOut();
+    try {
+      const { error } = await authClient.signOut();
 
-    if (error) {
-      toast.error(error.message || "Logout failed.");
-    }
+      if (error) {
+        throw Error(error.message);
+      }
 
-    if (data) {
       navigate({ to: "/login", reloadDocument: true });
+    } catch (error) {
+      const message = simpleError(error, "Logout failed.");
+      toast.error(message);
     }
   }
 
