@@ -2,25 +2,30 @@ import { relations } from "drizzle-orm";
 import { boolean, index, integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { v7 as uuidv7 } from "uuid";
 
-export const users = pgTable("users", {
-  id: uuid("id")
-    .$defaultFn(() => uuidv7())
-    .primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: boolean("email_verified").default(false).notNull(),
-  image: text("image"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  role: text("role").default("user").notNull(),
-  banned: boolean("banned").default(false),
-  banReason: text("ban_reason"),
-  banExpires: timestamp("ban_expires"),
-  twoFactorEnabled: boolean("two_factor_enabled").default(false),
-});
+export const users = pgTable(
+  "users",
+  {
+    id: uuid("id")
+      .$defaultFn(() => uuidv7())
+      .primaryKey(),
+    name: text("name").notNull(),
+    email: text("email").notNull().unique(),
+    emailVerified: boolean("email_verified").default(false).notNull(),
+    image: text("image"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    role: text("role").default("user").notNull(),
+    banned: boolean("banned").default(false),
+    banReason: text("ban_reason"),
+    banExpires: timestamp("ban_expires"),
+    twoFactorEnabled: boolean("two_factor_enabled").default(false),
+    activeOrganizationId: uuid("active_organization_id").references(() => organizations.id),
+  },
+  (table) => [index("users_activeOrganizationId_idx").on(table.activeOrganizationId)]
+);
 
 export const sessions = pgTable(
   "sessions",
@@ -192,13 +197,17 @@ export const invitations = pgTable(
   ]
 );
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   sessions: many(sessions),
   accounts: many(accounts),
   passkeys: many(passkeys),
   twoFactors: many(twoFactors),
   members: many(members),
   invitations: many(invitations),
+  activeOrganization: one(organizations, {
+    fields: [users.activeOrganizationId],
+    references: [organizations.id],
+  }),
 }));
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({

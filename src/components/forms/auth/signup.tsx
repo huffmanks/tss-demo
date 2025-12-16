@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 
 import { authClient } from "@/auth/auth-client";
+import { setUserActiveOrganizationId } from "@/fn/auth";
 import { createAdminUser, createFirstOrganization, seedNewOrganizationData } from "@/fn/onboarding";
 import { slugify } from "@/lib/utils";
 
@@ -19,6 +20,7 @@ export function SignupForm({ ...props }: SignupFormProps) {
   const createAdminUserFn = useServerFn(createAdminUser);
   const createFirstOrganizationFn = useServerFn(createFirstOrganization);
   const seedNewOrganizationDataFn = useServerFn(seedNewOrganizationData);
+  const setUserActiveOrganizationIdFn = useServerFn(setUserActiveOrganizationId);
 
   const form = useForm({
     defaultValues: {
@@ -55,9 +57,18 @@ export function SignupForm({ ...props }: SignupFormProps) {
 
         await seedNewOrganizationDataFn({ data: { organizationId: organization.id } });
 
+        await setUserActiveOrganizationIdFn({
+          data: { userId: user.id, organizationId: organization.id },
+        });
+
         await authClient.signIn.email({
           email: value.email,
           password: value.password,
+        });
+
+        await authClient.organization.setActive({
+          organizationId: organization.id,
+          organizationSlug: organization.slug,
         });
 
         navigate({ to: "/dashboard" });
@@ -71,7 +82,7 @@ export function SignupForm({ ...props }: SignupFormProps) {
     <Card {...props}>
       <CardHeader>
         <CardTitle>Create an account</CardTitle>
-        <CardDescription>Enter your information below to create your account</CardDescription>
+        <CardDescription>Enter your information below to create your account.</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -86,7 +97,7 @@ export function SignupForm({ ...props }: SignupFormProps) {
               name="name"
               children={(field) => (
                 <Field>
-                  <FieldLabel htmlFor="name">Full Name</FieldLabel>
+                  <FieldLabel htmlFor="name">Full name</FieldLabel>
                   <Input
                     id="name"
                     type="text"
@@ -116,10 +127,6 @@ export function SignupForm({ ...props }: SignupFormProps) {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
-                  <FieldDescription>
-                    We&apos;ll use this to contact you. We will not share your email with anyone
-                    else.
-                  </FieldDescription>
                 </Field>
               )}
             />
@@ -147,9 +154,9 @@ export function SignupForm({ ...props }: SignupFormProps) {
               name="confirmPassword"
               children={(field) => (
                 <Field>
-                  <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
+                  <FieldLabel htmlFor="confirmPassword">Confirm password</FieldLabel>
                   <Input
-                    id="confirm-password"
+                    id="confirmPassword"
                     type="password"
                     autoComplete="off"
                     required
@@ -177,6 +184,7 @@ export function SignupForm({ ...props }: SignupFormProps) {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
+                  <FieldDescription>Create the first organization to get started.</FieldDescription>
                 </Field>
               )}
             />

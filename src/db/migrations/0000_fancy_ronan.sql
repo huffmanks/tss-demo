@@ -253,6 +253,7 @@ CREATE TABLE "users" (
 	"ban_reason" text,
 	"ban_expires" timestamp,
 	"two_factor_enabled" boolean DEFAULT false,
+	"active_organization_id" uuid,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -309,6 +310,7 @@ ALTER TABLE "sessions" ADD CONSTRAINT "sessions_active_organization_id_organizat
 ALTER TABLE "tags" ADD CONSTRAINT "tags_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "two_factors" ADD CONSTRAINT "two_factors_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "units" ADD CONSTRAINT "units_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "users" ADD CONSTRAINT "users_active_organization_id_organizations_id_fk" FOREIGN KEY ("active_organization_id") REFERENCES "public"."organizations"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "accounts_userId_idx" ON "accounts" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "categories_organization_id_idx" ON "categories" USING btree ("organization_id");--> statement-breakpoint
 CREATE INDEX "cuisines_organization_id_idx" ON "cuisines" USING btree ("organization_id");--> statement-breakpoint
@@ -355,4 +357,5 @@ CREATE INDEX "tags_organization_id_idx" ON "tags" USING btree ("organization_id"
 CREATE INDEX "twoFactors_secret_idx" ON "two_factors" USING btree ("secret");--> statement-breakpoint
 CREATE INDEX "twoFactors_userId_idx" ON "two_factors" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "units_organization_id_idx" ON "units" USING btree ("organization_id");--> statement-breakpoint
+CREATE INDEX "users_activeOrganizationId_idx" ON "users" USING btree ("active_organization_id");--> statement-breakpoint
 CREATE INDEX "verifications_identifier_idx" ON "verifications" USING btree ("identifier");

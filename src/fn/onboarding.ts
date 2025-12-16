@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
 import { count } from "drizzle-orm";
 import z from "zod";
 
@@ -39,35 +38,13 @@ const createOrganizationSchema = z.object({
 export const createFirstOrganization = createServerFn()
   .inputValidator(createOrganizationSchema)
   .handler(async ({ data }) => {
-    const organization = await auth.api.createOrganization({
+    return await auth.api.createOrganization({
       body: {
         name: data.organizationName,
         slug: data.organizationSlug,
         userId: data.userId,
       },
     });
-
-    if (!organization) return null;
-
-    const headers = getRequestHeaders();
-
-    await auth.api.addMember({
-      body: {
-        userId: data.userId,
-        role: "owner",
-        organizationId: organization.id,
-      },
-    });
-
-    await auth.api.setActiveOrganization({
-      body: {
-        organizationId: organization.id,
-        organizationSlug: organization.slug,
-      },
-      headers,
-    });
-
-    return organization;
   });
 
 const seedNewOrganizationSchema = z.object({

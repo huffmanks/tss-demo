@@ -1,5 +1,4 @@
 import { passkey } from "@better-auth/passkey";
-import { getRequestHeaders } from "@tanstack/react-start/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import {
@@ -11,7 +10,6 @@ import { tanstackStartCookies } from "better-auth/tanstack-start";
 
 import { db } from "@/db";
 import * as schema from "@/db/schema";
-import { seedNewOrganizationData } from "@/fn/onboarding";
 import { siteConfig } from "@/lib/site-config";
 
 export const auth = betterAuth({
@@ -42,6 +40,15 @@ export const auth = betterAuth({
         defaultValue: "user",
         input: false,
       },
+      activeOrganizationId: {
+        type: "string",
+        required: false,
+        input: false,
+        references: {
+          model: "organizations",
+          field: "id",
+        },
+      },
     },
   },
   session: {
@@ -71,27 +78,6 @@ export const auth = betterAuth({
     organizationPlugin({
       allowUserToCreateOrganization: (user) => {
         return user.role === "admin";
-      },
-      organizationHooks: {
-        beforeCreateOrganization: async ({ organization, user }) => {
-          await auth.api.addMember({
-            body: {
-              userId: user.id,
-              role: ["owner"],
-              organizationId: organization.id,
-            },
-          });
-        },
-        afterCreateOrganization: async ({ organization }) => {
-          await seedNewOrganizationData({ data: { organizationId: organization.id } });
-          await auth.api.setActiveOrganization({
-            body: {
-              organizationId: organization.id,
-              organizationSlug: organization.slug,
-            },
-            headers: getRequestHeaders(),
-          });
-        },
       },
     }),
     tanstackStartCookies(),
