@@ -1,5 +1,5 @@
 {
-  "name": "tss-demo",
+  "name": "recipe-app",
   "private": true,
   "type": "module",
   "scripts": {

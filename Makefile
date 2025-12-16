@@ -13,7 +13,7 @@ PROD_ENV_FILE = .env.production
 
 # --- Global Commands ---
 all: dev-up-all ## Run the full development startup
-# all-prod: prod-up-all-graceful ## Run the full production startup
+all-prod: prod-up-all ## Run the full production startup
 
 DOCKER_COMPOSE = docker compose $(DOCKER_FILES) --env-file $(ENV_FILE)
 
@@ -71,10 +71,10 @@ prod-docker-down: ## Stop the production environment
 	@$(DOCKER_COMPOSE) down
 
 # The main production target:
-# prod-up-all: prod-docker-up
-# 	@echo "--- Migrating database... ---"
-# 	$(shell cat $(DEV_ENV_FILE) | xargs) pnpm db:migrate:prod
-# 	@echo "--- Database operations complete. ---"
+prod-up-all: prod-docker-up
+	@echo "--- Migrating database... ---"
+	$(shell cat $(DEV_ENV_FILE) | xargs) pnpm db:migrate:prod
+	@echo "--- Database operations complete. ---"
 
 # Run prod-up-all, and prod-docker-down on failure
 # .PHONY: prod-up-all-graceful
